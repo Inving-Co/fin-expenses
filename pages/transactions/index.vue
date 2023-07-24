@@ -214,7 +214,7 @@
 
 <script setup lang="ts">
 
-import {initDropdowns, initFlowbite} from "flowbite";
+import {initDropdowns} from "flowbite";
 import {
   endOfMonth, endOfToday,
   endOfWeek, endOfYesterday,

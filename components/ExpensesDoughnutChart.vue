@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import {Doughnut} from 'vue-chartjs'
 import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js'
-import {forEach, groupBy, map, mapValues, omit, reduce, split} from 'lodash';
+import lodash from 'lodash';
 import {PropType} from "@vue/runtime-core";
 import {Transaction} from "~/utils/types";
 import {capitalizeFirstLetter} from "~/utils/functions";
@@ -26,6 +26,8 @@ interface Datasets {
 }
 
 ChartJS.register(ArcElement, Tooltip, Legend)
+
+const {forEach, groupBy, map, mapValues, omit, reduce, split} = lodash;
 
 const data = ref<{ labels: string[], datasets: Datasets[] }>({
   labels: [],
