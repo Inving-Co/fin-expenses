@@ -143,18 +143,20 @@
             <span v-else><input v-model="selectedTransaction.amount" ref="inputRef" name="Amount"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                 type="text"
-                                placeholder="Example: 20000" v-on:keydown.enter="onUpdate"/></span>
+                                placeholder="Example: 20000" v-on:keydown.enter="onUpdate"/>
+            </span>
           </td>
           <td class="px-6 py-4">
             <span v-if="!trx.isEditMode">{{ capitalizeFirstLetter(trx.category.name) }}</span>
             <span v-else>
-<select v-model="selectedTransaction.categoryId" id="categories"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        @change="onUpdate">
-  <option v-for="category in categories" :value="category.id" selected>{{
-      capitalizeFirstLetter(category.name)
-    }}</option>
-</select></span>
+              <select v-model="selectedTransaction.categoryId" id="categories"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      @change="onUpdate">
+                <option v-for="category in categories" :value="category.id" selected>
+                  {{ capitalizeFirstLetter(category.name) }}
+                </option>
+              </select>
+            </span>
           </td>
         </tr>
         </tbody>
