@@ -15,7 +15,8 @@
 
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
-    <div class="sm:flex mx-4 justify-center sm:justify-between pb-4 bg-white dark:bg-gray-900">
+    <expenses-doughnut-chart :transactions="transactions ?? null"/>
+    <div class="sm:flex p-4 justify-center sm:justify-between bg-white dark:bg-gray-900">
       <div class="flex gap-2 justify-center">
         <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
                 class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
@@ -226,7 +227,7 @@ import {
   subMonths
 } from 'date-fns'
 import {capitalizeFirstLetter, currencyIDRFormatter} from "~/utils/functions";
-import {EditableTransaction, ElementEvent} from "~/utils/types";
+import {EditableTransaction, ElementEvent, Transaction} from "~/utils/types";
 import FormTransaction from "~/components/FormTransaction.vue";
 import {useCurrencyInput} from "vue-currency-input";
 import VueDatePicker from '@vuepic/vue-datepicker';
@@ -265,7 +266,9 @@ const {
   error: errorFetchTransactions,
   pending: isLoading,
   refresh,
-}: any = await useFetch('/api/transactions', {
+}: any = await useFetch<{
+  data: Transaction[]
+}>('/api/transactions', {
   query: {
     key: searchKey,
     startDate: startFilterDate,

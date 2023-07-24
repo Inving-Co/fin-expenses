@@ -12,6 +12,7 @@
     "@nuxt/devtools": "latest",
     "@nuxtjs/tailwindcss": "^6.8.0",
     "@sidebase/nuxt-auth": "^0.6.0-beta.3",
+    "@types/lodash": "^4.14.195",
     "@types/node": "^18.16.19",
     "nuxt": "^3.6.5",
     "prisma": "^5.0.0"
@@ -19,10 +20,13 @@
   "dependencies": {
     "@prisma/client": "^5.0.0",
     "@vuepic/vue-datepicker": "^5.4.0",
+    "chart.js": "^4.3.0",
     "date-fns": "^2.30.0",
     "express": "^4.18.2",
     "flowbite": "^1.7.0",
+    "lodash": "^4.17.21",
     "mobile-detect": "^1.4.5",
+    "vue-chartjs": "^5.2.0",
     "vue-currency-input": "^3.0.5"
   }
 }
