@@ -12,7 +12,7 @@ export default defineNuxtConfig({
             viewport: 'width=device-width, initial-scale=1',
         }
     },
-    router: { middleware: ['bigint'] },
+    router: { middleware: [] },
     devtools: {enabled: true},
     modules: ['@nuxtjs/tailwindcss'],
     build: {

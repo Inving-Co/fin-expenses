@@ -19,199 +19,199 @@
       <expenses-structure-chart :transactions="transactions ?? null"/>
       <cash-flow-chart :transactions="transactions ?? null"/>
     </div>
-<!--    <div class="sm:flex p-4 justify-center sm:justify-between bg-white dark:bg-gray-900">-->
-<!--      <div class="flex gap-2 justify-center">-->
-<!--        <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"-->
-<!--                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"-->
-<!--                type="button">-->
-<!--          <span class="sr-only">Action button</span>-->
-<!--          Action-->
-<!--          <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"-->
-<!--               viewBox="0 0 10 6">-->
-<!--            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
-<!--                  d="m1 1 4 4 4-4"/>-->
-<!--          </svg>-->
-<!--        </button>-->
-<!--        &lt;!&ndash; Dropdown menu &ndash;&gt;-->
-<!--        <div id="dropdownAction"-->
-<!--             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">-->
-<!--          <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">-->
-<!--            <li>-->
-<!--              <button type="button"-->
-<!--                      class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"-->
-<!--                      @click=" resetAllIsEditMode(); selectedTransaction = null; modalFormTransaction?.show()">Create-->
-<!--              </button>-->
-<!--            </li>-->
-<!--          </ul>-->
-<!--        </div>-->
+    <div class="sm:flex p-4 justify-center sm:justify-between bg-white dark:bg-gray-900">
+      <div class="flex gap-2 justify-center">
+        <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
+                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                type="button">
+          <span class="sr-only">Action button</span>
+          Action
+          <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+               viewBox="0 0 10 6">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m1 1 4 4 4-4"/>
+          </svg>
+        </button>
+        <!-- Dropdown menu -->
+        <div id="dropdownAction"
+             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+          <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
+            <li>
+              <button type="button"
+                      class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      @click=" resetAllIsEditMode(); selectedTransaction = null; modalFormTransaction?.show()">Create
+              </button>
+            </li>
+          </ul>
+        </div>
 
-<!--        <button id="dropdownFilterButton" data-dropdown-toggle="dropdownFilterRadio"-->
-<!--                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"-->
-<!--                type="button">-->
-<!--          <span class="sr-only">{{ capitalizeFirstLetter(filterDate) }}</span>-->
-<!--          {{ capitalizeFirstLetter(filterDate) }}-->
-<!--          <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"-->
-<!--               viewBox="0 0 10 6">-->
-<!--            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
-<!--                  d="m1 1 4 4 4-4"/>-->
-<!--          </svg>-->
-<!--        </button>-->
+        <button id="dropdownFilterButton" data-dropdown-toggle="dropdownFilterRadio"
+                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                type="button">
+          <span class="sr-only">{{ capitalizeFirstLetter(filterDate) }}</span>
+          {{ capitalizeFirstLetter(filterDate) }}
+          <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+               viewBox="0 0 10 6">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m1 1 4 4 4-4"/>
+          </svg>
+        </button>
 
-<!--        &lt;!&ndash; Dropdown menu &ndash;&gt;-->
-<!--        <div id="dropdownFilterRadio"-->
-<!--             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600"-->
-<!--             data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top"-->
-<!--             style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate3d(522.5px, 6119.5px, 0px);">-->
-<!--          <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"-->
-<!--              aria-labelledby="dropdownFilterButton">-->
-<!--            <li v-for="valueFilterDate in valuesFilterDate">-->
-<!--              <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">-->
-<!--                <div class="flex items-center h-5">-->
-<!--                  <input v-model="filterDate" :id="valueFilterDate + `-radio`" :name="valueFilterDate + `-radio`"-->
-<!--                         type="radio" :value="valueFilterDate"-->
-<!--                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"-->
-<!--                         @change="onFilterDateChanges($event.target.value);">-->
-<!--                </div>-->
-<!--                <div class="ml-2 text-sm">-->
-<!--                  <label :for="valueFilterDate + `-radio`" class="font-medium text-gray-900 dark:text-gray-300">-->
-<!--                    <div>{{ capitalizeFirstLetter(valueFilterDate) }}</div>-->
-<!--                  </label>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </li>-->
-<!--          </ul>-->
-<!--        </div>-->
+        <!-- Dropdown menu -->
+        <div id="dropdownFilterRadio"
+             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600"
+             data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top"
+             style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate3d(522.5px, 6119.5px, 0px);">
+          <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
+              aria-labelledby="dropdownFilterButton">
+            <li v-for="valueFilterDate in valuesFilterDate">
+              <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                <div class="flex items-center h-5">
+                  <input v-model="filterDate" :id="valueFilterDate + `-radio`" :name="valueFilterDate + `-radio`"
+                         type="radio" :value="valueFilterDate"
+                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                         @change="onFilterDateChanges($event.target.value);">
+                </div>
+                <div class="ml-2 text-sm">
+                  <label :for="valueFilterDate + `-radio`" class="font-medium text-gray-900 dark:text-gray-300">
+                    <div>{{ capitalizeFirstLetter(valueFilterDate) }}</div>
+                  </label>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
 
-<!--      </div>-->
-<!--      <div class="mt-2 sm:mt-0">-->
-<!--        <label for="table-search" class="sr-only">Search</label>-->
-<!--        <div class="relative">-->
-<!--          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">-->
-<!--            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"-->
-<!--                 fill="none" viewBox="0 0 20 20">-->
-<!--              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
-<!--                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>-->
-<!--            </svg>-->
-<!--          </div>-->
-<!--          <input :value="searchKey" :readonly="isLoading" type="text" id="table-search-transactions"-->
-<!--                 class="w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"-->
-<!--                 placeholder="Search for transactions" v-on:keydown.enter="onSearchTransactions($event.target.value)">-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div v-show="isLoading"-->
-<!--         class="fixed flex text-2xl justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 bg-black bg-opacity-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">-->
-<!--      Loading data...-->
-<!--    </div>-->
-<!--    <div>-->
-<!--      <table v-if="!$isMobile()" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">-->
-<!--        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">-->
-<!--        <tr>-->
-<!--          <th scope="col" class="px-6 py-3">-->
-<!--            Date-->
-<!--          </th>-->
-<!--          <th scope="col" class="px-6 py-3">-->
-<!--            Description-->
-<!--          </th>-->
-<!--          <th scope="col" class="px-6 py-3">-->
-<!--            Amount-->
-<!--          </th>-->
-<!--          <th scope="col" class="px-6 py-3">-->
-<!--            Category-->
-<!--          </th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr v-for="trx in transactions" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"-->
-<!--            v-on:dblclick="onDoubleClickRow(trx)"-->
-<!--            v-on:keydown.esc="trx.isEditMode = false; selectedTransaction = null">-->
-<!--          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">-->
-<!--            <span v-if="!trx.isEditMode">{{ format(parseISO(trx.date), 'dd/MM/yyyy') }}</span>-->
-<!--            <span v-else> <VueDatePicker v-model="selectedTransaction.date" format="dd/MM/yyyy"-->
-<!--                                         :enable-time-picker="false" name="datepicker" locale="id-ID" auto-apply-->
-<!--                                         @update:model-value="onUpdate"/></span>-->
-<!--          </th>-->
-<!--          <td class="px-6 py-4">-->
-<!--            <span v-if="!trx.isEditMode">{{ capitalizeFirstLetter(trx.description) }}</span>-->
-<!--            <span v-else class="flex"><input v-model="selectedTransaction.description" type="text" name="Description"-->
-<!--                                             id="Description"-->
-<!--                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"-->
-<!--                                             v-on:keydown.enter="onUpdate">-->
-<!--                          <button-->
-<!--                              class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"-->
-<!--                              type="button" @click="onDelete(trx.id); "><icons-trash/></button>-->
-<!--            </span>-->
-<!--          </td>-->
-<!--          <td class="px-6 py-4">-->
-<!--            <span v-if="!trx.isEditMode">{{ currencyIDRFormatter.format(trx.amount) }}</span>-->
-<!--            <span v-else><input v-model="selectedTransaction.amount" ref="inputRef" name="Amount"-->
-<!--                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"-->
-<!--                                type="text"-->
-<!--                                placeholder="Example: 20000" v-on:keydown.enter="onUpdate"/>-->
-<!--            </span>-->
-<!--          </td>-->
-<!--          <td class="px-6 py-4">-->
-<!--            <span v-if="!trx.isEditMode">{{ capitalizeFirstLetter(trx.category.name) }}</span>-->
-<!--            <span v-else>-->
-<!--              <select v-model="selectedTransaction.categoryId" id="categories"-->
-<!--                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"-->
-<!--                      @change="onUpdate">-->
-<!--                <option v-for="category in categories" :value="category.id" selected>-->
-<!--                  {{ capitalizeFirstLetter(category.name) }}-->
-<!--                </option>-->
-<!--              </select>-->
-<!--            </span>-->
-<!--          </td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--      </table>-->
-<!--      <div v-else>-->
-<!--        <div v-for="(trx,index) in transactions"-->
-<!--             class="w-full my-3 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">-->
-<!--          <span class="flex justify-between">-->
-<!--            <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">-->
-<!--            {{ currencyIDRFormatter.format(trx.amount) }}</h5>-->
-<!--            <div>-->
-<!--              <general-dropdown :id="`action-menu-mobile-trx-${index}`">-->
-<!--                <template #trigger="{activator}">-->
-<!--                  <button-->
-<!--                      class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"-->
-<!--                      type="button" @click="activator">-->
-<!--                    <icons-kebab-menu/>-->
-<!--                  </button>-->
-<!--                </template>-->
+      </div>
+      <div class="mt-2 sm:mt-0">
+        <label for="table-search" class="sr-only">Search</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                 fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+          </div>
+          <input :value="searchKey" :readonly="isLoading" type="text" id="table-search-transactions"
+                 class="w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                 placeholder="Search for transactions" v-on:keydown.enter="onSearchTransactions($event.target.value)">
+        </div>
+      </div>
+    </div>
+    <div v-show="isLoading"
+         class="fixed flex text-2xl justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 bg-black bg-opacity-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">
+      Loading data...
+    </div>
+    <div>
+      <table v-if="!$isMobile()" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+          <th scope="col" class="px-6 py-3">
+            Date
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Description
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Amount
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Category
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="trx in transactions" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+            v-on:dblclick="onDoubleClickRow(trx)"
+            v-on:keydown.esc="trx.isEditMode = false; selectedTransaction = null">
+          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            <span v-if="!trx.isEditMode">{{ format(parseISO(trx.date), 'dd/MM/yyyy') }}</span>
+            <span v-else> <VueDatePicker v-model="selectedTransaction.date" format="dd/MM/yyyy"
+                                         :enable-time-picker="false" name="datepicker" locale="id-ID" auto-apply
+                                         @update:model-value="onUpdate"/></span>
+          </th>
+          <td class="px-6 py-4">
+            <span v-if="!trx.isEditMode">{{ capitalizeFirstLetter(trx.description) }}</span>
+            <span v-else class="flex"><input v-model="selectedTransaction.description" type="text" name="Description"
+                                             id="Description"
+                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                             v-on:keydown.enter="onUpdate">
+                          <button
+                              class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                              type="button" @click="onDelete(trx.id); "><icons-trash/></button>
+            </span>
+          </td>
+          <td class="px-6 py-4">
+            <span v-if="!trx.isEditMode">{{ currencyIDRFormatter.format(trx.amount) }}</span>
+            <span v-else><input v-model="selectedTransaction.amount" ref="inputRef" name="Amount"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                type="text"
+                                placeholder="Example: 20000" v-on:keydown.enter="onUpdate"/>
+            </span>
+          </td>
+          <td class="px-6 py-4">
+            <span v-if="!trx.isEditMode">{{ capitalizeFirstLetter(trx.category.name) }}</span>
+            <span v-else>
+              <select v-model="selectedTransaction.categoryId" id="categories"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      @change="onUpdate">
+                <option v-for="category in categories" :value="category.id" selected>
+                  {{ capitalizeFirstLetter(category.name) }}
+                </option>
+              </select>
+            </span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div v-else>
+        <div v-for="(trx,index) in transactions"
+             class="w-full my-3 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+          <span class="flex justify-between">
+            <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
+            {{ currencyIDRFormatter.format(trx.amount) }}</h5>
+            <div>
+              <general-dropdown :id="`action-menu-mobile-trx-${index}`">
+                <template #trigger="{activator}">
+                  <button
+                      class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                      type="button" @click="activator">
+                    <icons-kebab-menu/>
+                  </button>
+                </template>
 
-<!--                <template #content="{activator}">-->
-<!--                  <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">-->
-<!--                    <li>-->
-<!--                      <button-->
-<!--                          class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"-->
-<!--                          type="button" @click="selectedTransaction = trx; modalFormTransaction?.show(); activator()">Edit</button>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                      <button-->
-<!--                          class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"-->
-<!--                          type="button" @click="onDelete(trx.id);  activator()">Delete</button>-->
-<!--                    </li>-->
-<!--                  </ul>-->
-<!--                </template>-->
-<!--              </general-dropdown>-->
-<!--            </div>-->
-<!--          </span>-->
+                <template #content="{activator}">
+                  <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+                    <li>
+                      <button
+                          class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          type="button" @click="selectedTransaction = trx; modalFormTransaction?.show(); activator()">Edit</button>
+                    </li>
+                    <li>
+                      <button
+                          class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          type="button" @click="onDelete(trx.id);  activator()">Delete</button>
+                    </li>
+                  </ul>
+                </template>
+              </general-dropdown>
+            </div>
+          </span>
 
-<!--          <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">{{ capitalizeFirstLetter(trx.description) }}</p>-->
-<!--          <span class="flex justify-between">-->
-<!--            <a class="inline-flex items-center text-gray-600 font-bold hover:underline">-->
-<!--            {{ capitalizeFirstLetter(trx.category.name) }}-->
-<!--          </a>-->
-<!--            <a class="inline-flex items-center text-gray-600 font-bold hover:underline">-->
-<!--            {{ format(parseISO(trx.date), 'dd/MM/yyyy') }}-->
-<!--          </a>-->
-<!--          </span>-->
-<!--        </div>-->
+          <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">{{ capitalizeFirstLetter(trx.description) }}</p>
+          <span class="flex justify-between">
+            <a class="inline-flex items-center text-gray-600 font-bold hover:underline">
+            {{ capitalizeFirstLetter(trx.category.name) }}
+          </a>
+            <a class="inline-flex items-center text-gray-600 font-bold hover:underline">
+            {{ format(parseISO(trx.date), 'dd/MM/yyyy') }}
+          </a>
+          </span>
+        </div>
 
-<!--      </div>-->
-<!--    </div>-->
+      </div>
+    </div>
   </div>
 </template>
 
