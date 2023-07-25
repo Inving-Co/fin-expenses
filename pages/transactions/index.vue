@@ -15,9 +15,9 @@
 
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
-    <div class="sm:h-1/4 w-full gap-4 sm:flex justify-center">
+    <div class="max-h-1/4 w-full gap-4 sm:flex justify-center my-8">
       <expenses-structure-chart :label-time="filterDate" :transactions="transactions ?? null"/>
-      <div class="sm:w-1/4 h-full w-full my-8">
+      <div class="sm:w-1/4 h-full w-full flex-grow justify-between mt-4 sm:mt-0">
         <cash-flow-chart class="mb-4" :label-time="filterDate" :transactions="transactions ?? null"/>
         <debt-prcentage-by-income :label-time="filterDate" :transactions="transactions ?? null" />
       </div>

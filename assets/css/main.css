@@ -3,7 +3,12 @@
 @tailwind utilities;
 
 @layer base {
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background-color: #f1f5f9
+    }
     :root {
-        
+
     }
 }
