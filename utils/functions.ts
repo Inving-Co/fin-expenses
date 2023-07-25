@@ -1,3 +1,6 @@
+import {createClient} from "@supabase/supabase-js";
+import {toast, ToastOptions} from "vue3-toastify";
+
 /// https://github.com/prisma/studio/issues/614#issuecomment-1374116622
 declare global {
     interface BigInt {
@@ -20,3 +23,20 @@ export const currencyIDRFormatter = Intl.NumberFormat('ID', {
     maximumFractionDigits: 0
 })
 
+export const supabase = createClient('', '')
+
+export function toastSuccess(str: string) {
+    toast(str, {
+        autoClose: 1000,
+        type: 'success',
+        position: toast.POSITION.TOP_RIGHT,
+    } as ToastOptions)
+}
+
+export function toastError(str: string) {
+    toast(str, {
+        autoClose: 3000,
+        type: 'error',
+        position: toast.POSITION.TOP_RIGHT,
+    } as ToastOptions)
+}
