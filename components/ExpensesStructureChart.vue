@@ -68,10 +68,10 @@ watch(() => props.transactions, (newVal, _) => {
   data.value = setData(newVal)
 })
 
-const sumOfAmount = computed(() => props.transactions?.reduce((sum: number, n: Transaction) => sum + n.amount, 0))
+const sumOfAmount = computed(() => props.transactions?.filter((val:Transaction) => val.category.name !== 'income').reduce((sum: number, n: Transaction) => sum + n.amount, 0))
 
 function setData(listTrx: Transaction[]): { labels: string[], datasets: Datasets[] } {
-  const groupedTrx = mapValues(groupBy(listTrx, (trx: Transaction) => `${trx.category.id}/${trx.category.name}/${trx.category.color}`), (clist: Transaction[]) => clist.map((trx: Transaction) => omit(trx, `${trx.category.id}/${trx.category.name}/${trx.category.color}`)))
+  const groupedTrx = mapValues(groupBy(listTrx.filter((val:Transaction) => val.category.name !== 'income'), (trx: Transaction) => `${trx.category.id}/${trx.category.name}/${trx.category.color}`), (clist: Transaction[]) => clist.map((trx: Transaction) => omit(trx, `${trx.category.id}/${trx.category.name}/${trx.category.color}`)))
   const keys = Object.keys(groupedTrx)
   const values = Object.values(groupedTrx)
 
