@@ -1,5 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+// @ts-ignore
 export default defineNuxtConfig({
+    // @ts-ignore
     app: {
         head: {
             title: 'Transaction Tracker',
