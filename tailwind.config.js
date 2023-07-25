@@ -45,6 +45,9 @@ module.exports = {
                     500: "#6E6666"
                 }
             },
+            transitionProperty: {
+                'width': 'width'
+            },
             animation: {
                 'spin-once': 'spin 0.35s ease-in-out 1',
                 'fade-in': 'fade-in 0.35s ease-in-out 1',

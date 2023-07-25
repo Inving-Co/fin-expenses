@@ -15,7 +15,10 @@
 
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
-    <expenses-doughnut-chart :transactions="transactions ?? null"/>
+    <div class="w-full gap-4 sm:flex justify-center">
+      <expenses-structure-chart :transactions="transactions ?? null"/>
+      <cash-flow-chart :transactions="transactions ?? null" />
+    </div>
     <div class="sm:flex p-4 justify-center sm:justify-between bg-white dark:bg-gray-900">
       <div class="flex gap-2 justify-center">
         <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
@@ -233,6 +236,7 @@ import {useCurrencyInput} from "vue-currency-input";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import FormSecretPin from "~/components/FormSecretPin.vue";
+import ExpensesStructureChart from "~/components/ExpensesStructureChart.vue";
 
 const valuesFilterDate = ['today', 'this week', 'this month', 'this year', 'yesterday', 'last month']
 
