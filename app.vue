@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-slate-100 " style="height: 100dvh;">
+  <div class="bg-slate-100 " style="height:100%">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>

@@ -1,8 +1,14 @@
 <template>
   <div
-      class="sm:w-1/4 sm:h-1/4 w-full h-full my-8 p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+      class="p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
     <h3 class="font-bold">Cash Flow</h3>
     <div class="flex-grow border-t mt-2 mb-4 border-gray-400"/>
+    <div class="mt-4 text-sm text-gray-500 font-bold dark:text-white">{{
+        capitalizeFirstLetter(labelTime)
+      }}</div>
+    <div class="mb-3 text-2xl text-gray-500 font-bold dark:text-white">{{
+        currencyIDRFormatter.format(sumOfIncomeAmount - sumOfExpenseAmount)
+      }}</div>
     <div class="flex-col">
       <span class="flex justify-between">
       <div class="mb-1 text-sm text-gray-500 font-medium dark:text-white">Income</div>
@@ -43,6 +49,10 @@ const {map, reduce, split} = lodash;
 
 
 const props = defineProps({
+  labelTime: {
+    type: String,
+    required: true,
+  },
   transactions: {
     type: Object as PropType<Transaction[]> || null,
     required: true,

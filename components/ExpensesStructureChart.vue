@@ -2,7 +2,13 @@
   <div
       class="sm:w-1/4 sm:h-1/4 w-full h-full my-8 p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
     <h3 class="font-bold">Expenses Structure</h3>
-    <div class="flex-grow border-t border-gray-400"/>
+    <div class="flex-grow border-t mt-2 mb-4 border-gray-400"/>
+    <div class="mt-4 text-sm text-gray-500 font-bold dark:text-white">{{
+       capitalizeFirstLetter(labelTime)
+      }}</div>
+    <div class="mb-3 text-2xl text-gray-500 font-bold dark:text-white">{{
+        currencyIDRFormatter.format(sumOfAmount)
+      }}</div>
     <Doughnut v-if="data.labels.length > 0" class="my-4" :data="data" :options="{
       responsive: true,
       elements: {
@@ -57,6 +63,10 @@ const data = ref<{ labels: string[], datasets: Datasets[] }>({
 })
 
 const props = defineProps({
+  labelTime: {
+    type: String,
+    required: true,
+  },
   transactions: {
     type: Object as PropType<Transaction[]>,
     required: true,

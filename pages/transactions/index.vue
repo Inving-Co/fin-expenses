@@ -15,9 +15,12 @@
 
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
-    <div class="w-full gap-4 sm:flex justify-center">
-      <expenses-structure-chart :transactions="transactions ?? null"/>
-      <cash-flow-chart :transactions="transactions ?? null"/>
+    <div class="sm:h-1/4 w-full gap-4 sm:flex justify-center">
+      <expenses-structure-chart :label-time="filterDate" :transactions="transactions ?? null"/>
+      <div class="sm:w-1/4 h-full w-full my-8">
+        <cash-flow-chart class="mb-4" :label-time="filterDate" :transactions="transactions ?? null"/>
+        <debt-prcentage-by-income :label-time="filterDate" :transactions="transactions ?? null" />
+      </div>
     </div>
     <div class="sm:flex p-4 justify-center sm:justify-between bg-white dark:bg-gray-900">
       <div class="flex gap-2 justify-center">
@@ -84,7 +87,7 @@
 
       </div>
       <div class="mt-2 sm:mt-0">
-        <label for="table-search" class="sr-only">Search</label>
+        <label for="table-search-transactions" class="sr-only">Search</label>
         <div class="relative">
           <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -237,6 +240,7 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import FormSecretPin from "~/components/FormSecretPin.vue";
 import ExpensesStructureChart from "~/components/ExpensesStructureChart.vue";
+import DebtPrcentageByIncome from "~/components/DebtPrcentageByIncome.vue";
 
 const valuesFilterDate = ['today', 'this week', 'this month', 'this year', 'yesterday', 'last month']
 
