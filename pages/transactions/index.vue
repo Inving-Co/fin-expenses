@@ -8,7 +8,7 @@
 
   <general-modal id="modal-form-input-pin" label="Input Secret PIN" @on-mounted="modalFormSecretPin = $event">
     <template #body>
-      <FormSecretPin @setted="modalFormSecretPin?.hide(); secretPin = $event; refresh()"/>
+      <FormSecretPin @setted="modalFormSecretPin?.hide(); secretPin = $event; refresh();"/>
     </template>
   </general-modal>
 
@@ -17,7 +17,7 @@
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
     <div class="w-full gap-4 sm:flex justify-center">
       <expenses-structure-chart :transactions="transactions ?? null"/>
-      <cash-flow-chart :transactions="transactions ?? null" />
+      <cash-flow-chart :transactions="transactions ?? null"/>
     </div>
     <div class="sm:flex p-4 justify-center sm:justify-between bg-white dark:bg-gray-900">
       <div class="flex gap-2 justify-center">
@@ -261,7 +261,7 @@ onMounted(() => {
   initDropdowns()
 
   onCheckModalSecretPin()
-})
+      .})
 
 const {data: categories}: any = await useFetch('/api/categories', {})
 
@@ -289,6 +289,7 @@ const {
   },
   watch: [startFilterDate, endFilterDate],
 })
+
 
 function onSearchTransactions(value: string) {
   searchKey.value = value;
