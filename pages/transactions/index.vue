@@ -19,7 +19,7 @@
       <expenses-structure-chart :label-time="filterDate" :transactions="transactions ?? null"/>
       <div class="sm:w-1/4 h-full w-full flex-grow justify-between mt-4 sm:mt-0">
         <cash-flow-chart class="mb-4" :label-time="filterDate" :transactions="transactions ?? null"/>
-        <debt-prcentage-by-income :label-time="filterDate" :transactions="transactions ?? null" />
+        <debt-percentage-by-income :label-time="filterDate" :transactions="transactions ?? null" />
       </div>
     </div>
     <div class="sm:flex p-4 justify-center sm:justify-between bg-white dark:bg-gray-900">
@@ -240,7 +240,7 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import FormSecretPin from "~/components/FormSecretPin.vue";
 import ExpensesStructureChart from "~/components/ExpensesStructureChart.vue";
-import DebtPrcentageByIncome from "~/components/DebtPrcentageByIncome.vue";
+import DebtPercentageByIncome from "~/components/DebtPercentageByIncome.vue";
 
 const valuesFilterDate = ['today', 'this week', 'this month', 'this year', 'yesterday', 'last month']
 
@@ -273,6 +273,11 @@ definePageMeta({
 
 
 const {data: categories}: any = await useFetch('/api/categories', {})
+
+const {data: circles}: any = await useFetch('/api/circles', {query: {key: ''},
+  onResponse: (context) => {
+    console.log(context.response)
+  },} )
 
 const {
   data: transactions,

@@ -42,7 +42,7 @@
 <script setup lang="ts">
 import {supabase} from "~/utils/functions";
 import { toast } from 'vue3-toastify';
-import {navigateTo, useNuxtApp} from "#app";
+import {navigateTo, useCookie, useNuxtApp} from "#app";
 const email = ref<string>('localhost.schilling141@passmail.net')
 const password = ref<string>('')
 
@@ -59,6 +59,13 @@ async function onSubmitLogin() {
   if(error) {
     toast.error(error.message);
   } else {
+    const {data: result, status} = await useFetch(`/api/users/${data.user?.id}`, {
+      method: 'POST',
+      query: {
+        email: data.user?.email
+      }
+    })
+    useCookie('user-id').value = `${result.value?.id}`
     navigateTo('/transactions')
   }
 

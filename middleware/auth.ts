@@ -16,7 +16,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             refresh_token: refreshToken.value
         })
     } else {
-        // make sure you handle this case!
         return navigateTo('/login')
     }
 // // returns user information
