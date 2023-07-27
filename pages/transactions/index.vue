@@ -267,6 +267,11 @@ onMounted(() => {
   onCheckModalSecretPin()
 })
 
+definePageMeta({
+  middleware: ['auth']
+})
+
+
 const {data: categories}: any = await useFetch('/api/categories', {})
 
 const {

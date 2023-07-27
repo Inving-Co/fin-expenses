@@ -24,19 +24,3 @@ export const currencyIDRFormatter = Intl.NumberFormat('ID', {
 })
 
 export const supabase = createClient('https://xoixclvjgysqxybilnfk.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvaXhjbHZqZ3lzcXh5YmlsbmZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTAyOTc1ODUsImV4cCI6MjAwNTg3MzU4NX0.7gRNtgPyHUmPY16Ds0OxWLYsG3owwplJEXb3nlLc48Y')
-
-export function toastSuccess(str: string) {
-    toast(str, {
-        autoClose: 1000,
-        type: 'success',
-        position: toast.POSITION.TOP_RIGHT,
-    } as ToastOptions)
-}
-
-export function toastError(str: string) {
-    toast(str, {
-        autoClose: 3000,
-        type: 'error',
-        position: toast.POSITION.TOP_RIGHT,
-    } as ToastOptions)
-}
