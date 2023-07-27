@@ -14,6 +14,29 @@ model Users {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   transactions Transactions[]
+  circles      Circles[]
+  circleUsers  CircleUsers[]
+}
+
+model Circles {
+    id          Int        @id @default(autoincrement())
+    name        String
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
+    userId      Int?
+    user        Users?     @relation(fields: [userId], references: [id])
+    transactions Transactions[]
+    circleUsers CircleUsers[]
+}
+
+model CircleUsers {
+    id          Int        @id @default(autoincrement())
+    userId      Int?
+    user        Users?     @relation(fields: [userId], references: [id])
+    circleId    Int?
+    circle      Circles?   @relation(fields: [circleId], references: [id])
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
 }
 
 model Transactions {
@@ -23,10 +46,12 @@ model Transactions {
   date        DateTime
   categoryId  Int
   createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  updatedAt   DateTime   @default(now()) @updatedAt
   userId      Int?
   category    Categories @relation(fields: [categoryId], references: [id])
   user        Users?     @relation(fields: [userId], references: [id])
+  circleId    Int?
+  circle      Circles?   @relation(fields: [circleId], references: [id])
 }
 
 model Categories {

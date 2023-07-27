@@ -70,6 +70,19 @@ async function onSubmitRegister() {
       throw error.message
     }
 
+    const {data: result, status} = await useFetch('/api/users/create.user', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: email.value
+      })
+    })
+
+    if (status.value === 'success') {
+      email.value = ''
+      password.value = ''
+      passwordConf.value = ''
+    }
+
     toast.success('Register success, please check your email.')
     navigateTo('/login')
   } catch (e: any) {

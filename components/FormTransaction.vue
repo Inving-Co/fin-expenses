@@ -54,7 +54,6 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import {useCurrencyInput} from 'vue-currency-input'
 import {watchDebounced} from "@vueuse/shared";
 import {EditableTransaction, Transaction} from "~/utils/types";
-import CircularIndicator from "~/components/icons/CircularIndicator.vue";
 
 const isLoadingSubmit = ref<boolean>(false)
 
