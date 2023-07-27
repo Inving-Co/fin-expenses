@@ -40,8 +40,10 @@
 </template>
 
 <script setup lang="ts">
-import {supabase, toastError} from "~/utils/functions";
-const email = ref<string>('')
+import {supabase} from "~/utils/functions";
+import { toast } from 'vue3-toastify';
+import {navigateTo, useNuxtApp} from "#app";
+const email = ref<string>('localhost.schilling141@passmail.net')
 const password = ref<string>('')
 
 const isLoadingSubmit = ref<boolean>(false)
@@ -55,8 +57,11 @@ async function onSubmitLogin() {
   })
 
   if(error) {
-    toastError(error.message)
+    toast.error(error.message);
+  } else {
+    navigateTo('/transactions')
   }
+
 
   isLoadingSubmit.value = false
 }

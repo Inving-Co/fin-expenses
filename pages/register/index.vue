@@ -41,7 +41,9 @@
 </template>
 
 <script setup lang="ts">
-import {supabase, toastError} from "~/utils/functions";
+import {supabase} from "~/utils/functions";
+import { toast } from 'vue3-toastify';
+import {navigateTo} from "#app";
 const email = ref<string>('')
 const password = ref<string>('')
 const passwordConf = ref<string>('')
@@ -60,16 +62,19 @@ async function onSubmitRegister() {
       email: email.value,
       password: password.value,
       options: {
-        emailRedirectTo: 'http://localhost:3000/login'
+        emailRedirectTo: `https://${useRuntimeConfig().NODE_ENV}/login`
       }
     })
 
     if(error) {
       throw error.message
     }
+
+    toast.success('Register success, please check your email.')
+    navigateTo('/login')
   } catch (e: any) {
     if(typeof(e) === "string") {
-      toastError(e)
+      toast.error(e)
     }
   }
 

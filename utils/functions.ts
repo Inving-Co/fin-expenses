@@ -24,19 +24,3 @@ export const currencyIDRFormatter = Intl.NumberFormat('ID', {
 })
 
 export const supabase = createClient('', '')
-
-export function toastSuccess(str: string) {
-    toast(str, {
-        autoClose: 1000,
-        type: 'success',
-        position: toast.POSITION.TOP_RIGHT,
-    } as ToastOptions)
-}
-
-export function toastError(str: string) {
-    toast(str, {
-        autoClose: 3000,
-        type: 'error',
-        position: toast.POSITION.TOP_RIGHT,
-    } as ToastOptions)
-}
