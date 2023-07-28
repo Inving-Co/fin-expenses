@@ -435,6 +435,8 @@ async function onSignOut() {
 
   await supabase.auth.signOut()
 
+  useCookie('user-id').value = undefined
+
   navigateTo('/login')
 }
 
