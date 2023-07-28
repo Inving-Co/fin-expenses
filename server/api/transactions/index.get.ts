@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
 
     const cookies = parseCookies(event)
     const userId =  +cookies['user-id'] as number | undefined
+    console.log(cookies['user-id'])
 
     return getTransactions(key as string, {start: startDate as string, end: endDate as string}, userId)
 })

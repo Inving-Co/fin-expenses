@@ -61,7 +61,7 @@ import {supabase} from "~/utils/functions";
 import {toast} from 'vue3-toastify';
 import {navigateTo, useCookie, useNuxtApp} from "#app";
 
-const email = ref<string>('localhost.schilling141@passmail.net')
+const email = ref<string>('')
 const password = ref<string>('')
 
 const isLoadingSubmit = ref<boolean>(false)
@@ -86,7 +86,6 @@ async function onSubmitLogin() {
     useCookie('user-id', {
       secure: true,
       sameSite: 'lax',
-      httpOnly: true,
     }).value = `${result.value?.id}`
     navigateTo('/transactions')
   }
