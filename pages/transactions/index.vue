@@ -22,8 +22,9 @@
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
     <div class="flex justify-end">
-      <button class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-              type="button" @click="onSignOut">
+      <button
+          class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+          type="button" @click="onSignOut">
         <span class="sr-only">Sign Out</span>
         Sign Out
       </button>
@@ -97,6 +98,18 @@
             </li>
           </ul>
         </div>
+
+
+        <button
+            class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+            type="button" @click="refreshTrx">
+          <span class="sr-only">Refresh</span>
+          Refresh
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="currentColor"
+                  d="M17.65 6.35a7.95 7.95 0 0 0-6.48-2.31c-3.67.37-6.69 3.35-7.1 7.02C3.52 15.91 7.27 20 12 20a7.98 7.98 0 0 0 7.21-4.56c.32-.67-.16-1.44-.9-1.44c-.37 0-.72.2-.88.53a5.994 5.994 0 0 1-6.8 3.31c-2.22-.49-4.01-2.3-4.48-4.52A6.002 6.002 0 0 1 12 6c1.66 0 3.14.69 4.22 1.78l-1.51 1.51c-.63.63-.19 1.71.7 1.71H19c.55 0 1-.45 1-1V6.41c0-.89-1.08-1.34-1.71-.71l-.64.65z"/>
+          </svg>
+        </button>
 
       </div>
       <div class="mt-2 sm:mt-0">
@@ -316,7 +329,7 @@ const {
       toast.error(context.response.statusText);
     }
 
-    if(context.response.status === 200) {
+    if (context.response.status === 200) {
       if (circles.value.length === 0) {
         modalFormCircle?.show()
       }

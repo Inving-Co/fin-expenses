@@ -74,7 +74,9 @@ const props = defineProps({
 })
 
 onMounted(() => {
-  data.value = setData(props.transactions)
+  if (props.transactions) {
+    data.value = setData(props.transactions)
+  }
 })
 
 watch(() => props.transactions, (newVal, _) => {
