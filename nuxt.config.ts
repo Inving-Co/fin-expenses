@@ -14,7 +14,7 @@ export default defineNuxtConfig({
     },
     ssr: true,
     target: 'server',
-    router: { middleware: [] },
+    // router: { middleware: [] },
     devtools: {enabled: true},
     modules: ['@nuxtjs/tailwindcss'],
     build: {

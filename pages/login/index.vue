@@ -66,6 +66,10 @@ const password = ref<string>('')
 
 const isLoadingSubmit = ref<boolean>(false)
 
+definePageMeta({
+  middleware: ['guest']
+})
+
 async function onSubmitLogin() {
   isLoadingSubmit.value = true
 
