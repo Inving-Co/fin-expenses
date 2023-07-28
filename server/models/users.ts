@@ -7,3 +7,16 @@ export async function createUser(email: string) {
         }
     });
 }
+
+export async function getDetailUser(id: number | undefined, email: string | undefined) {
+    return prisma.users.findFirst({
+        where: {
+            id: {
+                equals: id
+            },
+            email: {
+                equals: email
+            }
+        }
+    });
+}
