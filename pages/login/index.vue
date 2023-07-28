@@ -65,7 +65,11 @@ async function onSubmitLogin() {
         email: data.user?.email
       }
     })
-    useCookie('user-id').value = `${result.value?.id}`
+    useCookie('user-id', {
+      secure: true,
+      sameSite: 'lax',
+      httpOnly: true,
+    }).value = `${result.value?.id}`
     navigateTo('/transactions')
   }
 
