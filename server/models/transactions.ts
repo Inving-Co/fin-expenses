@@ -20,7 +20,7 @@ export async function deleteTransaction(trxId: number, userId: number | undefine
     return prisma.transactions.delete({where: {id: trxId, userId}})
 }
 
-export async function getTransactions(key: string, dateFilter: { start: string, end: string }, userId: number | undefined) {
+export async function getTransactions(key: string, dateFilter: { start: string, end: string }, userId: number | undefined, categoryIds: number[] | undefined) {
     return prisma.transactions.findMany({
         where: {
             description: {
@@ -30,7 +30,10 @@ export async function getTransactions(key: string, dateFilter: { start: string, 
                 gte: new Date(dateFilter.start),
                 lte: new Date(dateFilter.end),
             },
-            userId
+            userId,
+            categoryId: {
+                in: categoryIds ?? [-1]
+            }
         },
         orderBy: {
             date: 'desc'
