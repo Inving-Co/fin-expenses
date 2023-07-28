@@ -25,8 +25,8 @@
       <button
           class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
           type="button" @click="onSignOut">
-        <span class="sr-only">Sign Out</span>
-        Sign Out
+        <span class="sr-only">{{isLoggedIn ? 'Sign Out': 'Back to Login' }}</span>
+        {{isLoggedIn ? 'Sign Out': 'Back to Login' }}
       </button>
     </div>
     <div class="max-h-1/4 w-full gap-4 sm:flex justify-center my-8">
@@ -277,8 +277,8 @@ const filterDate = ref<string>('this month')
 const secretPin = ref<string>('')
 const startFilterDate = ref<string>(format(startOfMonth(new Date()), 'yyyy-MM-dd HH:mm'))
 const endFilterDate = ref<string>(format(endOfToday(), 'yyyy-MM-dd HH:mm'))
-
 const selectedTransaction = ref<EditableTransaction | null>(null)
+const isLoggedIn = ref<boolean>(false)
 
 const {inputRef} = useCurrencyInput({
   currency: 'IDR',
@@ -294,10 +294,8 @@ onMounted(() => {
   initDropdowns()
 
   // onCheckModalSecretPin()
-})
 
-definePageMeta({
-  // middleware: ['auth']
+  isLoggedIn.value = useCookie('user-id').value !== undefined
 })
 
 
