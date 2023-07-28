@@ -25,19 +25,20 @@
       <button
           class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
           type="button" @click="onSignOut">
-        <span class="sr-only">{{isLoggedIn ? 'Sign Out': 'Back to Login' }}</span>
-        {{isLoggedIn ? 'Sign Out': 'Back to Login' }}
+        <span class="sr-only">{{ isLoggedIn ? 'Sign Out' : 'Back to Login' }}</span>
+        {{ isLoggedIn ? 'Sign Out' : 'Back to Login' }}
       </button>
     </div>
     <div class="max-h-1/4 w-full gap-4 sm:flex justify-center my-8">
-      <expenses-structure-chart :label-time="filterDate" :transactions="transactions ?? null"/>
-      <div class="sm:w-1/4 h-full w-full flex-grow justify-between mt-4 sm:mt-0">
+      <expenses-structure-chart class="sm:w-1/2 md:w-1/4 w-full" :label-time="filterDate"
+                                :transactions="transactions ?? null"/>
+      <div class="sm:w-1/2 md:w-1/ h-full w-full flex-grow justify-between mt-4 sm:mt-0">
         <cash-flow-chart class="mb-4" :label-time="filterDate" :transactions="transactions ?? null"/>
         <debt-percentage-by-income :label-time="filterDate" :transactions="transactions ?? null"/>
       </div>
     </div>
     <div class="sm:flex p-4 justify-center sm:justify-between bg-white dark:bg-gray-900">
-      <div class="flex gap-2 justify-center">
+      <div class="flex flex-wrap gap-2 justify-center">
         <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
                 class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                 type="button">
@@ -99,6 +100,43 @@
           </ul>
         </div>
 
+        <button id="dropdownFilterCategoryButton" data-dropdown-toggle="dropdownFilterCategory"
+                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                type="button">
+          <span class="sr-only">Category</span>
+          Category
+          <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+               viewBox="0 0 10 6">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m1 1 4 4 4-4"/>
+          </svg>
+        </button>
+        <!-- Dropdown menu -->
+        <div id="dropdownFilterCategory"
+             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+          <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownFilterCategoryButton">
+            <li v-for="(category, index) of categories">
+              <div class="flex items-center px-2 py-1">
+                <input :id="`${category.id}-category-checkbox`" type="checkbox" :value="category.id"
+                       :checked="category.checked"
+                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                       @click="categories[index].checked = $event.target.checked; setCategoriesFilter()">
+                <label :for="`${category.id}-category-checkbox`"
+                       class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{
+                    capitalizeFirstLetter(category.name)
+                  }}</label>
+              </div>
+            </li>
+            <li>
+              <button
+                  class="w-full mt-2 text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                  type="button" @click="onClearSelectedCategories">
+                <span class="sr-only">{{ isHasChecked ? 'Clear' : 'Select All' }}</span>
+                {{ isHasChecked ? 'Clear' : 'Select All' }}
+              </button>
+            </li>
+          </ul>
+        </div>
 
         <button
             class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
@@ -132,9 +170,9 @@
          class="fixed flex text-2xl justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 bg-black bg-opacity-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">
       Loading data...
     </div>
-    <div>
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg" style="height: 500px !important">
       <table v-if="!$isMobile()" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 sticky top-0 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
           <th scope="col" class="px-6 py-3">
             Date
@@ -150,8 +188,9 @@
           </th>
         </tr>
         </thead>
-        <tbody>
-        <tr v-for="trx in transactions" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+        <tbody class="overflow-y-scroll">
+        <tr v-for="trx in transactions"
+            class="bg-white hover:bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700"
             v-on:dblclick="onDoubleClickRow(trx)"
             v-on:keydown.esc="trx.isEditMode = false; selectedTransaction = null">
           <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -259,7 +298,7 @@ import {
   subMonths
 } from 'date-fns'
 import {capitalizeFirstLetter, currencyIDRFormatter, supabase} from "~/utils/functions";
-import {EditableTransaction, ElementEvent, Transaction} from "~/utils/types";
+import {Category, EditableTransaction, ElementEvent, Transaction} from "~/utils/types";
 import FormTransaction from "~/components/FormTransaction.vue";
 import {useCurrencyInput} from "vue-currency-input";
 import VueDatePicker from '@vuepic/vue-datepicker';
@@ -277,6 +316,7 @@ const filterDate = ref<string>('this month')
 const secretPin = ref<string>('')
 const startFilterDate = ref<string>(format(startOfMonth(new Date()), 'yyyy-MM-dd HH:mm'))
 const endFilterDate = ref<string>(format(endOfToday(), 'yyyy-MM-dd HH:mm'))
+const categoryFilter = ref<string[]>([])
 const selectedTransaction = ref<EditableTransaction | null>(null)
 const isLoggedIn = ref<boolean>(false)
 
@@ -293,9 +333,9 @@ let modalFormCircle: ElementEvent | null = null
 onMounted(() => {
   initDropdowns()
 
-  // onCheckModalSecretPin()
-
   isLoggedIn.value = useCookie('user-id').value !== undefined
+
+  setCategoriesFilter()
 })
 
 
@@ -315,7 +355,7 @@ const {
     key: searchKey,
     startDate: startFilterDate,
     endDate: endFilterDate,
-    secretPin: secretPin
+    categoryIds: categoryFilter
   },
   immediate: true,
   server: false,
@@ -333,7 +373,7 @@ const {
       }
     }
   },
-  watch: [startFilterDate, endFilterDate],
+  watch: [startFilterDate, endFilterDate, categoryFilter],
 })
 
 
@@ -438,6 +478,26 @@ function onPinSetup(event: string) {
   modalFormSecretPin?.hide();
   secretPin.value = event;
   refreshTrx();
+}
+
+function setCategoriesFilter() {
+  categoryFilter.value = categories.value.filter((cat: Category) => cat.checked).map((cat: Category) => cat.id);
+}
+
+const isHasChecked = computed(() => categories.value.filter((cat: Category) => cat.checked).length > 0);
+
+function onClearSelectedCategories() {
+
+  const isChecked = isHasChecked.value
+
+  for (let i = 0; i < categories.value.length; i++) {
+    // need for initial load data is checked
+    // @ts-ignore
+    categories.value[i].checked = !isChecked;
+  }
+
+
+  setCategoriesFilter()
 }
 
 

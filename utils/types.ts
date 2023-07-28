@@ -29,4 +29,6 @@ export interface Category {
     color?: string
     createdAt: string
     updatedAt: string
+
+    checked?: boolean
 }
