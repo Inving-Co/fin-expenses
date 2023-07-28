@@ -272,11 +272,11 @@ let modalFormCircle: ElementEvent | null = null
 onMounted(() => {
   initDropdowns()
 
-  onCheckModalSecretPin()
+  // onCheckModalSecretPin()
 })
 
 definePageMeta({
-  middleware: ['auth']
+  // middleware: ['auth']
 })
 
 
