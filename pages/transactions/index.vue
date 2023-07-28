@@ -21,6 +21,13 @@
 
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
+    <div class="flex justify-end">
+      <button class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+              type="button" @click="onSignOut">
+        <span class="sr-only">Sign Out</span>
+        Sign Out
+      </button>
+    </div>
     <div class="max-h-1/4 w-full gap-4 sm:flex justify-center my-8">
       <expenses-structure-chart :label-time="filterDate" :transactions="transactions ?? null"/>
       <div class="sm:w-1/4 h-full w-full flex-grow justify-between mt-4 sm:mt-0">
@@ -238,7 +245,7 @@ import {
   startOfYesterday,
   subMonths
 } from 'date-fns'
-import {capitalizeFirstLetter, currencyIDRFormatter} from "~/utils/functions";
+import {capitalizeFirstLetter, currencyIDRFormatter, supabase} from "~/utils/functions";
 import {EditableTransaction, ElementEvent, Transaction} from "~/utils/types";
 import FormTransaction from "~/components/FormTransaction.vue";
 import {useCurrencyInput} from "vue-currency-input";
@@ -248,6 +255,7 @@ import FormSecretPin from "~/components/FormSecretPin.vue";
 import ExpensesStructureChart from "~/components/ExpensesStructureChart.vue";
 import DebtPercentageByIncome from "~/components/DebtPercentageByIncome.vue";
 import {toast} from "vue3-toastify";
+import {navigateTo} from "#app";
 
 const valuesFilterDate = ['today', 'this week', 'this month', 'this year', 'yesterday', 'last month']
 
@@ -419,6 +427,15 @@ function onPinSetup(event: string) {
   modalFormSecretPin?.hide();
   secretPin.value = event;
   refreshTrx();
+}
+
+
+async function onSignOut() {
+  localStorage.clear()
+
+  await supabase.auth.signOut()
+
+  navigateTo('/login')
 }
 
 </script>
