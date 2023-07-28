@@ -1,14 +1,20 @@
 <template>
   <general-modal id="modal-form-transaction" label="Form Transaction" @on-mounted="modalFormTransaction = $event">
     <template #body>
-      <FormTransaction :transaction="selectedTransaction"
-                       @on-success="modalFormTransaction?.hide(); refresh(); selectedTransaction.value = null"/>
+      <form-transaction :transaction="selectedTransaction"
+                        @on-success="modalFormTransaction?.hide(); refreshTrx(); selectedTransaction.value = null"/>
     </template>
   </general-modal>
 
   <general-modal id="modal-form-input-pin" label="Input Secret PIN" @on-mounted="modalFormSecretPin = $event">
     <template #body>
-      <FormSecretPin @setted="modalFormSecretPin?.hide(); secretPin = $event; refresh();"/>
+      <form-secret-pin @setted="onPinSetup"/>
+    </template>
+  </general-modal>
+
+  <general-modal id="modal-form-circle" label="Create Circle" @on-mounted="modalFormCircle = $event">
+    <template #body>
+      <form-circle @on-success="modalFormCircle?.hide(); refreshCircles(); refreshTrx();"/>
     </template>
   </general-modal>
 
@@ -19,7 +25,7 @@
       <expenses-structure-chart :label-time="filterDate" :transactions="transactions ?? null"/>
       <div class="sm:w-1/4 h-full w-full flex-grow justify-between mt-4 sm:mt-0">
         <cash-flow-chart class="mb-4" :label-time="filterDate" :transactions="transactions ?? null"/>
-        <debt-percentage-by-income :label-time="filterDate" :transactions="transactions ?? null" />
+        <debt-percentage-by-income :label-time="filterDate" :transactions="transactions ?? null"/>
       </div>
     </div>
     <div class="sm:flex p-4 justify-center sm:justify-between bg-white dark:bg-gray-900">
@@ -241,6 +247,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import FormSecretPin from "~/components/FormSecretPin.vue";
 import ExpensesStructureChart from "~/components/ExpensesStructureChart.vue";
 import DebtPercentageByIncome from "~/components/DebtPercentageByIncome.vue";
+import {toast} from "vue3-toastify";
 
 const valuesFilterDate = ['today', 'this week', 'this month', 'this year', 'yesterday', 'last month']
 
@@ -260,6 +267,7 @@ const {inputRef} = useCurrencyInput({
 
 let modalFormTransaction: ElementEvent | null = null
 let modalFormSecretPin: ElementEvent | null = null
+let modalFormCircle: ElementEvent | null = null
 
 onMounted(() => {
   initDropdowns()
@@ -274,16 +282,13 @@ definePageMeta({
 
 const {data: categories}: any = await useFetch('/api/categories', {})
 
-const {data: circles}: any = await useFetch('/api/circles', {query: {key: ''},
-  onResponse: (context) => {
-    console.log(context.response)
-  },} )
+const {data: circles, refresh: refreshCircles}: any = await useFetch('/api/circles', {query: {key: ''}})
 
 const {
   data: transactions,
   error: errorFetchTransactions,
   pending: isLoading,
-  refresh,
+  refresh: refreshTrx,
 }: any = await useFetch<{
   data: Transaction[]
 }>('/api/transactions', {
@@ -299,6 +304,14 @@ const {
     if (context.response.status === 401) {
       localStorage.clear()
       setTimeout(() => onCheckModalSecretPin(), 150)
+
+      toast.error(context.response.statusText);
+    }
+
+    if(context.response.status === 200) {
+      if (circles.value.length === 0) {
+        modalFormCircle?.show()
+      }
     }
   },
   watch: [startFilterDate, endFilterDate],
@@ -349,7 +362,7 @@ async function onDelete(trxId: number) {
   if (status.value === 'success') {
     selectedTransaction.value = null
 
-    refresh()
+    refreshTrx()
   }
 }
 
@@ -372,7 +385,7 @@ async function onUpdate() {
     if (status.value === 'success') {
       selectedTransaction.value = null
 
-      refresh()
+      refreshTrx()
     }
   }
 }
@@ -400,6 +413,12 @@ function onCheckModalSecretPin() {
   } else {
     secretPin.value = $secretPin
   }
+}
+
+function onPinSetup(event: string) {
+  modalFormSecretPin?.hide();
+  secretPin.value = event;
+  refreshTrx();
 }
 
 </script>
