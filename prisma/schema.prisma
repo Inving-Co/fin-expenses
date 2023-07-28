@@ -13,30 +13,30 @@ model Users {
   name         String?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
-  transactions Transactions[]
-  circles      Circles[]
   circleUsers  CircleUsers[]
+  circles      Circles[]
+  transactions Transactions[]
 }
 
 model Circles {
-    id          Int        @id @default(autoincrement())
-    name        String
-    createdAt   DateTime   @default(now())
-    updatedAt   DateTime   @updatedAt
-    userId      Int?
-    user        Users?     @relation(fields: [userId], references: [id])
-    transactions Transactions[]
-    circleUsers CircleUsers[]
+  id           Int            @id @default(autoincrement())
+  name         String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  userId       Int?
+  circleUsers  CircleUsers[]
+  user         Users?         @relation(fields: [userId], references: [id])
+  transactions Transactions[]
 }
 
 model CircleUsers {
-    id          Int        @id @default(autoincrement())
-    userId      Int?
-    user        Users?     @relation(fields: [userId], references: [id])
-    circleId    Int?
-    circle      Circles?   @relation(fields: [circleId], references: [id])
-    createdAt   DateTime   @default(now())
-    updatedAt   DateTime   @updatedAt
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  circleId  Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  circle    Circles? @relation(fields: [circleId], references: [id])
+  user      Users?   @relation(fields: [userId], references: [id])
 }
 
 model Transactions {
@@ -48,10 +48,10 @@ model Transactions {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @default(now()) @updatedAt
   userId      Int?
-  category    Categories @relation(fields: [categoryId], references: [id])
-  user        Users?     @relation(fields: [userId], references: [id])
   circleId    Int?
+  category    Categories @relation(fields: [categoryId], references: [id])
   circle      Circles?   @relation(fields: [circleId], references: [id])
+  user        Users?     @relation(fields: [userId], references: [id])
 }
 
 model Categories {

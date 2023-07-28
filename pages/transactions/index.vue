@@ -1,25 +1,38 @@
 <template>
   <general-modal id="modal-form-transaction" label="Form Transaction" @on-mounted="modalFormTransaction = $event">
     <template #body>
-      <FormTransaction :transaction="selectedTransaction"
-                       @on-success="modalFormTransaction?.hide(); refresh(); selectedTransaction.value = null"/>
+      <form-transaction :transaction="selectedTransaction"
+                        @on-success="modalFormTransaction?.hide(); refreshTrx(); selectedTransaction.value = null"/>
     </template>
   </general-modal>
 
   <general-modal id="modal-form-input-pin" label="Input Secret PIN" @on-mounted="modalFormSecretPin = $event">
     <template #body>
-      <FormSecretPin @setted="modalFormSecretPin?.hide(); secretPin = $event; refresh();"/>
+      <form-secret-pin @setted="onPinSetup"/>
+    </template>
+  </general-modal>
+
+  <general-modal id="modal-form-circle" label="Create Circle" @on-mounted="modalFormCircle = $event">
+    <template #body>
+      <form-circle @on-success="modalFormCircle?.hide(); refreshCircles(); refreshTrx();"/>
     </template>
   </general-modal>
 
 
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
+    <div class="flex justify-end">
+      <button class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+              type="button" @click="onSignOut">
+        <span class="sr-only">Sign Out</span>
+        Sign Out
+      </button>
+    </div>
     <div class="max-h-1/4 w-full gap-4 sm:flex justify-center my-8">
       <expenses-structure-chart :label-time="filterDate" :transactions="transactions ?? null"/>
       <div class="sm:w-1/4 h-full w-full flex-grow justify-between mt-4 sm:mt-0">
         <cash-flow-chart class="mb-4" :label-time="filterDate" :transactions="transactions ?? null"/>
-        <debt-prcentage-by-income :label-time="filterDate" :transactions="transactions ?? null" />
+        <debt-percentage-by-income :label-time="filterDate" :transactions="transactions ?? null"/>
       </div>
     </div>
     <div class="sm:flex p-4 justify-center sm:justify-between bg-white dark:bg-gray-900">
@@ -232,7 +245,7 @@ import {
   startOfYesterday,
   subMonths
 } from 'date-fns'
-import {capitalizeFirstLetter, currencyIDRFormatter} from "~/utils/functions";
+import {capitalizeFirstLetter, currencyIDRFormatter, supabase} from "~/utils/functions";
 import {EditableTransaction, ElementEvent, Transaction} from "~/utils/types";
 import FormTransaction from "~/components/FormTransaction.vue";
 import {useCurrencyInput} from "vue-currency-input";
@@ -240,7 +253,9 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import FormSecretPin from "~/components/FormSecretPin.vue";
 import ExpensesStructureChart from "~/components/ExpensesStructureChart.vue";
-import DebtPrcentageByIncome from "~/components/DebtPrcentageByIncome.vue";
+import DebtPercentageByIncome from "~/components/DebtPercentageByIncome.vue";
+import {toast} from "vue3-toastify";
+import {navigateTo} from "#app";
 
 const valuesFilterDate = ['today', 'this week', 'this month', 'this year', 'yesterday', 'last month']
 
@@ -260,25 +275,28 @@ const {inputRef} = useCurrencyInput({
 
 let modalFormTransaction: ElementEvent | null = null
 let modalFormSecretPin: ElementEvent | null = null
+let modalFormCircle: ElementEvent | null = null
 
 onMounted(() => {
   initDropdowns()
 
-  onCheckModalSecretPin()
+  // onCheckModalSecretPin()
 })
 
 definePageMeta({
-  middleware: ['auth']
+  // middleware: ['auth']
 })
 
 
 const {data: categories}: any = await useFetch('/api/categories', {})
 
+const {data: circles, refresh: refreshCircles}: any = await useFetch('/api/circles', {query: {key: ''}})
+
 const {
   data: transactions,
   error: errorFetchTransactions,
   pending: isLoading,
-  refresh,
+  refresh: refreshTrx,
 }: any = await useFetch<{
   data: Transaction[]
 }>('/api/transactions', {
@@ -294,6 +312,14 @@ const {
     if (context.response.status === 401) {
       localStorage.clear()
       setTimeout(() => onCheckModalSecretPin(), 150)
+
+      toast.error(context.response.statusText);
+    }
+
+    if(context.response.status === 200) {
+      if (circles.value.length === 0) {
+        modalFormCircle?.show()
+      }
     }
   },
   watch: [startFilterDate, endFilterDate],
@@ -344,7 +370,7 @@ async function onDelete(trxId: number) {
   if (status.value === 'success') {
     selectedTransaction.value = null
 
-    refresh()
+    refreshTrx()
   }
 }
 
@@ -367,7 +393,7 @@ async function onUpdate() {
     if (status.value === 'success') {
       selectedTransaction.value = null
 
-      refresh()
+      refreshTrx()
     }
   }
 }
@@ -395,6 +421,21 @@ function onCheckModalSecretPin() {
   } else {
     secretPin.value = $secretPin
   }
+}
+
+function onPinSetup(event: string) {
+  modalFormSecretPin?.hide();
+  secretPin.value = event;
+  refreshTrx();
+}
+
+
+async function onSignOut() {
+  localStorage.clear()
+
+  await supabase.auth.signOut()
+
+  navigateTo('/login')
 }
 
 </script>
