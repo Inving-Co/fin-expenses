@@ -55,7 +55,6 @@ import {useCurrencyInput} from 'vue-currency-input'
 import {watchDebounced} from "@vueuse/shared";
 import {EditableTransaction, Transaction} from "~/utils/types";
 
-const isLoadingSubmit = ref<boolean>(false)
 
 const props = defineProps({
   transaction: {
@@ -63,6 +62,7 @@ const props = defineProps({
   },
 })
 
+const isLoadingSubmit = ref<boolean>(false)
 const formTransaction = ref<{
   description: string,
   amount: number | null,
