@@ -1,13 +1,14 @@
 <template>
-  <div class="inline-flex justify-end">
+  <div>
     <slot name="trigger" :activator="() => { toggleDropdown(!isVisible); emit('on-trigger-click') }"/>
-
-    <div :id="`${props.id}-background`" class="fixed bg-transparent z-10 hidden left-0 right-0 bottom-0 top-0"
-         @click="toggleDropdown(false)"/>
-    <div
-        :id="props.id"
-        class="z-20 mt-10 hidden bg-white absolute divide-y divide-gray-100 rounded-lg shadow w-18 dark:bg-gray-700 dark:divide-gray-600">
-      <slot name="content" :activator="() => { toggleDropdown(!isVisible); }"/>
+    <div :id="`${props.id}-wrapper-dropdown`" class="flex">
+      <div :id="`${props.id}-background`" class="fixed bg-transparent z-10 hidden left-0 right-0 bottom-0 top-0"
+           @click="toggleDropdown(false)"/>
+      <div
+          :id="props.id"
+          class="z-20 hidden bg-white absolute divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
+        <slot name="content" :activator="() => { toggleDropdown(!isVisible); }"/>
+      </div>
     </div>
   </div>
 </template>
@@ -59,10 +60,20 @@ const toggleDropdown = (value: boolean) => {
     )
     $dropdownBackground?.classList.add('hidden')
   }
+  let $wrapper: HTMLElement | null = document.getElementById(`${props.id}-wrapper-dropdown`)
+
+  const $isOverflow = isOverflownX($wrapper?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement as any)
+
+  if($isOverflow) {
+    $wrapper?.classList.toggle('justify-end')
+  }
 
   isVisible.value = value
 }
 
+function isOverflownX(element: HTMLElement) {
+  return element.scrollWidth > element.clientWidth;
+}
 
 </script>
 
