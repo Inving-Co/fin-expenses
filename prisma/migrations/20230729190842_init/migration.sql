@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "Users" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "email" TEXT NOT NULL,
     "name" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -11,7 +11,7 @@ CREATE TABLE "Users" (
 
 -- CreateTable
 CREATE TABLE "Circles" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -22,7 +22,7 @@ CREATE TABLE "Circles" (
 
 -- CreateTable
 CREATE TABLE "CircleUsers" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "userId" UUID,
     "circleId" UUID,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -33,8 +33,8 @@ CREATE TABLE "CircleUsers" (
 
 -- CreateTable
 CREATE TABLE "Transactions" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
-    "amount" BIGINT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "amount" INTEGER NOT NULL,
     "description" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
     "categoryId" UUID NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE "Transactions" (
 
 -- CreateTable
 CREATE TABLE "Categories" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
     "color" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
