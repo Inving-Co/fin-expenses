@@ -1,8 +1,8 @@
 <template>
   <div>
     <div>
-      <label for="Secret PIN" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Secret PIN</label>
-      <input v-model="secretPin" ref="inputRef" name="Secret PIN"
+      <label for="secret-pin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Secret PIN</label>
+      <input v-model="secretPin" ref="inputRef" name="secret-pin" id="secret-pin"
              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
              type="password"
              placeholder="Don't know the PIN? ask the owner." required v-on:keydown.enter="onSave"/>
@@ -44,7 +44,7 @@ async function onSignOut() {
 
   useCookie('user-id').value = undefined
 
-  navigateTo('/login')
+  return navigateTo('/login')
 }
 </script>
 

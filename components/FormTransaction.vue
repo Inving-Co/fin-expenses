@@ -2,16 +2,16 @@
   <div>
     <form ref="form" class="space-y-6">
       <div>
-        <label for="Description"
+        <label for="description"
                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-        <input v-model="formTransaction.description" type="text" name="Description" id="Description"
+        <input v-model="formTransaction.description" type="text" name="description" id="description"
                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                placeholder="Example: Makan Siang" required>
       </div>
 
       <div>
         <label for="datepicker" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date</label>
-        <VueDatePicker v-model="formTransaction.date" name="datepicker" locale="id-ID" format="dd/MM/yyyy"
+        <VueDatePicker v-model="formTransaction.date" name="datepicker" id="datepicker" locale="id-ID" format="dd/MM/yyyy"
                        :enable-time-picker="false" placeholder="Select Date"
                        auto-apply/>
       </div>
@@ -28,7 +28,7 @@
       </div>
       <div>
         <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
-        <input v-model="formTransaction.amount" ref="inputRef" name="amount"
+        <input v-model="formTransaction.amount" ref="inputRef" name="amount" id="amount"
                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                type="text"
                placeholder="Example: 20000" required/>
