@@ -21,6 +21,7 @@ export interface Transaction {
     updatedAt: string
     userId?: number
     category: Category
+    isEditMode?: boolean
 }
 
 export interface Category {
@@ -29,6 +30,13 @@ export interface Category {
     color?: string
     createdAt: string
     updatedAt: string
-
     checked?: boolean
+}
+
+export interface Circle {
+    id: number
+    name: string
+    createdAt: string
+    updatedAt: string
+    userId?: number
 }

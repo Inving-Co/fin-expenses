@@ -66,7 +66,7 @@ async function onSubmitRegister() {
       email: email.value,
       password: password.value,
       options: {
-        emailRedirectTo: `https://${useRuntimeConfig().NODE_ENV}/login`
+        emailRedirectTo: `https://${useRuntimeConfig().NODE_ENV}/login`,
       }
     })
 
