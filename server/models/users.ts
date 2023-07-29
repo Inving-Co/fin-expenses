@@ -8,7 +8,7 @@ export async function createUser(email: string) {
     });
 }
 
-export async function getDetailUser(id: number | undefined, email: string | undefined) {
+export async function getDetailUser(id: string | undefined, email: string | undefined) {
     return prisma.users.findFirst({
         where: {
             id: {
@@ -17,6 +17,9 @@ export async function getDetailUser(id: number | undefined, email: string | unde
             email: {
                 equals: email
             }
+        },
+        include: {
+            circles: true
         }
     });
 }

@@ -82,7 +82,6 @@ async function onSubmitLogin() {
     toast.error(error.message);
   } else {
     const {data: result, status} = await useFetch(`/api/users/${data.user?.id}`, {
-      method: 'POST',
       query: {
         email: data.user?.email
       }

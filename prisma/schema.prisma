@@ -8,57 +8,57 @@ datasource db {
 }
 
 model Users {
-  id           Int            @id @default(autoincrement())
+  id           String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   email        String         @unique
   name         String?
   createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  updatedAt    DateTime       @default(now()) @updatedAt
   circleUsers  CircleUsers[]
   circles      Circles[]
   transactions Transactions[]
 }
 
 model Circles {
-  id           Int            @id @default(autoincrement())
+  id           String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name         String
   createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  userId       Int?
+  updatedAt    DateTime       @default(now()) @updatedAt
+  userId       String?        @db.Uuid
   circleUsers  CircleUsers[]
   user         Users?         @relation(fields: [userId], references: [id])
   transactions Transactions[]
 }
 
 model CircleUsers {
-  id        Int      @id @default(autoincrement())
-  userId    Int?
-  circleId  Int?
+  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId    String?  @db.Uuid
+  circleId  String?  @db.Uuid
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
   circle    Circles? @relation(fields: [circleId], references: [id])
   user      Users?   @relation(fields: [userId], references: [id])
 }
 
 model Transactions {
-  id          Int        @id @default(autoincrement())
+  id          String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   amount      BigInt
   description String
   date        DateTime
-  categoryId  Int
+  categoryId  String     @db.Uuid
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @default(now()) @updatedAt
-  userId      Int?
-  circleId    Int?
+  userId      String?    @db.Uuid
+  circleId    String?    @db.Uuid
   category    Categories @relation(fields: [categoryId], references: [id])
   circle      Circles?   @relation(fields: [circleId], references: [id])
   user        Users?     @relation(fields: [userId], references: [id])
 }
 
 model Categories {
-  id           Int            @id @default(autoincrement())
+  id           String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name         String
   color        String?
   createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  updatedAt    DateTime       @default(now()) @updatedAt
   Transactions Transactions[]
 }

@@ -1,7 +1,7 @@
 import {getCategories} from "~/server/models/categories";
 
-export default defineEventHandler(async (event) => {
-    const { key } = await getQuery(event)
+export default defineEventHandler((event) => {
+    const { key } = getQuery(event)
 
     return getCategories(key as string)
 })

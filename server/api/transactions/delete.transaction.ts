@@ -1,7 +1,7 @@
 import {deleteTransaction} from "~/server/models/transactions";
 
-export default defineEventHandler(async (event) => {
-    const {id, secretPin} = await getQuery(event);
+export default defineEventHandler((event) => {
+    const {id, secretPin} = getQuery(event);
 
     //
     // if (!userId && secretPin != useRuntimeConfig().APP_SECRET_PIN) {
