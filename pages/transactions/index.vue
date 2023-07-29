@@ -18,7 +18,6 @@
     </template>
   </general-modal>
 
-
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
     <div class="flex justify-end">
@@ -30,7 +29,7 @@
       </button>
     </div>
     <div class="max-h-1/4 w-full gap-4 sm:flex justify-center my-8">
-      <expenses-structure-chart class="sm:w-1/2 md:w-1/4 w-full" :label-time="filterDate"
+      <expenses-structure-chart class="sm:w-1/2 md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
                                 :transactions="transactions ?? null"/>
       <div class="sm:w-1/2 md:w-1/ h-full w-full flex-grow justify-between mt-4 sm:mt-0">
         <cash-flow-chart class="mb-4" :label-time="filterDate" :transactions="transactions ?? null"/>
@@ -39,104 +38,105 @@
     </div>
     <div class="sm:flex p-4 justify-center sm:justify-between bg-white dark:bg-gray-900">
       <div class="flex flex-wrap gap-2 justify-center">
-        <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
-                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                type="button">
-          <span class="sr-only">Action button</span>
-          Action
-          <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-               viewBox="0 0 10 6">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="m1 1 4 4 4-4"/>
-          </svg>
-        </button>
-        <!-- Dropdown menu -->
-        <div id="dropdownAction"
-             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-          <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
-            <li>
-              <button type="button"
-                      class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      @click=" resetAllIsEditMode(); selectedTransaction = null; modalFormTransaction?.show()">Create
-              </button>
-            </li>
-          </ul>
-        </div>
+        <general-dropdown id="dropdownActionButton">
+          <template #trigger="{activator}">
+            <button class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                    type="button" @click="activator">
+              <span class="sr-only">Action button</span>
+              Action
+              <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                   viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m1 1 4 4 4-4"/>
+              </svg>
+            </button>
+          </template>
+          <template #content="{activator}">
+              <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
+                <li>
+                  <button type="button"
+                          class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          @click=" resetAllIsEditMode(); selectedTransaction = null; modalFormTransaction?.show()">Create
+                  </button>
+                </li>
+              </ul>
+          </template>
+        </general-dropdown>
 
-        <button id="dropdownFilterButton" data-dropdown-toggle="dropdownFilterRadio"
-                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                type="button">
-          <span class="sr-only">{{ capitalizeFirstLetter(filterDate) }}</span>
-          {{ capitalizeFirstLetter(filterDate) }}
-          <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-               viewBox="0 0 10 6">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="m1 1 4 4 4-4"/>
-          </svg>
-        </button>
+        <general-dropdown id="dropdownFilterButton">
+          <template #trigger="{activator}">
+            <button class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                    type="button" @click="activator">
+              <span class="sr-only">{{ capitalizeFirstLetter(filterDate) }}</span>
+              {{ capitalizeFirstLetter(filterDate) }}
+              <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                   viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m1 1 4 4 4-4"/>
+              </svg>
+            </button>
+          </template>
+          <template #content="{activator}">
+              <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
+                  aria-labelledby="dropdownFilterButton">
+                <li v-for="valueFilterDate in valuesFilterDate">
+                  <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <div class="flex items-center h-5">
+                      <input v-model="filterDate" :id="valueFilterDate + `-radio`" :name="valueFilterDate + `-radio`"
+                             type="radio" :value="valueFilterDate"
+                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                             @change="onFilterDateChanges($event.target.value);">
+                    </div>
+                    <div class="ml-2 text-sm">
+                      <label :for="valueFilterDate + `-radio`" class="font-medium text-gray-900 dark:text-gray-300">
+                        <div>{{ capitalizeFirstLetter(valueFilterDate) }}</div>
+                      </label>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+          </template>
+        </general-dropdown>
 
-        <!-- Dropdown menu -->
-        <div id="dropdownFilterRadio"
-             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600"
-             data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top"
-             style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate3d(522.5px, 6119.5px, 0px);">
-          <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
-              aria-labelledby="dropdownFilterButton">
-            <li v-for="valueFilterDate in valuesFilterDate">
-              <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                <div class="flex items-center h-5">
-                  <input v-model="filterDate" :id="valueFilterDate + `-radio`" :name="valueFilterDate + `-radio`"
-                         type="radio" :value="valueFilterDate"
-                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                         @change="onFilterDateChanges($event.target.value);">
-                </div>
-                <div class="ml-2 text-sm">
-                  <label :for="valueFilterDate + `-radio`" class="font-medium text-gray-900 dark:text-gray-300">
-                    <div>{{ capitalizeFirstLetter(valueFilterDate) }}</div>
-                  </label>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <button id="dropdownFilterCategoryButton" data-dropdown-toggle="dropdownFilterCategory"
-                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                type="button">
-          <span class="sr-only">Category</span>
-          Category
-          <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-               viewBox="0 0 10 6">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="m1 1 4 4 4-4"/>
-          </svg>
-        </button>
-        <!-- Dropdown menu -->
-        <div id="dropdownFilterCategory"
-             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-          <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownFilterCategoryButton">
-            <li v-for="(category, index) of categories">
-              <div class="flex items-center px-2 py-1">
-                <input :id="`${category.id}-category-checkbox`" type="checkbox" :value="category.id"
-                       :checked="category.checked"
-                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                       @click="categories[index].checked = $event.target.checked; setCategoriesFilter()">
-                <label :for="`${category.id}-category-checkbox`"
-                       class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{
-                    capitalizeFirstLetter(category.name)
-                  }}</label>
-              </div>
-            </li>
-            <li>
-              <button
-                  class="w-full mt-2 text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                  type="button" @click="onClearSelectedCategories">
-                <span class="sr-only">{{ isHasChecked ? 'Clear' : 'Select All' }}</span>
-                {{ isHasChecked ? 'Clear' : 'Select All' }}
-              </button>
-            </li>
-          </ul>
-        </div>
+        <general-dropdown id="dropdownFilterCategoryButton">
+          <template #trigger="{activator}">
+            <button data-dropdown-toggle="dropdownFilterCategory"
+                    class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                    type="button" @click="activator">
+              <span class="sr-only">Category</span>
+              Category
+              <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                   viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m1 1 4 4 4-4"/>
+              </svg>
+            </button>
+          </template>
+          <template #content="{activator}">
+           <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownFilterCategoryButton">
+                <li v-for="(category, index) of categories">
+                  <div class="flex items-center px-2 py-1">
+                    <input :id="`${category.id}-category-checkbox`" type="checkbox" :value="category.id"
+                           :checked="category.checked"
+                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                           @click="categories[index].checked = $event.target.checked; setCategoriesFilter()">
+                    <label :for="`${category.id}-category-checkbox`"
+                           class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{
+                        capitalizeFirstLetter(category.name)
+                      }}</label>
+                  </div>
+                </li>
+                <li>
+                  <button
+                      class="w-full mt-2 text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                      type="button" @click="onClearSelectedCategories">
+                    <span class="sr-only">{{ isHasChecked ? 'Clear' : 'Select All' }}</span>
+                    {{ isHasChecked ? 'Clear' : 'Select All' }}
+                  </button>
+                </li>
+              </ul>
+          </template>
+        </general-dropdown>
 
         <button
             class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
@@ -508,7 +508,7 @@ async function onSignOut() {
 
   useCookie('user-id').value = undefined
 
-  navigateTo('/login')
+  return navigateTo('/login')
 }
 
 </script>

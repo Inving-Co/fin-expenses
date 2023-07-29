@@ -88,7 +88,7 @@ async function onSubmitRegister() {
     }
 
     toast.success('Register success, please check your email.')
-    navigateTo('/login')
+    return navigateTo('/login')
   } catch (e: any) {
     if(typeof(e) === "string") {
       toast.error(e)
