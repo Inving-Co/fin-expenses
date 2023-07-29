@@ -1,26 +1,27 @@
 import {prisma} from './prisma'
 
-export async function createTransaction(date: string, description: string, amount: number, categoryId: number, userId: number | undefined) {
+export async function createTransaction(date: string, description: string, amount: number, categoryId: string, userId: string | undefined, circleId: string | undefined) {
     return prisma.transactions.create({
         data: {
             amount,
             date,
             description: description.toLowerCase(),
             categoryId,
-            userId
+            userId,
+            circleId
         }
     });
 }
 
-export async function updateTransaction(trxId: number, description: string, amount: number, date: string, categoryId: number) {
+export async function updateTransaction(trxId: string, description: string, amount: number, date: string, categoryId: string) {
     return prisma.transactions.update({where: {id: trxId}, data: { description, amount, date, categoryId }})
 }
 
-export async function deleteTransaction(trxId: number, userId: number | undefined) {
+export async function deleteTransaction(trxId: string, userId: string | undefined) {
     return prisma.transactions.delete({where: {id: trxId, userId}})
 }
 
-export async function getTransactions(key: string, dateFilter: { start: string, end: string }, userId: number | undefined, categoryIds: number[] | undefined) {
+export async function getTransactions(key: string, dateFilter: { start: string, end: string }, circleId: string | undefined, categoryIds: string[] | undefined) {
     return prisma.transactions.findMany({
         where: {
             description: {
@@ -30,9 +31,9 @@ export async function getTransactions(key: string, dateFilter: { start: string, 
                 gte: new Date(dateFilter.start),
                 lte: new Date(dateFilter.end),
             },
-            userId,
+            circleId: circleId,
             categoryId: {
-                in: categoryIds ?? [-1]
+                in: categoryIds ?? []
             }
         },
         orderBy: {
