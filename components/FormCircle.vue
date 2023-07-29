@@ -1,8 +1,8 @@
 <template>
   <div>
     <div>
-      <label for="Circle Name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Circle Name</label>
-      <input v-model="name" ref="inputRef" name="Circle Name"
+      <label for="circle-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Circle Name</label>
+      <input v-model="name" ref="inputRef" name="circle-name" id="circle-name"
              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
              type="text"
              placeholder="Fill the circle name" required v-on:keydown.enter="onSave"/>

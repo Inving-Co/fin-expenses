@@ -1,12 +1,14 @@
 <template>
-  <slot name="trigger" :activator="() => { toggleDropdown(!isVisible); emit('on-trigger-click') }"/>
+  <div class="inline-flex justify-end">
+    <slot name="trigger" :activator="() => { toggleDropdown(!isVisible); emit('on-trigger-click') }"/>
 
-  <div :id="`${props.id}-background`" class="fixed bg-transparent z-10 hidden left-0 right-0 bottom-0 top-0"
-       @click="toggleDropdown(false)"/>
-  <div
-      :id="props.id"
-      class="z-20 hidden absolute right-8 bg-white divide-y divide-gray-100 rounded-lg shadow w-18 dark:bg-gray-700 dark:divide-gray-600">
-    <slot name="content" :activator="() => { toggleDropdown(!isVisible); }"/>
+    <div :id="`${props.id}-background`" class="fixed bg-transparent z-10 hidden left-0 right-0 bottom-0 top-0"
+         @click="toggleDropdown(false)"/>
+    <div
+        :id="props.id"
+        class="z-20 mt-10 hidden bg-white absolute divide-y divide-gray-100 rounded-lg shadow w-18 dark:bg-gray-700 dark:divide-gray-600">
+      <slot name="content" :activator="() => { toggleDropdown(!isVisible); }"/>
+    </div>
   </div>
 </template>
 
@@ -14,7 +16,7 @@
 
 import {ElementEvent} from "~/utils/types";
 
-const emit = defineEmits(['on-mounted', 'on-dropdown-closed'])
+const emit = defineEmits(['on-mounted', 'on-dropdown-closed', 'on-trigger-click'])
 const props = defineProps({
   id: {
     type: String,
