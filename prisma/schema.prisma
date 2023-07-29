@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Users {
-  id           String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email        String         @unique
   name         String?
   createdAt    DateTime       @default(now())
@@ -19,7 +19,7 @@ model Users {
 }
 
 model Circles {
-  id           String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name         String
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @default(now()) @updatedAt
@@ -30,7 +30,7 @@ model Circles {
 }
 
 model CircleUsers {
-  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId    String?  @db.Uuid
   circleId  String?  @db.Uuid
   createdAt DateTime @default(now())
@@ -40,8 +40,8 @@ model CircleUsers {
 }
 
 model Transactions {
-  id          String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  amount      BigInt
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  amount      Int
   description String
   date        DateTime
   categoryId  String     @db.Uuid
@@ -55,7 +55,7 @@ model Transactions {
 }
 
 model Categories {
-  id           String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name         String
   color        String?
   createdAt    DateTime       @default(now())
