@@ -1,63 +1,17 @@
-# Nuxt 3 Minimal Starter
+# Inving Money Tracker
+This application are mean to be the tools for my family, the feature are based on the family feedback (My Wife).
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+### Available Features
+- Record Income and Expenses
+- Simple Report such as:
+  - Expenses Categories
+  - Cash Flow
+  - Debt Percentage by Income
+- Multiple family records (Circle)
 
-## Setup
-
-Make sure to install the dependencies:
-
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+### Planned Features
+- Invite user to circle
+- Daily report by Email / Telegram
+- Assets Planner
+- Assets Prediction
+- Integrate with ChatGPT
