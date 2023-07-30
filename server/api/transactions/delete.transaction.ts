@@ -12,8 +12,8 @@ export default defineEventHandler((event) => {
     // }
 
     const cookies = parseCookies(event)
-    const userId = Number(cookies['user-id'])
+    const userId = cookies['user-id']
 
     // @ts-ignore getQuery convert the params to be string
-    return deleteTransaction(+id, userId)
+    return deleteTransaction(id, userId)
 })
