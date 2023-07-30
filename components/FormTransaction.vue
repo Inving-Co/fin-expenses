@@ -6,7 +6,8 @@
                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
         <input v-model="formTransaction.description" type="text" name="description" id="description"
                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-               placeholder="Example: Makan Siang" required>
+               placeholder="Example: Makan Siang" required
+               @keyup.enter="onSave" >
       </div>
 
       <div>
@@ -19,10 +20,11 @@
         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
         <div v-for="category in categories" class="flex items-center mb-4">
           <input v-model="formTransaction.categoryId" :id="`radio-${category.id}`" type="radio" :value="category.id"
-                 :name="`radio-${category.id}`"
-                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                 :name="`radio-${category.id}`" required
+                 @keyup.enter="onSave">
           <label :for="`radio-${category.id}`" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{
-              category.name
+              capitalizeFirstLetter(category.name)
             }}</label>
         </div>
       </div>
@@ -31,7 +33,7 @@
         <input v-model="formTransaction.amount" ref="inputRef" name="amount" id="amount"
                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                type="text"
-               placeholder="Example: 20000" required/>
+               placeholder="Example: 20000" required  @keyup.enter="onSave"/>
       </div>
 
       <button type="button"
