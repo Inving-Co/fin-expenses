@@ -14,5 +14,5 @@ export default defineEventHandler(async (event) => {
     const userId = cookies['user-id']
     const circle = cookies['selected-circle'] ? JSON.parse(cookies['selected-circle']) : undefined
 
-    return createTransaction(date, description, amount, categoryId, userId, circle?.id)
+    return createTransaction(date, description, Number(amount), categoryId, userId, circle?.id)
 })
