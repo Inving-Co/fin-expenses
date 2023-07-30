@@ -5,10 +5,15 @@
     <div class="relative w-full max-w-md max-h-full">
       <div class=" relative bg-white rounded-lg shadow dark:bg-gray-700 p-10">
         <div class="mb-4 flex items-start justify-between">
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-            {{ props.label }}
-          </h3>
-          <button type="button"
+          <div>
+            <h3 class="text-xl font-semibold text-gray-800 dark:text-white">
+              {{ props.title }}
+            </h3>
+            <h5 v-if="props.subtitle" class="text-md text-gray-900 dark:text-white">
+              {{ props.subtitle }}
+            </h5>
+          </div>
+          <button v-if="props.isHasClose" type="button"
                   class="absolute top-9 right-8 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
                   @click.prevent="toggleModal(false)">
             <icons-close/>
@@ -31,9 +36,16 @@ const props = defineProps({
     type: String,
     required: true
   },
-  label: {
+  title: {
     type: String,
     required: true
+  },
+  subtitle: {
+    type: String,
+  },
+  isHasClose: {
+    type: Boolean,
+    default: true
   }
 })
 const isVisible = ref<boolean>(false)

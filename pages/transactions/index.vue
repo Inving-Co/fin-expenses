@@ -6,11 +6,6 @@
     </template>
   </general-modal>
 
-  <general-modal id="modal-form-input-pin" label="Input Secret PIN" @on-mounted="modalFormSecretPin = $event">
-    <template #body>
-      <form-secret-pin @setted="onPinSetup"/>
-    </template>
-  </general-modal>
 
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
@@ -211,7 +206,7 @@ import {
   parseISO,
   startOfMonth,
 } from 'date-fns'
-import {capitalizeFirstLetter, currencyIDRFormatter} from "~/utils/functions";
+import {capitalizeFirstLetter, currencyIDRFormatter, onSignOut} from "~/utils/functions";
 import {Category, EditableTransaction, ElementEvent, Transaction} from "~/utils/types";
 import FormTransaction from "~/components/FormTransaction.vue";
 import {useCurrencyInput} from "vue-currency-input";
@@ -264,10 +259,9 @@ const {
   server: false,
   onResponse: (context) => {
     if (context.response.status === 401) {
-      localStorage.clear()
-      setTimeout(() => onCheckModalSecretPin(), 150)
-
       toast.error(context.response.statusText);
+
+      onSignOut()
     }
   },
   watch: [startFilterDate, endFilterDate, categoriesFilter],
@@ -330,22 +324,6 @@ function onDoubleClickRow(trx: any) {
 
 function resetAllIsEditMode() {
   transactions.value!.forEach((val: any) => val.isEditMode = false)
-}
-
-function onCheckModalSecretPin() {
-  const $secretPin = localStorage.getItem('secretPin')
-
-  if (!$secretPin) {
-    setTimeout(() => modalFormSecretPin?.show(), 200)
-  } else {
-    secretPin.value = $secretPin
-  }
-}
-
-function onPinSetup(event: string) {
-  modalFormSecretPin?.hide();
-  secretPin.value = event;
-  refreshTrx();
 }
 
 
