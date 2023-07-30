@@ -11,7 +11,7 @@ export default defineEventHandler((event) => {
     } else {
         proceedCategoryIds = categoryIds ? [categoryIds as string] : undefined
     }
-console.log(circle)
+
     return getTransactions(key as string, {
         start: startDate as string,
         end: endDate as string
