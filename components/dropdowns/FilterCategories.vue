@@ -49,6 +49,7 @@ const {data: categories}: any = await useFetch('/api/categories', {})
 
 onMounted(() => {
   emit('on-mounted', categories)
+
   setCategoriesFilter()
 })
 
