@@ -1,8 +1,8 @@
 <template>
 
-  <general-modal id="modal-form-circle" label="Create Circle" @on-mounted="modalFormCircle = $event">
+  <general-modal id="modal-form-circle" title="Create Circle" subtitle="Circle mean to be your group" :is-has-close="isHasClose" @on-mounted="modalFormCircle = $event">
     <template #body>
-      <form-circle @on-success="modalFormCircle?.hide(); onCircleChange($event); refreshCircles(); "/>
+      <form-circle @on-success="modalFormCircle?.hide(); refreshCircles(); "/>
     </template>
   </general-modal>
 
@@ -37,6 +37,14 @@
             </div>
           </div>
         </li>
+        <li>
+          <button
+              class="w-full mt-2 text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+              type="button" @click="isHasClose=true; modalFormCircle?.show()">
+            <span class="sr-only">Create</span>
+            Create
+          </button>
+        </li>
       </ul>
     </template>
   </general-dropdown>
@@ -50,22 +58,23 @@ import {ElementEvent} from "~/utils/types";
 const emit = defineEmits(['on-mounted', 'on-changed'])
 let modalFormCircle: ElementEvent | null = null
 let selected = ref<number | null>(null)
-
-onMounted(() => {
-  emit('on-mounted', circles)
-})
+const isHasClose = ref<boolean>(false)
 
 const {data: circles, refresh: refreshCircles} = await useFetch('/api/circles', {
   server: false,
-  onResponse: ({ response }) => {
+})
 
-    if(response.status === 200) {
-      const data = response._data
+onMounted(() => {
+  emit('on-mounted')
 
-      if(data && data.length > 0) {
-        onCircleChange(data[0])
-      }
-    }
+  refreshCircles()
+})
+
+watch(() => circles.value, (value, oldValue, onCleanup) => {
+  if(value && value.length > 0) {
+    onCircleChange(value[0])
+  } else {
+    modalFormCircle?.show();
   }
 })
 

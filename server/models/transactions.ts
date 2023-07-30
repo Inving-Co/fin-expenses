@@ -31,7 +31,7 @@ export async function getTransactions(key: string, dateFilter: { start: string, 
                 gte: new Date(dateFilter.start),
                 lte: new Date(dateFilter.end),
             },
-            circleId: circleId,
+            circleId: circleId ?? null,
             categoryId: {
                 in: categoryIds ?? []
             }
