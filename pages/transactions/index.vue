@@ -278,7 +278,7 @@ function onSearchTransactions(value: string) {
   searchKey.value = value;
 }
 
-async function onDelete(trxId: number) {
+async function onDelete(trxId: String) {
   const {status} = await useFetch('/api/transactions/delete.transaction', {
     query: {
       id: trxId,

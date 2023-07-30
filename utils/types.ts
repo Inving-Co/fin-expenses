@@ -7,12 +7,12 @@ export interface ElementEvent {
 export interface EditableTransaction {
     description: string,
     amount: number | null,
-    id: number | null,
+    id: string | null,
     date: string,
     categoryId: number | null
 }
 export interface Transaction {
-    id: number
+    id: string
     amount: number
     description: string
     date: string
@@ -25,7 +25,7 @@ export interface Transaction {
 }
 
 export interface Category {
-    id: number
+    id: string
     name: string
     color?: string
     createdAt: string
@@ -34,7 +34,7 @@ export interface Category {
 }
 
 export interface Circle {
-    id: number
+    id: string
     name: string
     createdAt: string
     updatedAt: string
