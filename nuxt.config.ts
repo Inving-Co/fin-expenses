@@ -13,7 +13,6 @@ export default defineNuxtConfig({
         }
     },
     ssr: true,
-    target: 'server',
     // router: { middleware: [] },
     devtools: {enabled: true},
     modules: ['@nuxtjs/tailwindcss'],
@@ -25,7 +24,9 @@ export default defineNuxtConfig({
     ],
     runtimeConfig: {
         APP_SECRET_PIN: process.env.APP_SECRET_PIN,
-        APP_DOMAIN: process.env.APP_DOMAIN,
         APP_SECRET: process.env.APP_SECRET,
+        public: {
+            APP_DOMAIN: process.env.APP_DOMAIN,
+        }
     },
 })

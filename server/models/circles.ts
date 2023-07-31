@@ -8,6 +8,14 @@ export async function createCircle(name: string, userId: string | undefined) {
     });
 }
 
+export async function getCircle(circleId: string | undefined) {
+    return prisma.circles.findUnique({
+        where: {
+            id: circleId
+        }
+    })
+}
+
 export async function getCircles(key: string, userId: string | undefined) {
     return prisma.circles.findMany({
         where: {
@@ -20,5 +28,13 @@ export async function getCircles(key: string, userId: string | undefined) {
                 }
             }
         },
+    })
+}
+
+export async function createCircleUser(userId: string, circleId: string) {
+    return prisma.circleUsers.create({
+        data: {
+            userId, circleId
+        }
     })
 }

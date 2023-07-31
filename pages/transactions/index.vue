@@ -1,5 +1,5 @@
 <template>
-  <general-modal id="modal-form-transaction" label="Form Transaction" @on-mounted="modalFormTransaction = $event">
+  <general-modal id="modal-form-transaction" title="Form Transaction" @on-mounted="modalFormTransaction = $event">
     <template #body>
       <form-transaction :transaction="selectedTransaction"
                         @on-success="modalFormTransaction?.hide(); refreshTrx(); selectedTransaction = null"/>
@@ -12,7 +12,7 @@
     <div class="flex justify-end">
       <general-signout />
     </div>
-    <dropdowns-circles @on-changed="refreshTrx()" />
+    <dropdowns-circles-selector @on-changed="refreshTrx()" />
     <div v-if="transactions" class="max-h-1/4 w-full gap-4 sm:flex justify-center mb-8 mt-2">
       <expenses-structure-chart class="sm:w-1/2 md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
                                 :transactions="transactions"/>
@@ -81,7 +81,7 @@
       </div>
     </div>
     <div v-show="isLoading"
-         class="fixed flex text-2xl justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 bg-black bg-opacity-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">
+         class="fixed flex text-2xl justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 font-semibold bg-black bg-opacity-5 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">
       Loading data...
     </div>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg" style="height: 500px !important">
