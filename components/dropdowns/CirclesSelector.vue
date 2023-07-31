@@ -6,6 +6,12 @@
     </template>
   </general-modal>
 
+  <general-modal id="modal-form-circle-invitation" title="Invite Member" subtitle="Invite your family or friends to this circle" @on-mounted="modalFormCircleInvitation = $event">
+    <template #body>
+      <form-circle-invitation :circle-id="selected ?? undefined" />
+    </template>
+  </general-modal>
+
   <general-dropdown id="dropdownCircles" class="mt-2">
     <template #trigger="{activator}">
       <button class="h-[38px] inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
@@ -22,19 +28,27 @@
     <template #content="{activator}">
       <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200">
         <li v-for="circle in circles">
-          <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-            <div class="flex items-center h-5">
-              <input :id="circle?.id + `-radio`" :name="circle?.id + `-radio`"
-                     type="radio" :value="circle?.id"
-                     :checked="selected === circle?.id"
-                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                     @change="onCircleChange(circle);"/>
+          <div class="flex justify-between">
+            <div class="flex p-2 w-full rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+              <div class="flex items-center h-5">
+                <input :id="circle?.id + `-radio`" :name="circle?.id + `-radio`"
+                       type="radio" :value="circle?.id"
+                       :checked="selected === circle?.id"
+                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                       @change="onCircleChange(circle);"/>
+              </div>
+              <div class="ml-2 text-sm flex justify-between w-full gap-2">
+                <label :for="circle?.id + `-radio`" class="font-medium text-gray-900 dark:text-gray-300">
+                  <span>{{ capitalizeFirstLetter(circle?.name) }}</span>
+                </label>
+              </div>
             </div>
-            <div class="ml-2 text-sm">
-              <label :for="circle?.id + `-radio`" class="font-medium text-gray-900 dark:text-gray-300">
-                <div>{{ capitalizeFirstLetter(circle?.name) }}</div>
-              </label>
-            </div>
+            <button
+                class="text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                type="button" @click="onCircleChange(circle); modalFormCircleInvitation?.show()">
+              <span class="sr-only"><icons-user-group-add /></span>
+              <icons-user-group-add />
+            </button>
           </div>
         </li>
         <li>
@@ -54,10 +68,12 @@
 import {capitalizeFirstLetter} from "~/utils/functions";
 import {useCookie} from "#app";
 import {ElementEvent} from "~/utils/types";
+import FormCircleInvitation from "~/components/FormCircleInvitation.vue";
 
 const emit = defineEmits(['on-mounted', 'on-changed'])
 let modalFormCircle: ElementEvent | null = null
-let selected = ref<number | null>(null)
+let modalFormCircleInvitation: ElementEvent | null = null
+let selected = ref<string | null>(null)
 const isHasClose = ref<boolean>(false)
 
 const {data: circles, refresh: refreshCircles} = await useFetch('/api/circles', {

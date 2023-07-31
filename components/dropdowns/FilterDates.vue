@@ -25,7 +25,7 @@
             </div>
             <div class="ml-2 text-sm">
               <label :for="valueFilterDate + `-radio`" class="font-medium text-gray-900 dark:text-gray-300">
-                <div>{{ capitalizeFirstLetter(valueFilterDate) }}</div>
+                <span>{{ capitalizeFirstLetter(valueFilterDate) }}</span>
               </label>
             </div>
           </div>
