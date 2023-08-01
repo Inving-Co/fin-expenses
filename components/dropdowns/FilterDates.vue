@@ -78,7 +78,7 @@ function onFilterDateChanges(value: string) {
 }
 
 function setFilterDate(start: Date, end: Date, filterValue: string) {
-  emit('on-filter-changed', {start: format(start, 'yyyy-MM-dd HH:mm'), end: format(end, 'yyyy-MM-dd HH:mm')})
+  emit('on-filter-changed', {start: format(start, 'yyyy-MM-dd HH:mm'), end: format(end, 'yyyy-MM-dd HH:mm'), label: filterValue})
 
   filterDate.value = filterValue
 }

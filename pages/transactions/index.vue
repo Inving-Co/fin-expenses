@@ -48,7 +48,7 @@
           </template>
         </general-dropdown>
 
-        <dropdowns-filter-dates @on-filter-changed="startFilterDate = $event.start; endFilterDate = $event.end" />
+        <dropdowns-filter-dates @on-filter-changed="startFilterDate = $event.start; endFilterDate = $event.end; filterDate = $event.label" />
 
         <dropdowns-filter-categories @on-mounted="categories = $event" @on-filter-changed="categoriesFilter = $event; refreshTrx()" />
 
