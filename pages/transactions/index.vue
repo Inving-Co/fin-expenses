@@ -233,7 +233,6 @@ const {inputRef} = useCurrencyInput({
 })
 
 let modalFormTransaction: ElementEvent | null = null
-let modalFormSecretPin: ElementEvent | null = null
 
 onMounted(() => {
   initDropdowns()

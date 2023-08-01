@@ -12,6 +12,13 @@ export async function getCircle(circleId: string | undefined) {
     return prisma.circles.findUnique({
         where: {
             id: circleId
+        },
+        include: {
+            circleUsers: {
+                include: {
+                    user: true
+                }
+            }
         }
     })
 }
