@@ -32,9 +32,32 @@ export async function getCircles(key: string, userId: string | undefined) {
                 },
                 userId: {
                     equals: userId ?? null,
-                }
+                },
             }
         },
+        include: {
+            circleUsers: true
+        }
+    })
+}
+
+export async function getCircleUsers(key: string, userId: string | undefined) {
+    return prisma.circleUsers.findMany({
+        where: {
+            AND: {
+                circle: {
+                    name: {
+                        contains: key?.toLowerCase()
+                    },
+                },
+                userId: {
+                    equals: userId ?? null,
+                },
+            }
+        },
+        include: {
+            circle: true
+        }
     })
 }
 

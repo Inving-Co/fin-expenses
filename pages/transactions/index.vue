@@ -10,9 +10,9 @@
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
     <div class="flex justify-end">
-      <general-signout />
+      <general-signout/>
     </div>
-    <dropdowns-circles-selector @on-changed="refreshTrx()" />
+    <dropdowns-circles-selector @on-changed="refreshTrx()"/>
     <div v-if="transactions" class="max-h-1/4 w-full gap-4 sm:flex justify-center mb-8 mt-2">
       <expenses-structure-chart class="sm:w-1/2 md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
                                 :transactions="transactions"/>
@@ -25,8 +25,9 @@
       <div class="flex flex-wrap gap-2 justify-center">
         <general-dropdown id="dropdownActionButton">
           <template #trigger="{activator}">
-            <button class="h-[38px] inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                    type="button" @click="activator">
+            <button
+                class="h-[38px] inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                type="button" @click="activator">
               <span class="sr-only">Action button</span>
               Action
               <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -37,27 +38,30 @@
             </button>
           </template>
           <template #content="{activator}">
-              <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
-                <li>
-                  <button type="button"
-                          class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                          @click="resetAllIsEditMode(); selectedTransaction = null; modalFormTransaction?.show()">Create
-                  </button>
-                </li>
-              </ul>
+            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
+              <li>
+                <button type="button"
+                        class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        @click="resetAllIsEditMode(); selectedTransaction = null; modalFormTransaction?.show()">Create
+                </button>
+              </li>
+            </ul>
           </template>
         </general-dropdown>
 
-        <dropdowns-filter-dates @on-filter-changed="startFilterDate = $event.start; endFilterDate = $event.end; filterDate = $event.label" />
+        <dropdowns-filter-dates
+            @on-filter-changed="startFilterDate = $event.start; endFilterDate = $event.end; filterDate = $event.label"/>
 
-        <dropdowns-filter-categories @on-mounted="categories = $event" @on-filter-changed="categoriesFilter = $event; refreshTrx()" />
+        <dropdowns-filter-categories @on-mounted="categories = $event"
+                                     @on-filter-changed="categoriesFilter = $event; refreshTrx()"/>
 
         <button
             class="h-[38px] inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
             type="button" @click="refreshTrx">
           <span class="sr-only">Refresh</span>
           Refresh
-          <svg class="w-4 h-4 text-gray-500 dark:text-gray-400 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-gray-500 dark:text-gray-400 ml-1" aria-hidden="true"
+               xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path fill="currentColor"
                   d="M17.65 6.35a7.95 7.95 0 0 0-6.48-2.31c-3.67.37-6.69 3.35-7.1 7.02C3.52 15.91 7.27 20 12 20a7.98 7.98 0 0 0 7.21-4.56c.32-.67-.16-1.44-.9-1.44c-.37 0-.72.2-.88.53a5.994 5.994 0 0 1-6.8 3.31c-2.22-.49-4.01-2.3-4.48-4.52A6.002 6.002 0 0 1 12 6c1.66 0 3.14.69 4.22 1.78l-1.51 1.51c-.63.63-.19 1.71.7 1.71H19c.55 0 1-.45 1-1V6.41c0-.89-1.08-1.34-1.71-.71l-.64.65z"/>
           </svg>
@@ -103,7 +107,7 @@
         </tr>
         </thead>
         <tbody class="overflow-y-scroll">
-        <tr v-for="trx in transactions as Transaction[]"
+        <tr v-for="trx in transactions"
             class="bg-white hover:bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700"
             v-on:dblclick="onDoubleClickRow(trx)"
             v-on:keydown.esc="trx.isEditMode = false; selectedTransaction = null">
@@ -148,7 +152,7 @@
         </tbody>
       </table>
       <div v-else>
-        <div v-for="(trx,index) in transactions as Transaction[]"
+        <div v-for="(trx,index) in transactions"
              class="w-full my-3 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <span class="flex justify-between">
             <span class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
