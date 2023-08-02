@@ -21,7 +21,7 @@ const props = defineProps({
 watch(() => props.circleId, async (value) => {
   if(value)  {
     await activatorLoad(value)
-    copiedLink.value = `https://${useRuntimeConfig().public.APP_DOMAIN}/circles/${circle.value?.id}`
+    copiedLink.value = `${window.location.origin}/circles/${circle.value?.id}`
   }
 })
 
