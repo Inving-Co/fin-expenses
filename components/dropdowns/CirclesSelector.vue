@@ -73,7 +73,6 @@ import {capitalizeFirstLetter} from "~/utils/functions";
 import {useCookie} from "#app";
 import {Circle, ElementEvent} from "~/utils/types";
 import FormCircleInvitation from "~/components/FormCircleInvitation.vue";
-import {useTimeout} from "@vueuse/shared";
 
 const emit = defineEmits(['on-mounted', 'on-changed'])
 let modalFormCircle: ElementEvent | null = null
@@ -88,12 +87,18 @@ const {data: circleUsers, refresh: refreshCircles} = await useFetch('/api/circle
 onMounted(() => {
   emit('on-mounted')
 
+  const value = useCookie('selected-circle').value as Circle | null | undefined
+
+  if(value) selected.value = value?.id
+
   refreshCircles()
 })
 
 watch(() => circleUsers.value, (value) => {
   if (value && value.length > 0) {
-    onCircleChange(value[0].circle as Circle)
+    if(!selected.value) {
+      onCircleChange(value[0].circle as Circle)
+    }
   } else {
     modalFormCircle?.show();
   }
