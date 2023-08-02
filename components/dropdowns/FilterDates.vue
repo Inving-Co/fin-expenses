@@ -25,7 +25,7 @@
             </div>
             <div class="ml-2 text-sm">
               <label :for="valueFilterDate + `-radio`" class="font-medium text-gray-900 dark:text-gray-300">
-                <div>{{ capitalizeFirstLetter(valueFilterDate) }}</div>
+                <span>{{ capitalizeFirstLetter(valueFilterDate) }}</span>
               </label>
             </div>
           </div>
@@ -78,7 +78,7 @@ function onFilterDateChanges(value: string) {
 }
 
 function setFilterDate(start: Date, end: Date, filterValue: string) {
-  emit('on-filter-changed', {start: format(start, 'yyyy-MM-dd HH:mm'), end: format(end, 'yyyy-MM-dd HH:mm')})
+  emit('on-filter-changed', {start: format(start, 'yyyy-MM-dd HH:mm'), end: format(end, 'yyyy-MM-dd HH:mm'), label: filterValue})
 
   filterDate.value = filterValue
 }

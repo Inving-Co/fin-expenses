@@ -38,5 +38,13 @@ export interface Circle {
     name: string
     createdAt: string
     updatedAt: string
-    userId?: number
+    userId?: string
+    circleUsers: CircleUser[]
+}
+
+export interface CircleUser {
+    id: string
+    userId: string
+    createdAt: string
+    updatedAt: string
 }
