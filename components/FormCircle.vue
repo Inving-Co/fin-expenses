@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 
-const name = ref<string>('')
+const name = ref<string>('Personal Circle\'s')
 const isLoadingSubmit = ref<boolean>(false)
 
 const emit = defineEmits(['setted', 'on-success'])

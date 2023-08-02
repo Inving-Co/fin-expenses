@@ -11,11 +11,6 @@ module.exports = {
     ],
     theme: {
         extend: {
-            // staggered grid max 2 columns for desktop and 1 column for mobile
-            gridTemplateColumns: {
-                'cols-desktop': 'repeat(auto-fit, minmax(300px, 1fr))',
-                'col-mobile': '1fr',
-            },
             colors: {
                 primary: {
                     50: "#f57b7b",
