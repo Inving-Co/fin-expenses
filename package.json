@@ -15,7 +15,8 @@
     "@types/lodash": "^4.14.195",
     "@types/node": "^18.16.19",
     "nuxt": "^3.6.5",
-    "prisma": "^5.0.0"
+    "prisma": "^5.0.0",
+    "supabase": "^1.82.6"
   },
   "dependencies": {
     "@prisma/client": "^5.0.0",
