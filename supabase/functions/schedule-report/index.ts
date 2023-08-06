@@ -28,7 +28,9 @@ const handler = async (_request: Request): Promise<Response> => {
                 u.id as "userId",
                 u.name as "userName",
                 u.email as "userEmail",
-                cu.id as "circleId",
+                cu.id as "circleUserId",
+                c.id as "circleId",
+                c.name as "circleName",
                 SUM(
                     case
                         when t."categoryId" = 'ed424618-eb48-45af-a99f-a118ce0846a1' then t."amount"
@@ -65,7 +67,8 @@ const handler = async (_request: Request): Promise<Response> => {
                 )
             GROUP BY
                 cu.id,
-                u.id
+                u.id,
+                c.id
             `
 
             circleUsers = result.rows
@@ -78,7 +81,7 @@ const handler = async (_request: Request): Promise<Response> => {
 
         const statusSent = []
 
-        for (let i = 0; i < circleUsers.length; i++) {
+        for (let i = 0; i < 1; i++) {
             const res = await fetch('https://qstash.upstash.io/v1/publish//functions/v1/send-email', {
                 method: 'POST',
                 headers: {
@@ -95,7 +98,7 @@ const handler = async (_request: Request): Promise<Response> => {
                         report: {
                             type: 'Weekly',
                                 message_1: 'Here\'s your weekly financial report, plan your next move for a better week.',
-                                message_2: 'Last week\'s activity',
+                                message_2: `Last week\'s activity on circle ${circleUsers[i].circleName}`,
                                 expense_amount: circleUsers[i].expenseAmount,
                                 income_amount: circleUsers[i].incomeAmount
                         }
