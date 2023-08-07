@@ -68,3 +68,8 @@ export async function createCircleUser(userId: string, circleId: string) {
         }
     })
 }
+
+
+export async function updateCircleUser(circleUserId: string, receiveReport: boolean) {
+    return prisma.circleUsers.update({where: {id: circleUserId}, data: { receiveReport }})
+}
