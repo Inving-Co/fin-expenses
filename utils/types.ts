@@ -47,4 +47,5 @@ export interface CircleUser {
     userId: string
     createdAt: string
     updatedAt: string
+    receiveReport: boolean
 }
