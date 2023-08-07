@@ -35,10 +35,10 @@ model CircleUsers {
   circleId               String?   @db.Uuid
   createdAt              DateTime  @default(now())
   updatedAt              DateTime  @default(now()) @updatedAt
+  latestReportReceivedAt DateTime?
+  receiveReport          Boolean   @default(true)
   circle                 Circles?  @relation(fields: [circleId], references: [id])
   user                   Users?    @relation(fields: [userId], references: [id])
-  receiveReport          Boolean   @default(true)
-  latestReportReceivedAt DateTime?
 }
 
 model Transactions {
