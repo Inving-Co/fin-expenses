@@ -6,13 +6,14 @@
     </template>
   </general-modal>
 
-
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
     <div class="flex justify-end">
       <general-signout/>
     </div>
-    <dropdowns-circles-selector @on-changed="refreshTrx()"/>
+    <div class="flex justify-between mt-2">
+      <dropdowns-circles-selector @on-changed="refreshTrx()"/>
+    </div>
     <div v-if="transactions" class="max-h-1/4 w-full gap-4 sm:flex justify-center mb-8 mt-2">
       <expenses-structure-chart class="sm:w-1/2 md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
                                 :transactions="transactions"/>
