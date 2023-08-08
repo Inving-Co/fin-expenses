@@ -65,8 +65,6 @@ const checkToken = async (jwt: string) => {
   const data = textEncoder(jwtParts[0] + '.' + jwtParts[1])
   const secretKey = useRuntimeConfig().public.APP_SECRET_KEY;
 
-  console.log('secret', secretKey)
-
   const key = await crypto.subtle.importKey("raw", textEncoder(secretKey), {
     name: "HMAC",
     hash: "SHA-256"
