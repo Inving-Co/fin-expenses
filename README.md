@@ -2,16 +2,33 @@
 This application are mean to be the tools for my family, the feature are based on the family feedback (My Wife).
 
 ### Available Features
-- Record Income and Expenses
-- Simple Report such as:
-  - Expenses Categories
-  - Cash Flow
-  - Debt Percentage by Income
-- Multiple family records (Circle)
+- [x] Record Income and Expenses
+- [x] Simple Report such as:
+  - [x] Expenses Categories
+  - [x] Cash Flow
+  - [x] Debt Percentage by Income
+- [x] Multiple family records (Circle)
+- [x] Invite user to circle
+- [x] Weekly report by Email
 
 ### Planned Features
-- Invite user to circle
-- Daily report by Email / Telegram
-- Assets Planner
-- Assets Prediction
-- Integrate with ChatGPT
+- [ ] Assets Planner
+- [ ] Assets Prediction
+- [ ] Integrate with ChatGPT
+
+### Tech Stack
+- [x] Nuxt3
+  - [x] Typescript
+  - [x] TailwindCSS
+  - [x] Flowbite
+- [x] Prisma
+- [x] PostgreSQL
+
+### Services
+- [x] Supabase
+  - [x] Auth
+  - [x] Database
+- [x] Vercel
+- [x] Upstash
+  - [x] Qstash
+- [x] Sendgrid
