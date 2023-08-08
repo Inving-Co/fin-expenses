@@ -24,8 +24,8 @@ export default defineNuxtConfig({
     ],
     runtimeConfig: {
         APP_SECRET_PIN: process.env.APP_SECRET_PIN,
-        APP_SECRET: process.env.APP_SECRET,
         public: {
+            APP_SECRET_KEY: process.env.APP_SECRET_KEY,
             APP_DOMAIN: process.env.APP_DOMAIN,
         }
     },

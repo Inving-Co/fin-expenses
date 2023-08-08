@@ -95,13 +95,14 @@ const handler = async (_request: Request): Promise<Response> => {
                         recipient_name: circleUsers[i].userName,
                         from: 'report@inving.co',
                         content: {
-                        report: {
-                            type: 'Weekly',
-                                message_1: 'Here\'s your weekly financial report, plan your next move for a better week.',
-                                message_2: `Last week\'s activity on circle ${circleUsers[i].circleName}`,
-                                expense_amount: circleUsers[i].expenseAmount,
-                                income_amount: circleUsers[i].incomeAmount
-                        }
+                            circleUserId: circleUsers[i].circleUserId,
+                            report: {
+                                type: 'Weekly',
+                                    message_1: 'Here\'s your weekly financial report, plan your next move for a better week.',
+                                    message_2: `Last week\'s activity on circle ${circleUsers[i].circleName}`,
+                                    expense_amount: circleUsers[i].expenseAmount,
+                                    income_amount: circleUsers[i].incomeAmount
+                            }
                     }
                 }, (_, v) => typeof v === 'bigint' ? +v.toString() : v),
             })
