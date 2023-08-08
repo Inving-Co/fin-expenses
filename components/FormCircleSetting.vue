@@ -91,7 +91,6 @@ async function onToggleEmailReportChange(receiveReport: boolean) {
 
 
   if (circleUser.value) {
-    // console.log(receiveReport)
     circleUser.value.receiveReport = receiveReport
 
     const {data: result, status} = await useFetch('/api/circleUsers/update.circleUsers', {
