@@ -16,7 +16,7 @@ const isLoggedIn = ref<boolean>(false)
 const emit = defineEmits(['on-signout'])
 
 onMounted(() => {
-  isLoggedIn.value = useCookie('user-id').value !== undefined
+  isLoggedIn.value = useCookie('access-token').value !== undefined
 })
 
 </script>

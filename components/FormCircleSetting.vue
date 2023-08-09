@@ -42,7 +42,6 @@
 <script setup lang="ts">
 import {Circle, CircleUser} from "~/utils/types";
 import {toast} from "vue3-toastify";
-import {useCookie} from "#app";
 
 const circle = ref<Circle | null>(null)
 const circleUser = ref<CircleUser | null>(null)
@@ -50,7 +49,7 @@ const copiedLink = ref<string | null>(null)
 const elink = ref<string | null>(null)
 const isLoadingToggle = ref<boolean>(false)
 
-const userId = useCookie('user-id')
+const auth = useAuth()
 
 const props = defineProps({
   circleId: {
@@ -72,7 +71,7 @@ const activatorLoad = async (value: string) => {
   })
 
   circle.value = data.value as any
-  const myCircles = circle.value?.circleUsers.filter((e: CircleUser) => e.userId === userId.value) ?? []
+  const myCircles = circle.value?.circleUsers.filter((e: CircleUser) => e.userId === auth.value?.userId) ?? []
 
   circleUser.value = myCircles.length > 0 ? myCircles[0] : null
 }
@@ -102,7 +101,6 @@ async function onToggleEmailReportChange(receiveReport: boolean) {
     })
 
     if (status.value !== 'success') {
-      console.log(status.value)
       circleUser.value.receiveReport = !receiveReport
     }
   }

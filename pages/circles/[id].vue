@@ -82,7 +82,7 @@
 <script setup lang="ts">
 import {useRoute} from 'vue-router'
 import lodash from "lodash";
-import {navigateTo, useCookie} from "#app";
+import {navigateTo} from "#app";
 import {initTooltips} from "flowbite";
 import {ElementEvent} from "~/utils/types";
 import {toast} from "vue3-toastify";
@@ -95,13 +95,13 @@ onMounted(() => {
 
 let modalConfirmJoin: ElementEvent | null = null
 const isLoadingSubmit = ref<boolean>(false)
-const userId = useCookie('user-id')
+const auth = useAuth()
 const route = useRoute()
 const {data: circle} = await useFetch(`/api/circles/${route.params.id}`, {
   watch: [isLoadingSubmit],
 },)
 
-const isHasJoined = computed(() => includes(map(circle.value?.circleUsers, (val: any) => val.userId), userId.value));
+const isHasJoined = computed(() => includes(map(circle.value?.circleUsers, (val: any) => val.userId), auth.value?.userId));
 
 async function onSubmitJoin() {
   isLoadingSubmit.value = true

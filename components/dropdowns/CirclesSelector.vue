@@ -80,9 +80,7 @@
 
 <script setup lang="ts">
 import {capitalizeFirstLetter} from "~/utils/functions";
-import {useCookie} from "#app";
 import {Circle, ElementEvent} from "~/utils/types";
-import FormCircleInvitation from "~/components/FormCircleInvitation.vue";
 import FormCircleSetting from "~/components/FormCircleSetting.vue";
 
 const emit = defineEmits(['on-mounted', 'on-changed'])
