@@ -62,6 +62,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import {useCurrencyInput} from 'vue-currency-input'
 import {watchDebounced} from "@vueuse/shared";
 import {EditableTransaction, Transaction} from "~/utils/types";
+import {useCategories} from "~/composables/categories";
 
 
 const props = defineProps({
@@ -88,7 +89,8 @@ const {inputRef} = useCurrencyInput({
   precision: 0,
 })
 const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue'])
-const {data: categories, error, pending: isLoadingCategory}: any = await useFetch('/api/categories', {})
+const categories = useCategories()
+
 
 watchDebounced(formTransaction.value, (value) => emit('update:modelValue', value), {debounce: 1000}) // Vue 2: emit('input', value)
 
