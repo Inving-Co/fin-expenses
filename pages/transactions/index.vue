@@ -11,7 +11,7 @@
       <general-signout/>
     </div>
     <div class="flex justify-between mt-2">
-      <dropdowns-circles-selector @on-changed="refreshTrx()"/>
+      <dropdowns-circles-selector @circle-changed="refreshTrx()"/>
     </div>
     <div v-if="transactions" class="max-h-1/4 w-full gap-4 sm:flex justify-center mb-8 mt-2">
       <expenses-structure-chart class="sm:w-1/2 md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
@@ -113,24 +113,25 @@
             v-on:keydown.esc="trx.isEditMode = false; selectedTransaction = null">
           <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
             <span v-if="!trx.isEditMode">{{ format(parseISO(trx.date), 'dd/MM/yyyy') }}</span>
-            <span v-else> <VueDatePicker v-model="selectedTransaction.date" format="dd/MM/yyyy"
-                                         :enable-time-picker="false" name="datepicker" locale="id-ID" auto-apply
-                                         @update:model-value="onUpdate"/></span>
+                        <span v-else> <VueDatePicker v-model="selectedTransaction.date" format="dd/MM/yyyy"
+                                                     :enable-time-picker="false" name="datepicker" locale="id-ID" auto-apply
+                                                     @update:model-value="onUpdate(trx)"/></span>
           </th>
           <td class="px-6 py-4">
             <span v-if="!trx.isEditMode">{{ capitalizeFirstLetter(trx.description) }}</span>
-            <span v-else class="flex"><input v-model="selectedTransaction.description" type="text" name="Description"
-                                             id="Description"
-                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                             v-on:keydown.enter="onUpdate">
-                          <button
-                              class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                              type="button" @click="onDelete(trx.id); "><icons-trash/></button>
+            <span v-else class="flex">
+              <input v-model="selectedTransaction.description" type="text" name="Description"
+                     id="Description"
+                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                     v-on:keydown.enter="onUpdate">
+              <button
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  type="button" @click="onDelete(trx.id); "><icons-trash/></button>
             </span>
           </td>
           <td class="px-6 py-4">
             <span v-if="!trx.isEditMode">{{ currencyIDRFormatter.format(trx.amount) }}</span>
-            <span v-else><input v-model="selectedTransaction.amount" ref="inputRef" name="Amount"
+            <span v-else><input v-model="selectedTransaction.amount" name="Amount"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                 type="text"
                                 placeholder="Example: 20000" v-on:keydown.enter="onUpdate"/>
@@ -204,13 +205,8 @@
 <script setup lang="ts">
 
 import {initDropdowns} from "flowbite";
-import {
-  endOfToday,
-  format,
-  parseISO,
-  startOfMonth,
-} from 'date-fns'
-import {capitalizeFirstLetter, checkToken, currencyIDRFormatter, onSignOut} from "~/utils/functions";
+import {endOfToday, format, parseISO, startOfMonth,} from 'date-fns'
+import {capitalizeFirstLetter, currencyIDRFormatter, onSignOut} from "~/utils/functions";
 import {Category, EditableTransaction, ElementEvent, Transaction} from "~/utils/types";
 import FormTransaction from "~/components/FormTransaction.vue";
 import {useCurrencyInput} from "vue-currency-input";
@@ -229,11 +225,11 @@ const categoriesFilter = ref<string[]>([])
 const selectedTransaction = ref<EditableTransaction | null>(null)
 const categories = ref<Category[]>([])
 
-const {inputRef} = useCurrencyInput({
-  currency: 'IDR',
-  locale: 'id-ID',
-  precision: 0,
-})
+// const {inputRef} = useCurrencyInput({
+//   currency: 'IDR',
+//   locale: 'id-ID',
+//   precision: 0,
+// })
 
 let modalFormTransaction: ElementEvent | null = null
 
@@ -289,7 +285,7 @@ async function onDelete(trxId: String) {
   }
 }
 
-async function onUpdate() {
+async function onUpdate(trx: any) {
   const currentRow = selectedTransaction.value
 
   if (currentRow?.amount && currentRow.description && currentRow.id && currentRow.date && currentRow.categoryId) {
@@ -306,22 +302,21 @@ async function onUpdate() {
     })
 
     if (status.value === 'success') {
-      selectedTransaction.value = null
-
       await refreshTrx()
     }
   }
 }
 
 function onDoubleClickRow(trx: any) {
-  trx.isEditMode = true;
 
   if (selectedTransaction.value && transactions.value) {
     const index = transactions.value.indexOf(selectedTransaction.value) as number
     transactions.value.at(index).isEditMode = false;
   }
 
+  // trx.date = format(parseISO(trx.date), 'dd/MM/yyyy')
   selectedTransaction.value = trx
+  trx.isEditMode = true;
 }
 
 function resetAllIsEditMode() {
