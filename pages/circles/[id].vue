@@ -32,14 +32,14 @@
               isHasJoined ? 'You have joined with this circle' : 'You\'re invited to join Circle\'s'
             }}</small>
         </div>
-        <button v-if="userId && !isHasJoined" data-tooltip-target="tooltip-join" type="button"
+        <button v-if="auth.userId && !isHasJoined" data-tooltip-target="tooltip-join" type="button"
                 class="text-white w-12 h-12 bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 @click="modalConfirmJoin?.show()">
           <icons-login/>
           <span class="sr-only">Join Circle</span>
         </button>
 
-        <span v-else-if="!userId" class="text-sm font-light text-gray-500 dark:text-gray-400">
+        <span v-else-if="!auth.userId" class="text-sm font-light text-gray-500 dark:text-gray-400">
               You're not logged in, please <nuxt-link to="/register"
                                                       class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</nuxt-link>
         </span>
