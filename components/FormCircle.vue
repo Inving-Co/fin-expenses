@@ -21,8 +21,17 @@
 
 <script setup lang="ts">
 
+const auth = useAuth()
+
 const name = ref<string>('Personal Circle\'s')
 const isLoadingSubmit = ref<boolean>(false)
+
+onMounted(() => {
+  const firstEmail = auth.value?.email?.split('@')[0] ?? 'Personal'
+  const personalName = firstEmail.replace('.', ' ')
+
+  name.value = `${capitalizeFirstLetter(personalName)} Circle\'s`
+})
 
 const emit = defineEmits(['setted', 'on-success'])
 
