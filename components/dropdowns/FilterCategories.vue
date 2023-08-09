@@ -42,13 +42,23 @@
 <script setup lang="ts">
 import {capitalizeFirstLetter} from "~/utils/functions";
 import {Category} from "~/utils/types";
+import {useCategories} from "~/composables/categories";
+
+const $categories = useCategories()
 
 const emit = defineEmits(['on-filter-changed', 'on-mounted'])
 
-const {data: categories, error}: any = await useFetch('/api/categories', {})
+const {data: categories, error, }: any = await useFetch('/api/categories', {
+  onResponse({ request, response, options }) {
+    if(response.ok) {
+      $categories.value = response._data
+    }
+  },
+
+})
 
 onMounted(() => {
-  emit('on-mounted', categories)
+  emit('on-mounted')
 
   setCategoriesFilter()
 })
