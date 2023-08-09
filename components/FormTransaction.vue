@@ -1,44 +1,50 @@
 <template>
   <div>
     <form ref="form" class="space-y-6">
-      <div>
-        <label for="description"
-               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-        <input v-model="formTransaction.description" type="text" name="description" id="description"
-               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-               placeholder="Example: Makan Siang" required
-               @keyup.enter="onSave" >
+      <div class="flex gap-2">
+        <div>
+          <label for="description"
+                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+          <input v-model="formTransaction.description" type="text" name="description" id="description"
+                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                 placeholder="Example: Makan Siang" required
+                 @keyup.enter="onSave" >
+        </div>
+        <div>
+          <label for="datepicker" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date</label>
+          <VueDatePicker v-model="formTransaction.date" name="datepicker" id="datepicker" locale="id-ID" format="dd/MM/yyyy"
+                         input-class-name="dp-custom-input"
+                         hide-input-icon
+                         :enable-time-picker="false" placeholder="Select Date"
+                         auto-apply/>
+        </div>
       </div>
 
       <div>
-        <label for="datepicker" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date</label>
-        <VueDatePicker v-model="formTransaction.date" name="datepicker" id="datepicker" locale="id-ID" format="dd/MM/yyyy"
-                       :enable-time-picker="false" placeholder="Select Date"
-                       auto-apply/>
+        <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
+        <input v-model="formTransaction.amount" ref="inputRef" name="amount" id="amount"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+               type="text"
+               placeholder="Example: 20000" required  @keyup.enter="onSave"/>
       </div>
       <div v-if="!isLoadingCategory">
         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
-        <div v-for="category in categories" class="flex items-center mb-4">
+        <div v-for="category in categories" class="inline-flex items-center mb-4 mx-2">
           <input v-model="formTransaction.categoryId" :id="`radio-${category.id}`" type="radio" :value="category.id"
-                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                 class="w-4 h-4 hidden peer text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                  :name="`radio-${category.id}`" required
                  @keyup.enter="onSave">
-          <label :for="`radio-${category.id}`" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{
-              capitalizeFirstLetter(category.name)
-            }}</label>
+          <label :for="`radio-${category.id}`" class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+              <div class="text-lg font-semibold">
+                {{ capitalizeFirstLetter(category.name) }}
+            </div>
+          </label>
         </div>
-      </div>
-      <div>
-        <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
-        <input v-model="formTransaction.amount" ref="inputRef" name="amount" id="amount"
-               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-               type="text"
-               placeholder="Example: 20000" required  @keyup.enter="onSave"/>
       </div>
 
       <button type="button"
               :disabled="isLoadingSubmit"
-              class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              class="w-full text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               @click="onSave">
         <span v-if="isLoadingSubmit">
           <icons-circular-indicator class="inline w-4 h-4 mr-3 text-white animate-spin" />
@@ -157,6 +163,17 @@ async function onSave() {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+//bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white
+.dp-custom-input {
+  background: #F9FAFB;
+  border-color: #D1D5DB;
+  color: gray;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding: 0.625rem;
+  display: block;
+  width: 100%;
+  border-radius: 0.5rem;
+}
 </style>

@@ -21,7 +21,7 @@ This application are mean to be the tools for my family, the feature are based o
   - [x] Typescript
   - [x] TailwindCSS
   - [x] Flowbite
-- [x] Prisma
+  - [x] Prisma
 - [x] PostgreSQL
 
 ### Services

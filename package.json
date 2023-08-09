@@ -16,6 +16,7 @@
     "@types/node": "^18.16.19",
     "nuxt": "^3.6.5",
     "prisma": "^5.0.0",
+    "sass": "^1.64.2",
     "supabase": "^1.82.6"
   },
   "dependencies": {

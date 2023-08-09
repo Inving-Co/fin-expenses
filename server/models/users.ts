@@ -1,8 +1,9 @@
 import {prisma} from "~/server/models/prisma";
 
-export async function createUser(email: string) {
+export async function createUser(id: string, email: string) {
     return prisma.users.create({
         data: {
+            id,
             email
         }
     });
