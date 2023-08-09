@@ -83,7 +83,7 @@ import {capitalizeFirstLetter} from "~/utils/functions";
 import {Circle, ElementEvent} from "~/utils/types";
 import FormCircleSetting from "~/components/FormCircleSetting.vue";
 
-const emit = defineEmits(['on-mounted', 'on-changed'])
+const emit = defineEmits(['on-mounted', 'circle-changed'])
 let modalFormCircle: ElementEvent | null = null
 let modalFormCircleInvitation: ElementEvent | null = null
 let modalSetting: ElementEvent | null = null
@@ -126,7 +126,7 @@ function onCircleChange(value: Circle) {
   /// I think the cookie itself was async, it means that when I put new value on circle
   /// It will still use the old value when I refresh the trx, so I need to delay some milliseconds
   /// to make it refresh later
-  setTimeout(() => emit('on-changed'), 50)
+  setTimeout(() => emit('circle-changed'), 50)
 }
 </script>
 
