@@ -88,7 +88,6 @@ function copyText() {
 async function onToggleEmailReportChange(receiveReport: boolean) {
   isLoadingToggle.value = true
 
-
   if (circleUser.value) {
     circleUser.value.receiveReport = receiveReport
 
