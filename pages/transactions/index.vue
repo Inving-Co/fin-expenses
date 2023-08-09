@@ -51,9 +51,7 @@
 
         <dropdowns-filter-dates
             @on-filter-changed="startFilterDate = $event.start; endFilterDate = $event.end; filterDate = $event.label"/>
-
-        <dropdowns-filter-categories @on-mounted="categories = $event"
-                                     @on-filter-changed="categoriesFilter = $event; refreshTrx()"/>
+        <dropdowns-filter-categories @on-filter-changed="categoriesFilter = $event; refreshTrx()"/>
 
         <button
             class="h-[38px] inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
@@ -209,12 +207,12 @@ import {endOfToday, format, parseISO, startOfMonth,} from 'date-fns'
 import {capitalizeFirstLetter, currencyIDRFormatter, onSignOut} from "~/utils/functions";
 import {Category, EditableTransaction, ElementEvent, Transaction} from "~/utils/types";
 import FormTransaction from "~/components/FormTransaction.vue";
-import {useCurrencyInput} from "vue-currency-input";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import ExpensesStructureChart from "~/components/ExpensesStructureChart.vue";
 import DebtPercentageByIncome from "~/components/DebtPercentageByIncome.vue";
 import {toast} from "vue3-toastify";
+import {useCategories} from "~/composables/categories";
 
 const searchKey = ref<string>('')
 const filterDate = ref<string>('this month')
@@ -223,13 +221,7 @@ const startFilterDate = ref<string>(format(startOfMonth(new Date()), 'yyyy-MM-dd
 const endFilterDate = ref<string>(format(endOfToday(), 'yyyy-MM-dd HH:mm'))
 const categoriesFilter = ref<string[]>([])
 const selectedTransaction = ref<EditableTransaction | null>(null)
-const categories = ref<Category[]>([])
-
-// const {inputRef} = useCurrencyInput({
-//   currency: 'IDR',
-//   locale: 'id-ID',
-//   precision: 0,
-// })
+const categories = useCategories()
 
 let modalFormTransaction: ElementEvent | null = null
 
@@ -293,7 +285,7 @@ async function onUpdate(trx: any) {
       method: 'POST',
       body: JSON.stringify({
         id: currentRow.id,
-        amount: currentRow.amount,
+        amount: +currentRow.amount,
         description: currentRow.description,
         date: currentRow.date,
         categoryId: currentRow.categoryId,
