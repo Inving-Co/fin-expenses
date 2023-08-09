@@ -45,7 +45,7 @@ import {Category} from "~/utils/types";
 
 const emit = defineEmits(['on-filter-changed', 'on-mounted'])
 
-const {data: categories}: any = await useFetch('/api/categories', {})
+const {data: categories, error}: any = await useFetch('/api/categories', {})
 
 onMounted(() => {
   emit('on-mounted', categories)

@@ -5,7 +5,6 @@
                         @on-success="modalFormTransaction?.hide(); refreshTrx(); selectedTransaction = null"/>
     </template>
   </general-modal>
-
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
     <div class="flex justify-end">
@@ -211,13 +210,12 @@ import {
   parseISO,
   startOfMonth,
 } from 'date-fns'
-import {capitalizeFirstLetter, currencyIDRFormatter, onSignOut} from "~/utils/functions";
+import {capitalizeFirstLetter, checkToken, currencyIDRFormatter, onSignOut} from "~/utils/functions";
 import {Category, EditableTransaction, ElementEvent, Transaction} from "~/utils/types";
 import FormTransaction from "~/components/FormTransaction.vue";
 import {useCurrencyInput} from "vue-currency-input";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-import FormSecretPin from "~/components/FormSecretPin.vue";
 import ExpensesStructureChart from "~/components/ExpensesStructureChart.vue";
 import DebtPercentageByIncome from "~/components/DebtPercentageByIncome.vue";
 import {toast} from "vue3-toastify";

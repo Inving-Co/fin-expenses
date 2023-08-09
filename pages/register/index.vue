@@ -62,7 +62,7 @@ async function onSubmitRegister() {
       throw 'Password Confirmation Invalid'
     }
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: email.value,
       password: password.value,
       options: {
@@ -74,10 +74,11 @@ async function onSubmitRegister() {
       throw error.message
     }
 
-    const {data: result, status} = await useFetch('/api/users/create.user', {
+    const {data: _, status} = await useFetch('/api/users/create.user', {
       method: 'POST',
       body: JSON.stringify({
-        email: email.value
+        email: email.value,
+        id: data.user?.id
       })
     })
 

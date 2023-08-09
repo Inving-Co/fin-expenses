@@ -2,11 +2,6 @@ import {supabase} from "~/utils/functions";
 import {useCookie, navigateTo} from "#app";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    // const auth = useState('auth')
-    // if (!auth.value.authenticated) {
-    //     return navigateTo('/login')
-    // }
-
     const refreshToken = useCookie('my-refresh-token')
     const accessToken = useCookie('my-access-token')
 
@@ -18,6 +13,4 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     } else {
         return navigateTo('/login')
     }
-// // returns user information
-//     await supabase.auth.getUser()
 })

@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import {supabase} from "~/utils/functions";
+import {generateToken, supabase} from "~/utils/functions";
 import {toast} from 'vue3-toastify';
 import {navigateTo, useCookie, useNuxtApp} from "#app";
 
@@ -86,10 +86,19 @@ async function onSubmitLogin() {
         email: data.user?.email
       }
     })
+
+    const accessToken = await generateToken({userId: result.value?.id})
     useCookie('user-id', {
       secure: true,
       sameSite: 'lax',
     }).value = `${result.value?.id}`
+
+    useCookie('access-token', {
+      secure: true,
+      sameSite: 'lax',
+      maxAge: 60*60*24*7
+    }).value = `${accessToken}`
+
     return navigateTo('/transactions')
   }
 
