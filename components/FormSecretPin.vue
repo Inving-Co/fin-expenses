@@ -44,7 +44,7 @@ async function onSignOut() {
 
   useCookie('user-id').value = undefined
 
-  return navigateTo('/login')
+  return navigateTo('/')
 }
 </script>
 
