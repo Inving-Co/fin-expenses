@@ -31,7 +31,7 @@
               <span v-else>Sign Up</span>
             </button>
             <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-              Already have an account? <nuxt-link  to="/login" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign in</nuxt-link>
+              Already have an account? <nuxt-link  to="/" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign in</nuxt-link>
             </p>
           </form>
         </div>
@@ -70,7 +70,7 @@ async function onSubmitRegister() {
       email: email.value,
       password: password.value,
       options: {
-        emailRedirectTo: `${window.location.origin}/login`,
+        emailRedirectTo: `${window.location.origin}/`,
       }
     })
 
@@ -93,7 +93,7 @@ async function onSubmitRegister() {
     }
 
     toast.success('Register success, please check your email.')
-    return navigateTo('/login')
+    return navigateTo('/')
   } catch (e: any) {
     if(typeof(e) === "string") {
       toast.error(e)

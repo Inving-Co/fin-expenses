@@ -94,5 +94,5 @@ export async function onSignOut() {
     useCookie('selected-circle').value = undefined
     useCookie('access-token').value = undefined
 
-    return navigateTo('/login')
+    return navigateTo('/')
 }
