@@ -7,6 +7,6 @@
 
 <script setup lang="ts">
 onMounted(() => {
-  setTimeout(() => navigateTo('transactions'), 10)
+  setTimeout(() => navigateTo('transactions', {replace: true}), 10)
 })
 </script>
