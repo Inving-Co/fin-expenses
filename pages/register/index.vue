@@ -44,6 +44,8 @@
 import {supabase} from "~/utils/functions";
 import { toast } from 'vue3-toastify';
 import {navigateTo} from "#app";
+import va from '@vercel/analytics';
+
 const email = ref<string>('')
 const password = ref<string>('')
 const passwordConf = ref<string>('')
@@ -56,6 +58,8 @@ definePageMeta({
 
 async function onSubmitRegister() {
   isLoadingSubmit.value = true
+
+  va.track('Signup');
 
   try {
     if (password.value !== passwordConf.value) {
