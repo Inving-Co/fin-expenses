@@ -225,6 +225,8 @@ let modalFormTransaction: ElementEvent | null = null
 
 onMounted(() => {
   initDropdowns()
+
+  refreshTrx()
 })
 
 const {
