@@ -1,11 +1,19 @@
 import {prisma} from "~/server/models/prisma";
 
-export async function getCategories(key: string) {
+export async function getCategories(key: string, circleId: string | undefined, ) {
     const result = await prisma.categories.findMany({
         where: {
             name: {
                 contains: key?.toLowerCase()
-            }
+            },
+            OR: [
+                {
+                    circleId: circleId,
+                },
+                {
+                    circleId: null,
+                }
+            ]
         },
     })
 
