@@ -51,10 +51,9 @@ const emit = defineEmits(['on-filter-changed', 'on-mounted'])
 const {data: categories, error, }: any = await useFetch('/api/categories', {
   onResponse({ request, response, options }) {
     if(response.ok) {
-      $categories.value = response._data
+      $categories.value.data = response._data
     }
   },
-
 })
 
 onMounted(() => {

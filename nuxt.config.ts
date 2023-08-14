@@ -22,7 +22,7 @@ export default defineNuxtConfig({
     css: [
         '~/assets/css/main.css'
     ],
-    plugins: [{ src: '~/plugins/vercel.ts', mode: 'client' }],
+    plugins: ["~/plugins/vercel.client.ts", "~/plugins/lottie.ts"],
     runtimeConfig: {
         APP_SECRET_PIN: process.env.APP_SECRET_PIN,
         public: {
