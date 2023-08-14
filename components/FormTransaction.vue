@@ -30,7 +30,7 @@
                @input="formTransaction.amount = $event.target.value"/>
       </div>
       <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
-      <div v-for="category in categories" class="inline-flex items-center mb-4 mx-2">
+      <div v-for="category in categories.values" class="inline-flex items-center mb-4 mx-2">
         <input v-model="formTransaction.categoryId" :id="`radio-${category.id}`" type="radio" :value="category.id"
                class="w-4 h-4 hidden peer text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                :name="`radio-${category.id}`" required

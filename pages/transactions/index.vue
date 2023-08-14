@@ -82,11 +82,8 @@
         </div>
       </div>
     </div>
-    <div v-show="isLoading"
-         class="fixed flex text-2xl justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 font-semibold bg-black bg-opacity-5 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">
-      Loading data...
-    </div>
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg" style="height: 500px !important">
+    <general-loading :is-loading="isLoading"/>
+    <div v-if="!circleUsers.isLoading && !categories.isLoading"  class="relative overflow-x-auto shadow-md sm:rounded-lg" style="height: 500px !important">
       <table v-if="!$isMobile()" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 sticky top-0 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
@@ -111,9 +108,9 @@
             v-on:keydown.esc="trx.isEditMode = false; selectedTransaction = null">
           <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
             <span v-if="!trx.isEditMode">{{ format(parseISO(trx.date), 'dd/MM/yyyy') }}</span>
-                        <span v-else> <VueDatePicker v-model="selectedTransaction.date" format="dd/MM/yyyy"
-                                                     :enable-time-picker="false" name="datepicker" locale="id-ID" auto-apply
-                                                     @update:model-value="onUpdate(trx)"/></span>
+            <span v-else> <vue-date-picker v-model="selectedTransaction.date" format="dd/MM/yyyy"
+                                           :enable-time-picker="false" name="datepicker" locale="id-ID" auto-apply
+                                           @update:model-value="onUpdate(trx)"/></span>
           </th>
           <td class="px-6 py-4">
             <span v-if="!trx.isEditMode">{{ capitalizeFirstLetter(trx.description) }}</span>
@@ -201,11 +198,10 @@
 </template>
 
 <script setup lang="ts">
-
 import {initDropdowns} from "flowbite";
 import {endOfToday, format, parseISO, startOfMonth,} from 'date-fns'
 import {capitalizeFirstLetter, currencyIDRFormatter, onSignOut} from "~/utils/functions";
-import {Category, EditableTransaction, ElementEvent, Transaction} from "~/utils/types";
+import {EditableTransaction, ElementEvent, Transaction} from "~/utils/types";
 import FormTransaction from "~/components/FormTransaction.vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -213,6 +209,7 @@ import ExpensesStructureChart from "~/components/ExpensesStructureChart.vue";
 import DebtPercentageByIncome from "~/components/DebtPercentageByIncome.vue";
 import {toast} from "vue3-toastify";
 import {useCategories} from "~/composables/categories";
+import {useCircleUsers} from "~/composables/circles";
 
 const searchKey = ref<string>('')
 const filterDate = ref<string>('this month')
@@ -222,6 +219,7 @@ const endFilterDate = ref<string>(format(endOfToday(), 'yyyy-MM-dd HH:mm'))
 const categoriesFilter = ref<string[]>([])
 const selectedTransaction = ref<EditableTransaction | null>(null)
 const categories = useCategories()
+const circleUsers = useCircleUsers()
 
 let modalFormTransaction: ElementEvent | null = null
 
