@@ -12,7 +12,7 @@ export async function getCategories(key: string) {
     for(let i = 0; i < result.length; i++) {
         // need for initial load data is checked
         // @ts-ignore
-        result[i].checked = true;
+        result[i].checked = false;
     }
 
     return result
