@@ -54,6 +54,14 @@ const valuesFilterDate = ['today', 'this week', 'this month', 'this year', 'yest
 
 const emit = defineEmits(['on-filter-changed'])
 
+onMounted(() => {
+  const dt = localStorage.getItem('current-filtered-date-selected')
+
+  if (dt) {
+    onFilterDateChanges(dt)
+  }
+})
+
 function onFilterDateChanges(value: string) {
   switch (value) {
     case('today'):
@@ -81,6 +89,8 @@ function setFilterDate(start: Date, end: Date, filterValue: string) {
   emit('on-filter-changed', {start: format(start, 'yyyy-MM-dd HH:mm'), end: format(end, 'yyyy-MM-dd HH:mm'), label: filterValue})
 
   filterDate.value = filterValue
+
+  localStorage.setItem('current-filtered-date-selected', filterValue)
 }
 
 </script>
