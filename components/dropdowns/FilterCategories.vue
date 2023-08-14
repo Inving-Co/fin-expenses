@@ -1,8 +1,9 @@
 <template>
   <general-dropdown id="dropdownFilterCategoryButton">
     <template #trigger="{activator}">
-      <button class="h-[38px] inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-              type="button" @click="activator">
+      <button
+          class="h-[38px] inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+          type="button" @click="activator">
         <span class="sr-only">Category</span>
         Category
         <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -48,9 +49,9 @@ const $categories = useCategories()
 
 const emit = defineEmits(['on-filter-changed', 'on-mounted'])
 
-const {data: categories, error, }: any = await useFetch('/api/categories', {
-  onResponse({ request, response, options }) {
-    if(response.ok) {
+const {data: categories, error,}: any = await useFetch('/api/categories', {
+  onResponse({request, response, options}) {
+    if (response.ok) {
       $categories.value.data = response._data
     }
   },
@@ -59,13 +60,46 @@ const {data: categories, error, }: any = await useFetch('/api/categories', {
 onMounted(() => {
   emit('on-mounted')
 
+  const cats = localStorage.getItem('current-filtered-categories-selected')
+
+  if (cats) {
+    const arrCats = cats.split(',');
+
+    for (let i = 0; i < arrCats.length; i++) {
+      let foundIndex = -1
+
+      for (let j = 0; j < categories.value.length; j++) {
+        const isFound = categories.value[j].id === arrCats[i]
+
+        if (isFound) {
+          foundIndex = j;
+          break;
+        }
+
+      }
+
+      if (foundIndex !== -1) {
+        categories.value[foundIndex].checked = true
+      }
+
+    }
+  } else {
+    for (let j = 0; j < categories.value.length; j++) {
+      categories.value[j].checked = true
+    }
+  }
+
+
   setCategoriesFilter()
 })
 
 const isHasChecked = computed(() => categories.value.filter((cat: Category) => cat.checked).length > 0);
 
 function setCategoriesFilter() {
-  emit('on-filter-changed', categories.value.filter((cat: Category) => cat.checked).map((cat: Category) => cat.id))
+  const values = categories.value.filter((cat: Category) => cat.checked).map((cat: Category) => cat.id)
+  emit('on-filter-changed', values)
+
+  localStorage.setItem('current-filtered-categories-selected', values.join(','))
 }
 
 function onClearSelectedCategories() {
