@@ -93,6 +93,7 @@ let selected = ref<string | null>(null)
 const isHasClose = ref<boolean>(false)
 
 const {data: circleUsers, refresh: refreshCircles} = await useFetch('/api/circleUsers', {
+  immediate: false,
   onRequest({request, response}) {
     $circleUsers.value.isLoading = true
   },
