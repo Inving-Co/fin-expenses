@@ -52,7 +52,7 @@ const selectedCircleId = ref<string | undefined>()
 
 const emit = defineEmits(['on-filter-changed', 'on-mounted'])
 
-const {data, error, refresh: refreshCategories}: any = await useFetch('/api/categories', {
+const {error}: any = await useFetch('/api/categories', {
   query: {
     selectedCircleId: selectedCircleId
   },
@@ -60,18 +60,15 @@ const {data, error, refresh: refreshCategories}: any = await useFetch('/api/cate
   onResponse({request, response, options}) {
     if (response.ok) {
       $categories.value.data = response._data
+
+      reloadState({selectedAll: false});
+      setCategoriesFilter()
     }
   },
-  watch: [selectedCircleId]
 })
 
 watch(() => $circleUsers.value.selected, async (value: any) => {
   selectedCircleId.value = value.id
-
-  await refreshCategories()
-
-  reloadState({selectedAll: false});
-  setCategoriesFilter()
 })
 
 onMounted(() => {

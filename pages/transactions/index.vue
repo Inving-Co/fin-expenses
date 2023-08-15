@@ -11,7 +11,7 @@
       <general-signout/>
     </div>
     <div class="flex justify-between mt-2">
-      <dropdowns-circles-selector @circle-changed="refreshTrx()"/>
+      <dropdowns-circles-selector />
     </div>
     <div v-if="transactions" class="max-h-1/4 w-full gap-4 sm:flex justify-center mb-8 mt-2">
       <expenses-structure-chart class="sm:w-1/2 md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
@@ -51,7 +51,7 @@
 
         <dropdowns-filter-dates
             @on-filter-changed="startFilterDate = $event.start; endFilterDate = $event.end; filterDate = $event.label"/>
-        <dropdowns-filter-categories @on-filter-changed="categoriesFilter = $event; refreshTrx()"/>
+        <dropdowns-filter-categories @on-filter-changed="categoriesFilter = $event;"/>
 
         <button
             class="h-[38px] inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
@@ -254,7 +254,7 @@ const {
       onSignOut()
     }
   },
-  watch: [startFilterDate, endFilterDate, categoriesFilter],
+  // watch: [startFilterDate, endFilterDate, categoriesFilter],
 })
 
 
