@@ -1,6 +1,6 @@
 <template>
-  <section class="bg-gray-50 dark:bg-gray-900">
-    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+  <section class="dark:bg-gray-900">
+    <div class="flex md:flex-row flex-col-reverse items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       <!--      <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">-->
       <!--        <img class="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo">-->
       <!--        Inving-->
@@ -51,6 +51,13 @@
           <span>Access as Guest</span>
         </button>
       </div>
+
+      <div class="m-8 sm:max-w-lg md:block hidden">
+        <img class="rounded-lg" src="/images/login-unsplash.jpg" alt="login illustration">
+        <span class="w-full text-center text-slate-400 text-[12px]">Photo by <a
+            href="https://unsplash.com/@kellysikkema?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank">Kelly Sikkema</a> on <a
+            href="https://unsplash.com/photos/3-Tc_5LROrM?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank">Unsplash</a></span>
+      </div>
     </div>
   </section>
 </template>
@@ -95,7 +102,7 @@ async function onSubmitLogin() {
     useCookie('access-token', {
       secure: true,
       sameSite: 'lax',
-      maxAge: 60*60*24*7
+      maxAge: 60 * 60 * 24 * 7
     }).value = `${accessToken}`
 
     return navigateTo('/transactions')
