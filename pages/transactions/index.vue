@@ -82,7 +82,6 @@
         </div>
       </div>
     </div>
-    <general-loading :is-loading="isLoading"/>
     <div v-if="!circleUsers.isLoading && !categories.isLoading"  class="relative overflow-x-auto shadow-md sm:rounded-lg" style="height: 500px !important">
       <table v-if="!$isMobile()" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 sticky top-0 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -210,6 +209,7 @@ import DebtPercentageByIncome from "~/components/DebtPercentageByIncome.vue";
 import {toast} from "vue3-toastify";
 import {useCategories} from "~/composables/categories";
 import {useCircleUsers} from "~/composables/circles";
+import {useTransactions} from "~/composables/transactions";
 
 const searchKey = ref<string>('')
 const filterDate = ref<string>('this month')
@@ -220,13 +220,13 @@ const categoriesFilter = ref<string[]>([])
 const selectedTransaction = ref<EditableTransaction | null>(null)
 const categories = useCategories()
 const circleUsers = useCircleUsers()
+const $transactions = useTransactions()
+
 
 let modalFormTransaction: ElementEvent | null = null
 
 onMounted(() => {
   initDropdowns()
-
-  refreshTrx()
 })
 
 const {
@@ -247,14 +247,19 @@ const {
     categoryIds: categoriesFilter
   },
   server: false,
+  immediate: false,
+  onRequest({request, response}) {
+    $transactions.value.isLoading = true
+  },
   onResponse: (context) => {
+    $transactions.value.isLoading = false
+
     if (context.response.status === 401) {
       toast.error(context.response.statusText);
 
       onSignOut()
     }
   },
-  // watch: [startFilterDate, endFilterDate, categoriesFilter],
 })
 
 

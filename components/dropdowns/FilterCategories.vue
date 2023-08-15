@@ -57,6 +57,9 @@ const {error}: any = await useFetch('/api/categories', {
     selectedCircleId: selectedCircleId
   },
   immediate: false,
+  onRequest({request, response}) {
+    $categories.value.isLoading = true
+  },
   onResponse({request, response, options}) {
     if (response.ok) {
       $categories.value.data = response._data
@@ -64,6 +67,8 @@ const {error}: any = await useFetch('/api/categories', {
       reloadState({selectedAll: false});
       setCategoriesFilter()
     }
+
+    $categories.value.isLoading = false
   },
 })
 
