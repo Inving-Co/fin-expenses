@@ -15,7 +15,18 @@ export default defineNuxtConfig({
     ssr: true,
     // router: { middleware: [] },
     devtools: {enabled: true},
-    modules: ['@nuxtjs/tailwindcss'],
+    modules: ['@nuxtjs/tailwindcss', ['@nuxtjs/google-fonts', {
+        families: {
+            Roboto: true,
+            Inter: [400, 700],
+            'Josefin+Sans': true,
+            Lato: [100, 300],
+            Raleway: {
+                wght: [100, 400],
+                ital: [100]
+            },
+        }
+    }]],
     build: {
         transpile: ['@vuepic/vue-datepicker']
     },
