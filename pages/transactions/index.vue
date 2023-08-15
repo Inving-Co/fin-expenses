@@ -77,7 +77,7 @@
             </svg>
           </div>
           <input :value="searchKey" :readonly="isLoading" type="text" id="table-search-transactions"
-                 class="w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                 class="w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                  placeholder="Search for transactions" v-on:keydown.enter="onSearchTransactions($event.target.value)">
         </div>
       </div>
@@ -116,7 +116,7 @@
             <span v-else class="flex">
               <input v-model="selectedTransaction.description" type="text" name="Description"
                      id="Description"
-                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                      v-on:keydown.enter="onUpdate">
               <button
                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
@@ -126,7 +126,7 @@
           <td class="px-6 py-4">
             <span v-if="!trx.isEditMode">{{ currencyIDRFormatter.format(trx.amount) }}</span>
             <span v-else><input v-model="selectedTransaction.amount" name="Amount"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                 type="text"
                                 placeholder="Example: 20000" v-on:keydown.enter="onUpdate"/>
             </span>
@@ -135,7 +135,7 @@
             <span v-if="!trx.isEditMode">{{ capitalizeFirstLetter(trx.category.name) }}</span>
             <span v-else>
               <select v-model="selectedTransaction.categoryId" id="categories"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       @change="onUpdate">
                 <option v-for="category in categories" :value="category.id" selected>
                   {{ capitalizeFirstLetter(category.name) }}
