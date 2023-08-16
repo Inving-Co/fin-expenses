@@ -53,7 +53,7 @@
               </div>
             </div>
             <button
-                v-if="circleUser?.userId"
+                v-if="$auth?.userId"
                 class="rounded-md text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                 type="button" @click="onCircleChange(circleUser?.circle); modalSetting?.show()">
               <span class="sr-only">Setting</span>
@@ -67,7 +67,7 @@
         <li>
           <button
               class="w-full mt-2 text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-              type="button" @click="isHasClose=true; modalFormCircle?.show()">
+              type="button" @click="isHasClose = true; modalFormCircle?.show()">
             <span class="sr-only">Create</span>
             Create
           </button>
@@ -78,16 +78,18 @@
 </template>
 
 <script setup lang="ts">
-import {capitalizeFirstLetter} from "~/utils/functions";
+import {capitalizeFirstLetter, checkAuth} from "~/utils/functions";
 import {Circle, ElementEvent} from "~/utils/types";
 import FormCircleSetting from "~/components/FormCircleSetting.vue";
 import {useCircleUsers} from "~/composables/circles";
+import {useAuth} from "~/composables/auth";
 
 const emit = defineEmits(['on-mounted', 'circle-changed'])
 let modalFormCircle: ElementEvent | null = null
 let modalFormCircleInvitation: ElementEvent | null = null
 let modalSetting: ElementEvent | null = null
 
+const $auth = useAuth()
 const $circleUsers = useCircleUsers()
 let selected = ref<string | null>(null)
 const isHasClose = ref<boolean>(false)
