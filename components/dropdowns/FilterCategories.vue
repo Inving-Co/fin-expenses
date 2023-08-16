@@ -52,6 +52,9 @@ const selectedCircleId = ref<string | undefined>()
 
 const emit = defineEmits(['on-filter-changed', 'on-mounted'])
 
+const categories = computed(() => $categories.value.data)
+const isHasChecked = computed(() => categories.value?.filter((cat: Category) => cat.checked).length > 0);
+
 const {error}: any = await useFetch('/api/categories', {
   query: {
     selectedCircleId: selectedCircleId
@@ -80,8 +83,6 @@ onMounted(() => {
   emit('on-mounted')
 })
 
-const categories = computed(() => $categories.value.data)
-const isHasChecked = computed(() => categories.value?.filter((cat: Category) => cat.checked).length > 0);
 
 function reloadState({selectedAll = false}) {
   if (selectedAll) {
