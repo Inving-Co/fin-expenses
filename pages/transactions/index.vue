@@ -206,7 +206,7 @@
 <script setup lang="ts">
 import {initDropdowns} from "flowbite";
 import {endOfToday, format, parseISO, startOfMonth,} from 'date-fns'
-import {capitalizeFirstLetter, currencyIDRFormatter, onSignOut} from "~/utils/functions";
+import {capitalizeFirstLetter, checkAuth, currencyIDRFormatter, onSignOut} from "~/utils/functions";
 import {EditableTransaction, ElementEvent, Transaction} from "~/utils/types";
 import FormTransaction from "~/components/FormTransaction.vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
@@ -235,6 +235,8 @@ let modalFormCategory: ElementEvent | null = null
 
 onMounted(() => {
   initDropdowns()
+  checkAuth()
+
 })
 
 const {
