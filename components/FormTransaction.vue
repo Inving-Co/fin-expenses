@@ -45,11 +45,10 @@
       <div v-else class="h-10 w-10 inline-flex mx-2 p-2" style="margin-top: 0"/>
       <div v-for="(category, index) of categories.data" class="relative h-10 inline-flex items-center mb-4 mx-3">
         <div v-if="!category.edited">
-
           <div v-if="isEditMode">
-            <icons-close class="absolute -top-3 -left-2 w-5 h-5 rounded-md p-1 bg-red-500 text-white cursor-pointer"
+            <icons-trash class="absolute -top-3 -left-2 w-5 h-5 rounded-md p-1 bg-red-500 text-white cursor-pointer"
                          @click="onDeleteCategory(category.id)"/>
-            <icons-edit class="absolute -top-3 -right-2 w-5 h-5 rounded-md p-1 bg-primary-500 text-white cursor-pointer"
+            <icons-edit class="absolute -top-3 -right-2 w-5 h-5 rounded-md p-1 bg-purple-500 text-white cursor-pointer"
                         @click="category.edited = true"/>
           </div>
           <input v-model="formTransaction.categoryId" :id="`radio-${category.id}`" type="radio" :value="category.id"
@@ -65,11 +64,11 @@
         </div>
         <div v-else class="relative align-bottom" style="margin-top: 0">
           <icons-check class="absolute -top-3 -right-2 w-5 h-5 rounded-md p-1 bg-green-500 text-white cursor-pointer"
-                       @click=""/>
-          <input ref="inputRef" name="category-name" id="category-name" :value="category.name"
+                       @click="onUpdateCategory(index, category.id, category.name)"/>
+          <input name="category-name" id="category-name" :value="category.name"
                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-20 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                  type="text"
-                 placeholder="Example: Food" required v-on:keydown.enter="onUpdateCategory(index, category.id, $event.target.value)"/>
+                 placeholder="Example: Food" required @input="category.name = $event.target.value" v-on:keydown.enter="onUpdateCategory(index, category.id, $event.target.value)"/>
         </div>
       </div>
 
@@ -121,7 +120,7 @@ const {inputRef} = useCurrencyInput({
   locale: 'id-ID',
   precision: 0,
 })
-const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'add-category'])
+const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'add-category', 'edit-category'])
 const categories = useCategories()
 
 
@@ -135,6 +134,14 @@ watch(() => props.transaction, (newVal, oldVal) => {
       categoryId: newVal?.categoryId ?? null,
       date: newVal?.date ?? '',
     }
+  }
+})
+
+watch(() => isEditMode.value, (val) => {
+  if (!val) {
+    categories.value.data.forEach((val: Category) => {
+      val.edited = false
+    })
   }
 })
 
