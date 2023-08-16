@@ -29,7 +29,7 @@
                placeholder="Example: 20000" required @keyup.enter="onSave"
                @input="formTransaction.amount = $event.target.value"/>
       </div>
-      <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category <span
+      <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category <span v-if="$auth?.userId"
           class="inline-flex cursor-pointer" @click="emit('edit-category'); isEditMode = !isEditMode">
         <icons-edit v-if="!isEditMode" class="h-4"/>
         <icons-close v-else class="h-4"/>
@@ -45,7 +45,7 @@
       <div v-else class="h-10 w-10 inline-flex mx-2 p-2" style="margin-top: 0"/>
       <div v-for="(category, index) of categories.data" class="relative h-10 inline-flex items-center mb-4 mx-3">
         <div v-if="!category.edited">
-          <div v-if="isEditMode">
+          <div v-if="isEditMode && category.circleId">
             <icons-trash class="absolute -top-3 -left-2 w-5 h-5 rounded-md p-1 bg-red-500 text-white cursor-pointer"
                          @click="onDeleteCategory(category.id)"/>
             <icons-edit class="absolute -top-3 -right-2 w-5 h-5 rounded-md p-1 bg-purple-500 text-white cursor-pointer"
@@ -94,6 +94,7 @@ import {watchDebounced} from "@vueuse/shared";
 import {Category, EditableTransaction} from "~/utils/types";
 import {useCategories} from "~/composables/categories";
 import {toast} from "vue3-toastify";
+import {useAuth} from "~/composables/auth.ts";
 
 
 const props = defineProps({
@@ -121,6 +122,8 @@ const {inputRef} = useCurrencyInput({
   precision: 0,
 })
 const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'add-category', 'edit-category'])
+
+const $auth = useAuth()
 const categories = useCategories()
 
 

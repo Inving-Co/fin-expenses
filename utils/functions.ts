@@ -1,7 +1,6 @@
 import {createClient} from "@supabase/supabase-js";
-import {toast, ToastOptions} from "vue3-toastify";
 import {navigateTo, useCookie} from "#app";
-import {Payload} from "~/supabase/functions/send-email";
+import {useAuth} from "~/composables/auth.ts";
 
 /// https://github.com/prisma/studio/issues/614#issuecomment-1374116622
 declare global {
@@ -111,4 +110,18 @@ export async function onSignOut() {
     useCookie('access-token').value = undefined
 
     return navigateTo('/')
+}
+
+export async function checkAuth() {
+    const result = await supabase.auth.getSession()
+    const auth = useAuth()
+
+    if(result.data.session) {
+        auth.value = {
+            userId: result.data.session.user?.id,
+            email: result.data.session.user?.email,
+        }
+    } else {
+        auth.value = undefined
+    }
 }
