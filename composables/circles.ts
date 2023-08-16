@@ -1,5 +1,5 @@
-import {CircleUser} from "~/utils/types";
+import {Circle, CircleUser} from "~/utils/types";
 
-export const useCircleUsers = () => useState<{ isLoading: boolean, data: CircleUser[] }>('useCircleUsers', () => {
-    return {isLoading: false, data: []}
+export const useCircleUsers = () => useState<{ isLoading: boolean, data: CircleUser[], selected: Circle | null }>('useCircleUsers', () => {
+    return {isLoading: false, data: [], selected: null}
 });

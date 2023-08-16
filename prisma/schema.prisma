@@ -16,6 +16,7 @@ model Users {
   circleUsers  CircleUsers[]
   circles      Circles[]
   transactions Transactions[]
+  Categories   Categories[]
 }
 
 model Circles {
@@ -27,6 +28,7 @@ model Circles {
   circleUsers  CircleUsers[]
   user         Users?         @relation(fields: [userId], references: [id])
   transactions Transactions[]
+  Categories   Categories[]
 }
 
 model CircleUsers {
@@ -63,4 +65,8 @@ model Categories {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @default(now()) @updatedAt
   Transactions Transactions[]
+  userId       String?        @db.Uuid
+  circleId     String?        @db.Uuid
+  circle       Circles?       @relation(fields: [circleId], references: [id])
+  user         Users?         @relation(fields: [userId], references: [id])
 }
