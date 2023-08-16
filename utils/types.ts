@@ -31,6 +31,7 @@ export interface Category {
     createdAt: string
     updatedAt: string
     checked?: boolean
+    edited?: boolean
 }
 
 export interface Circle {
