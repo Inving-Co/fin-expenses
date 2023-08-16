@@ -1,5 +1,4 @@
 <template>
-
   <general-modal id="modal-form-circle" title="Create Circle" subtitle="Circle mean to be your group"
                  :is-has-close="isHasClose" @on-mounted="modalFormCircle = $event">
     <template #body>
@@ -94,6 +93,7 @@ let selected = ref<string | null>(null)
 const isHasClose = ref<boolean>(false)
 
 const {data: circleUsers, refresh: refreshCircles} = await useFetch('/api/circleUsers', {
+  immediate: false,
   onRequest({request, response}) {
     $circleUsers.value.isLoading = true
   },
@@ -111,7 +111,10 @@ onMounted(() => {
 
   const value = useCookie('selected-circle').value as Circle | null | undefined
 
-  if(value) selected.value = value?.id
+  if(value) {
+    $circleUsers.value.selected = value
+    selected.value = value?.id
+  }
 
   refreshCircles()
 })
@@ -133,6 +136,7 @@ function onCircleChange(value: Circle) {
   }).value = JSON.stringify(value)
 
   selected.value = value.id
+  $circleUsers.value.selected = value
 
   /// I think the cookie itself was async, it means that when I put new value on circle
   /// It will still use the old value when I refresh the trx, so I need to delay some milliseconds
