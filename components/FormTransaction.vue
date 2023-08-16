@@ -29,12 +29,23 @@
                placeholder="Example: 20000" required @keyup.enter="onSave"
                @input="formTransaction.amount = $event.target.value"/>
       </div>
-      <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
-        <div
-            class="inline-flex items-center justify-between mx-2 p-2 text-lg font-semibold text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700" @click="emit('add-category')">
-            <icons-plus/>
-        </div>
-      <div v-for="category in categories.data" class="inline-flex items-center mb-4 mx-2">
+      <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category <span
+          class="inline-flex cursor-pointer" @click="emit('edit-category'); isEditMode = !isEditMode">
+        <icons-edit v-if="!isEditMode" class="h-4 h-4"/>
+        <icons-close v-else class="h-4 h-4"/>
+      </span>
+      </label>
+      <div
+          v-if="!isEditMode"
+          class="h-10 w-10 inline-flex align-bottom mx-2 p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+          style="margin-top: 0"
+          @click="emit('add-category')">
+        <icons-plus />
+      </div>
+      <div v-else class="h-10 w-10 inline-flex mx-2 p-2" style="margin-top: 0"/>
+      <div v-for="category in categories.data" class="relative h-10 inline-flex items-center mb-4 mx-3">
+        <icons-close v-if="isEditMode" class="absolute -top-3 -left-2 w-5 h-5 rounded-md p-1 bg-red-500 text-white cursor-pointer" @click="onDeleteCategory(category.id)"/>
+        <icons-edit v-if="isEditMode" class="absolute -top-3 -right-2 w-5 h-5 rounded-md p-1 bg-primary-500 text-white cursor-pointer"/>
         <input v-model="formTransaction.categoryId" :id="`radio-${category.id}`" type="radio" :value="category.id"
                class="w-4 h-4 hidden peer text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                :name="`radio-${category.id}`" required
@@ -66,8 +77,9 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import {useCurrencyInput} from 'vue-currency-input'
 import {watchDebounced} from "@vueuse/shared";
-import {EditableTransaction, Transaction} from "~/utils/types";
+import {Category, EditableTransaction} from "~/utils/types";
 import {useCategories} from "~/composables/categories";
+import {toast} from "vue3-toastify";
 
 
 const props = defineProps({
@@ -76,6 +88,7 @@ const props = defineProps({
   },
 })
 
+const isEditMode = ref<boolean>(false)
 const isLoadingSubmit = ref<boolean>(false)
 const formTransaction = ref<{
   description: string,
@@ -97,7 +110,7 @@ const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'add-c
 const categories = useCategories()
 
 
-watchDebounced(formTransaction.value, (value) => emit('update:modelValue', value), {debounce: 1000}) // Vue 2: emit('input', value)
+watchDebounced(formTransaction.value, (value) => emit('update:modelValue', value), {debounce: 1000})
 
 watch(() => props.transaction, (newVal, oldVal) => {
   if (newVal != oldVal) {
@@ -168,6 +181,21 @@ async function onSave() {
     inputRef.value.value = ''
 
     isLoadingSubmit.value = false
+  }
+}
+
+
+async function onDeleteCategory(categoryId: string) {
+  const {error, status} = await useFetch('/api/categories/delete.category', {
+    query: {
+      id: categoryId,
+    },
+  })
+
+  if (status.value === 'success') {
+    categories.value.data = categories.value.data.filter((val: Category) => val.id !== categoryId)
+  } else {
+    toast.error(error.value?.statusMessage ?? '')
   }
 }
 </script>
