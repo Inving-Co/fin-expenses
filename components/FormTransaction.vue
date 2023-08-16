@@ -30,6 +30,10 @@
                @input="formTransaction.amount = $event.target.value"/>
       </div>
       <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
+        <div
+            class="inline-flex items-center justify-between mx-2 p-2 text-lg font-semibold text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700" @click="emit('add-category')">
+            <icons-plus/>
+        </div>
       <div v-for="category in categories.data" class="inline-flex items-center mb-4 mx-2">
         <input v-model="formTransaction.categoryId" :id="`radio-${category.id}`" type="radio" :value="category.id"
                class="w-4 h-4 hidden peer text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -89,7 +93,7 @@ const {inputRef} = useCurrencyInput({
   locale: 'id-ID',
   precision: 0,
 })
-const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue'])
+const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'add-category'])
 const categories = useCategories()
 
 

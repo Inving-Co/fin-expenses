@@ -14,6 +14,22 @@ BigInt.prototype.toJSON = function (): string {
     return this.toString();
 };
 
+export const predefinedColors =  [
+    'F9844A',
+    'F3722C',
+    '4D908E',
+    'FFBF69',
+    '90BE6D',
+    'F8961E',
+    '43AA8B',
+    '277DA1',
+    '457b9d',
+    'FF9770',
+    'F9C74F',
+    'F94144',
+    '233d4d',
+    '577590'
+]
 
 export const checkToken = async (jwt: string) => {
 

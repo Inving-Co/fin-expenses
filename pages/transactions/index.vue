@@ -2,7 +2,14 @@
   <general-modal id="modal-form-transaction" title="Form Transaction" @on-mounted="modalFormTransaction = $event">
     <template #body>
       <form-transaction :transaction="selectedTransaction"
-                        @on-success="modalFormTransaction?.hide(); refreshTrx(); selectedTransaction = null"/>
+                        @on-success="modalFormTransaction?.hide(); refreshTrx(); selectedTransaction = null"
+                        @add-category="modalFormTransaction?.hide(); modalFormCategory?.show();"
+      />
+    </template>
+  </general-modal>
+  <general-modal id="modal-form-category" title="Form Category" @on-mounted="modalFormCategory = $event" @on-modal-closed="modalFormTransaction?.show();">
+    <template #body>
+      <form-category @category-created="modalFormCategory?.hide(); modalFormTransaction?.show();" />
     </template>
   </general-modal>
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
@@ -210,6 +217,7 @@ import {toast} from "vue3-toastify";
 import {useCategories} from "~/composables/categories";
 import {useCircleUsers} from "~/composables/circles";
 import {useTransactions} from "~/composables/transactions";
+import FormCategory from "~/components/FormCategory.vue";
 
 const searchKey = ref<string>('')
 const filterDate = ref<string>('this month')
@@ -222,8 +230,8 @@ const categories = useCategories()
 const circleUsers = useCircleUsers()
 const $transactions = useTransactions()
 
-
 let modalFormTransaction: ElementEvent | null = null
+let modalFormCategory: ElementEvent | null = null
 
 onMounted(() => {
   initDropdowns()

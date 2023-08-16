@@ -1,6 +1,17 @@
 import {prisma} from "~/server/models/prisma";
 
-export async function getCategories(key: string, circleId: string | undefined, ) {
+export async function createCategory(name: string, color: string | undefined, userId: string | undefined, circleId: string | undefined) {
+    return prisma.categories.create({
+        data: {
+            name,
+            color,
+            circleId,
+            userId
+        }
+    });
+}
+
+export async function getCategories(key: string, circleId: string | undefined) {
     const result = await prisma.categories.findMany({
         where: {
             name: {
@@ -17,7 +28,7 @@ export async function getCategories(key: string, circleId: string | undefined, )
         },
     })
 
-    for(let i = 0; i < result.length; i++) {
+    for (let i = 0; i < result.length; i++) {
         // need for initial load data is checked
         // @ts-ignore
         result[i].checked = false;
