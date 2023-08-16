@@ -19,7 +19,7 @@
           <div class="flex items-center px-2 py-1">
             <input :id="`${category.id}-category-checkbox`" type="checkbox" :value="category.id"
                    :checked="category.checked"
-                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                   class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                    @click="categories[index].checked = $event.target.checked; setCategoriesFilter()">
             <label :for="`${category.id}-category-checkbox`"
                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{
