@@ -42,25 +42,59 @@
 
 <script setup lang="ts">
 import {capitalizeFirstLetter} from "~/utils/functions";
-import {Category} from "~/utils/types";
+import {Category, Circle} from "~/utils/types";
 import {useCategories} from "~/composables/categories";
+import {useCircleUsers} from "~/composables/circles";
 
 const $categories = useCategories()
+const $circleUsers = useCircleUsers()
+const selectedCircleId = ref<string | undefined>()
 
 const emit = defineEmits(['on-filter-changed', 'on-mounted'])
 
-const {data: categories, error,}: any = await useFetch('/api/categories', {
+const categories = computed(() => $categories.value.data)
+const isHasChecked = computed(() => categories.value?.filter((cat: Category) => cat.checked).length > 0);
+
+const {error}: any = await useFetch('/api/categories', {
+  query: {
+    selectedCircleId: selectedCircleId
+  },
+  immediate: false,
+  onRequest({request, response}) {
+    $categories.value.isLoading = true
+  },
   onResponse({request, response, options}) {
     if (response.ok) {
       $categories.value.data = response._data
+
+      reloadState({selectedAll: false});
+      setCategoriesFilter()
     }
+
+    $categories.value.isLoading = false
   },
+})
+
+watch(() => $circleUsers.value.selected, async (value: any) => {
+  selectedCircleId.value = value.id
 })
 
 onMounted(() => {
   emit('on-mounted')
+})
 
-  const cats = localStorage.getItem('current-filtered-categories-selected')
+
+function reloadState({selectedAll = false}) {
+  if (selectedAll) {
+    for (let j = 0; j < categories.value.length; j++) {
+      categories.value[j].checked = true
+    }
+
+    return
+  }
+
+
+  const cats = localStorage.getItem(`${selectedCircleId.value}-current-filtered-categories-selected`)
 
   if (cats) {
     const arrCats = cats.split(',');
@@ -88,18 +122,13 @@ onMounted(() => {
       categories.value[j].checked = true
     }
   }
-
-
-  setCategoriesFilter()
-})
-
-const isHasChecked = computed(() => categories.value.filter((cat: Category) => cat.checked).length > 0);
+}
 
 function setCategoriesFilter() {
   const values = categories.value.filter((cat: Category) => cat.checked).map((cat: Category) => cat.id)
   emit('on-filter-changed', values)
 
-  localStorage.setItem('current-filtered-categories-selected', values.join(','))
+  localStorage.setItem(`${selectedCircleId.value}-current-filtered-categories-selected`, values.join(','))
 }
 
 function onClearSelectedCategories() {

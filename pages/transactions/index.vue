@@ -2,7 +2,14 @@
   <general-modal id="modal-form-transaction" title="Form Transaction" @on-mounted="modalFormTransaction = $event">
     <template #body>
       <form-transaction :transaction="selectedTransaction"
-                        @on-success="modalFormTransaction?.hide(); refreshTrx(); selectedTransaction = null"/>
+                        @on-success="modalFormTransaction?.hide(); refreshTrx(); selectedTransaction = null"
+                        @add-category="modalFormTransaction?.hide(); modalFormCategory?.show();"
+      />
+    </template>
+  </general-modal>
+  <general-modal id="modal-form-category" title="Form Category" @on-mounted="modalFormCategory = $event" @on-modal-closed="modalFormTransaction?.show();">
+    <template #body>
+      <form-category @category-created="modalFormCategory?.hide(); modalFormTransaction?.show();" />
     </template>
   </general-modal>
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
@@ -11,7 +18,7 @@
       <general-signout/>
     </div>
     <div class="flex justify-between mt-2">
-      <dropdowns-circles-selector @circle-changed="refreshTrx()"/>
+      <dropdowns-circles-selector />
     </div>
     <div v-if="transactions" class="max-h-1/4 w-full gap-4 sm:flex justify-center mb-8 mt-2">
       <expenses-structure-chart class="sm:w-1/2 md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
@@ -51,7 +58,7 @@
 
         <dropdowns-filter-dates
             @on-filter-changed="startFilterDate = $event.start; endFilterDate = $event.end; filterDate = $event.label"/>
-        <dropdowns-filter-categories @on-filter-changed="categoriesFilter = $event; refreshTrx()"/>
+        <dropdowns-filter-categories @on-filter-changed="categoriesFilter = $event;"/>
 
         <button
             class="h-[38px] inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
@@ -82,7 +89,6 @@
         </div>
       </div>
     </div>
-    <general-loading :is-loading="isLoading"/>
     <div v-if="!circleUsers.isLoading && !categories.isLoading"  class="relative overflow-x-auto shadow-md sm:rounded-lg" style="height: 500px !important">
       <table v-if="!$isMobile()" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 sticky top-0 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -210,6 +216,8 @@ import DebtPercentageByIncome from "~/components/DebtPercentageByIncome.vue";
 import {toast} from "vue3-toastify";
 import {useCategories} from "~/composables/categories";
 import {useCircleUsers} from "~/composables/circles";
+import {useTransactions} from "~/composables/transactions";
+import FormCategory from "~/components/FormCategory.vue";
 
 const searchKey = ref<string>('')
 const filterDate = ref<string>('this month')
@@ -220,8 +228,10 @@ const categoriesFilter = ref<string[]>([])
 const selectedTransaction = ref<EditableTransaction | null>(null)
 const categories = useCategories()
 const circleUsers = useCircleUsers()
+const $transactions = useTransactions()
 
 let modalFormTransaction: ElementEvent | null = null
+let modalFormCategory: ElementEvent | null = null
 
 onMounted(() => {
   initDropdowns()
@@ -245,14 +255,19 @@ const {
     categoryIds: categoriesFilter
   },
   server: false,
+  immediate: false,
+  onRequest({request, response}) {
+    $transactions.value.isLoading = true
+  },
   onResponse: (context) => {
+    $transactions.value.isLoading = false
+
     if (context.response.status === 401) {
       toast.error(context.response.statusText);
 
       onSignOut()
     }
   },
-  watch: [startFilterDate, endFilterDate, categoriesFilter],
 })
 
 
