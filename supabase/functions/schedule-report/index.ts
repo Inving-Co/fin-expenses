@@ -99,7 +99,7 @@ const handler = async (_request: Request): Promise<Response> => {
                             report: {
                                 type: 'Weekly',
                                     message_1: 'Here\'s your weekly financial report, plan your next move for a better week.',
-                                    message_2: `Last week\'s activity on circle ${circleUsers[i].circleName}`,
+                                    message_2: `Last week\'s activity on circle <strong>${circleUsers[i].circleName}</strong>`,
                                     expense_amount: circleUsers[i].expenseAmount,
                                     income_amount: circleUsers[i].incomeAmount
                             }

@@ -32,3 +32,10 @@ This application are mean to be the tools for my family, the feature are based o
 - [x] Upstash
   - [x] Qstash
 - [x] Sendgrid
+
+
+### How to run Supabase functions on local
+1. Start Docker
+2. Run `npx supabase start`
+3. Setup `supabase/.env` file, just copy the example 
+4. Run `npx supabase functions serve --env-file ./supabase/.env` to start local functions
