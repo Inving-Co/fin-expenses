@@ -11,6 +11,10 @@ export async function createCategory(name: string, color: string | undefined, us
     });
 }
 
+export async function updateCategory(categoryId: string, name: string) {
+    return prisma.categories.update({where: {id: categoryId}, data: { name }})
+}
+
 export async function deleteCategory(categoryId: string, userId: string | undefined) {
     return prisma.categories.delete({where: {id: categoryId, userId}})
 }
