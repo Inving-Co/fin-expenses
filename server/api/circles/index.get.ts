@@ -6,5 +6,7 @@ export default defineEventHandler((event) => {
     const cookies = parseCookies(event)
     const userId = cookies['user-id']
 
+    console.log(userId)
+
     return getCircles(key as string, userId)
 })
