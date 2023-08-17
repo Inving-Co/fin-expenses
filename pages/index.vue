@@ -43,6 +43,12 @@
                 up
               </nuxt-link>
             </p>
+
+            <button type="button"
+                    class="w-full text-gray-500 bg-white-600 hover:bg-white-700 shadow-md focus:ring-4 border focus:outline-none focus:ring-white-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-white-600 dark:hover:bg-white-700 dark:focus:ring-white-800"
+                    @click="onSubmitLoginWithGoogle">
+              <span class="flex justify-center align-middle"><icons-google class="w-8 h-8 mr-2" /> <span class="self-center">Sign In with Google</span></span>
+            </button>
           </form>
         </div>
         <button type="button"
@@ -65,7 +71,7 @@
 <script setup lang="ts">
 import {generateToken, supabase} from "~/utils/functions";
 import {toast} from 'vue3-toastify';
-import {navigateTo, useCookie, useNuxtApp} from "#app";
+import {navigateTo} from "#app";
 
 const email = ref<string>('')
 const password = ref<string>('')
@@ -94,20 +100,25 @@ async function onSubmitLogin() {
     })
 
     const accessToken = await generateToken({userId: result.value?.id})
-    useCookie('user-id', {
-      secure: true,
-      sameSite: 'lax',
-    }).value = `${result.value?.id}`
+    const maxAge = 60 * 60 * 24 * 7
 
-    useCookie('access-token', {
-      secure: true,
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7
-    }).value = `${accessToken}`
+    document.cookie = `my-access-token=${accessToken}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
+    document.cookie = `user-id=${result.value?.id}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
 
     return navigateTo('/transactions')
   }
 
+  isLoadingSubmit.value = false
+}
+
+async function onSubmitLoginWithGoogle() {
+  const {data, error} = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+  })
+
+  if (error) {
+    toast.error(error.message);
+  }
 
   isLoadingSubmit.value = false
 }
