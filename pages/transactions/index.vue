@@ -58,7 +58,7 @@
 
         <dropdowns-filter-dates
             @on-filter-changed="startFilterDate = $event.start; endFilterDate = $event.end; filterDate = $event.label"/>
-        <dropdowns-filter-categories @on-filter-changed="categoriesFilter = $event;"/>
+        <dropdowns-filter-categories @on-filter-changed=""/>
 
         <button
             class="h-[38px] inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
@@ -207,7 +207,7 @@
 import {initDropdowns} from "flowbite";
 import {endOfToday, format, parseISO, startOfMonth,} from 'date-fns'
 import {capitalizeFirstLetter, checkAuth, currencyIDRFormatter, onSignOut} from "~/utils/functions";
-import {EditableTransaction, ElementEvent, Transaction} from "~/utils/types";
+import {Category, EditableTransaction, ElementEvent, Transaction} from "~/utils/types";
 import FormTransaction from "~/components/FormTransaction.vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -236,7 +236,6 @@ let modalFormCategory: ElementEvent | null = null
 onMounted(() => {
   initDropdowns()
   checkAuth()
-
 })
 
 const {
@@ -270,6 +269,10 @@ const {
       onSignOut()
     }
   },
+})
+
+watch(() => categories.value.data.filter((cat: Category) => cat.checked), (values: Category[]) => {
+  categoriesFilter.value = values.map((cat: Category) => cat.id)
 })
 
 

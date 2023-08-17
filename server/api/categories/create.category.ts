@@ -3,7 +3,7 @@ import {createCategory} from "~/server/models/categories";
 import {predefinedColors} from "~/utils/functions";
 
 export default defineEventHandler(async (event) => {
-    const {name} = await readBody(event);
+    const {name, type} = await readBody(event);
 
     const cookies = parseCookies(event)
     const userId = cookies['user-id']
@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
 
     const randColor = predefinedColors[Math.floor(Math.random() * predefinedColors.length)]
 
-    const result = await createCategory(name, randColor, userId, circle?.id)
+    const result = await createCategory(name, randColor, type, userId, circle?.id)
 
     return result;
 

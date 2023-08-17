@@ -1,10 +1,11 @@
 import {prisma} from "~/server/models/prisma";
 
-export async function createCategory(name: string, color: string | undefined, userId: string | undefined, circleId: string | undefined) {
+export async function createCategory(name: string, color: string | undefined, type: string | undefined, userId: string | undefined, circleId: string | undefined) {
     return prisma.categories.create({
         data: {
             name,
             color,
+            type,
             circleId,
             userId
         }

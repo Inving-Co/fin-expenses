@@ -63,8 +63,8 @@ const props = defineProps({
 watch(() => props.transactions, (newVal, _) => {
 })
 
-const sumOfIncomeAmount = computed(() => props.transactions?.filter((val: Transaction) => val.category.name === 'income').reduce((sum: number, n: Transaction) => sum + n.amount, 0) ?? 0)
-const sumOfExpenseAmount = computed(() => props.transactions?.filter((val: Transaction) => val.category.name !== 'income').reduce((sum: number, n: Transaction) => sum + n.amount, 0) ?? 0)
+const sumOfIncomeAmount = computed(() => props.transactions?.filter((val: Transaction) => val.category.type === 'income').reduce((sum: number, n: Transaction) => sum + n.amount, 0) ?? 0)
+const sumOfExpenseAmount = computed(() => props.transactions?.filter((val: Transaction) => val.category.type !== 'income').reduce((sum: number, n: Transaction) => sum + n.amount, 0) ?? 0)
 
 
 const percentageOfIncome = computed<number>(() => !sumOfIncomeAmount.value ? 0 : sumOfIncomeAmount.value / (sumOfIncomeAmount.value + sumOfExpenseAmount.value) * 100)
