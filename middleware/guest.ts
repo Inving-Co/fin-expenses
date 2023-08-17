@@ -1,29 +1,46 @@
 import {useCookie, navigateTo} from "#app";
 import {useAuth} from "~/composables/auth";
 import {useLoading} from "~/composables/loading";
+import {onSignOut, registerWhenNotExist} from "~/utils/functions";
+import {toast} from "vue3-toastify";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
     const hash = from.hash.substring(1)
     const parsed = hash.split('&')
+    const loading = useLoading()
 
-    if(hash) {
-        useLoading().value = true
+    if(loading.value) return
 
-        let query: any = {}
-        for(let i = 0; i < parsed.length; i++) {
+    if (hash) {
+        loading.value = true
+
+        /// parsed hash to map params
+        let params: any = {}
+        for (let i = 0; i < parsed.length; i++) {
             const kv = parsed[i].split('=')
-            query[kv[0]] = kv[1]
+            params[kv[0]] = kv[1]
         }
-        if(query) {
+        if (params) {
+            const auth = useAuth()
             const maxAge = 100 * 365 * 24 * 60 * 60
-            document.cookie = `my-access-token=${query.access_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
-            document.cookie = `my-refresh-token=${query.refresh_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
+            document.cookie = `my-access-token=${params.access_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
+            document.cookie = `my-refresh-token=${params.refresh_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
 
             await checkAuth()
 
-            document.cookie = `user-id=${useAuth().value?.userId}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
+            const result = await registerWhenNotExist(auth.value?.userId, auth.value?.email)
+            if (!result.status) {
 
-            useLoading().value = false
+                toast.error(result.message)
+                from.hash = ''
+                loading.value = false
+
+                return await onSignOut()
+            }
+
+            document.cookie = `user-id=${auth.value?.userId}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
+
+            loading.value = false
             return navigateTo('/transactions')
         }
     } else {
@@ -31,7 +48,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         const accessToken = useCookie('my-access-token')
 
         if (refreshToken.value && accessToken.value) {
-            // return navigateTo('/transactions')
+            return navigateTo('/transactions')
         }
     }
 })

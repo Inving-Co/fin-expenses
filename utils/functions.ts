@@ -13,7 +13,7 @@ BigInt.prototype.toJSON = function (): string {
     return this.toString();
 };
 
-export const predefinedColors =  [
+export const predefinedColors = [
     'F9844A',
     'F3722C',
     '4D908E',
@@ -56,17 +56,17 @@ export const checkToken = async (jwt: string) => {
 }
 
 export const generateToken = async (data: any) => {
-    const textEncoder=(d:string)=>new TextEncoder().encode(d)
+    const textEncoder = (d: string) => new TextEncoder().encode(d)
 
     const secretKey = useRuntimeConfig().public.APP_SECRET_KEY
-    const header={alg:'HS256', typ: 'JWT'}
+    const header = {alg: 'HS256', typ: 'JWT'}
 
-    const encodedHeader=base64url_encode(textEncoder(JSON.stringify(header)));
-    const encodedPayload=base64url_encode(textEncoder(JSON.stringify(data)));
-    const oTkn=`${encodedHeader}.${encodedPayload}`;
+    const encodedHeader = base64url_encode(textEncoder(JSON.stringify(header)));
+    const encodedPayload = base64url_encode(textEncoder(JSON.stringify(data)));
+    const oTkn = `${encodedHeader}.${encodedPayload}`;
 
-    const key = await crypto.subtle.importKey("raw", textEncoder(secretKey), {name:"HMAC", hash:"SHA-256"}, false, ["sign", "verify"]);
-    const signature = base64url_encode(new Uint8Array(await crypto.subtle.sign({name:"HMAC"}, key, textEncoder(oTkn))))
+    const key = await crypto.subtle.importKey("raw", textEncoder(secretKey), {name: "HMAC", hash: "SHA-256"}, false, ["sign", "verify"]);
+    const signature = base64url_encode(new Uint8Array(await crypto.subtle.sign({name: "HMAC"}, key, textEncoder(oTkn))))
     return `${oTkn}.${signature}`
 }
 
@@ -93,7 +93,7 @@ export function capitalizeFirstLetter(str: string | null | undefined): string {
 
 
 export const currencyIDRFormatter = Intl.NumberFormat('ID', {
-    style:'currency',
+    style: 'currency',
     currency: 'IDR',
     maximumFractionDigits: 0
 })
@@ -107,7 +107,10 @@ export async function onSignOut() {
 
     useCookie('user-id').value = undefined
     useCookie('selected-circle').value = undefined
-    useCookie('access-token').value = undefined
+    useCookie('my-access-token').value = undefined
+    useCookie('my-refresh-token').value = undefined
+
+    useAuth().value = null
 
     return navigateTo('/')
 }
@@ -116,12 +119,66 @@ export async function checkAuth() {
     const result = await supabase.auth.getSession()
     const auth = useAuth()
 
-    if(result.data.session) {
+    if (result.data.session) {
         auth.value = {
             userId: result.data.session.user?.id,
             email: result.data.session.user?.email,
         }
     } else {
         auth.value = undefined
+    }
+}
+
+export async function registerWhenNotExist(userId: string | undefined, email: string | undefined): Promise<{ status: boolean, message: string, error: any }> {
+    if (!userId || !email) return {
+        status: false,
+        message: 'Unable to check user',
+        error: undefined
+    }
+
+    const {data: resultUser, status: statusGet} = await useFetch(`/api/users/${userId}`, {
+        query: {
+            id: userId, email: email
+        }
+    })
+
+    if (statusGet.value === 'success') {
+
+        if (resultUser.value?.id) {
+            return {
+                status: true,
+                message: 'User already registered with this email',
+                error: undefined
+            }
+        }
+
+
+        const {data: resultCreate, status: statusCreate, error: errorCreate} = await useFetch('/api/users/create.user', {
+            method: 'POST',
+            body: JSON.stringify({
+                email: email,
+                id: userId
+            })
+        })
+
+        if (statusCreate.value !== 'success') {
+            return {
+                status: false,
+                message: 'Failed to create user',
+                error: errorCreate.value
+            }
+        }
+
+        return {
+            status: true,
+            message: 'Success to create user',
+            error: undefined
+        }
+    }
+
+    return {
+        status: false,
+        message: 'Failed to get user',
+        error: undefined
     }
 }
