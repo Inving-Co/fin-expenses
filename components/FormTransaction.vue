@@ -29,7 +29,7 @@
                placeholder="Example: 20000" required @keyup.enter="onSave"
                @input="formTransaction.amount = $event.target.value"/>
       </div>
-      <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category <span v-if="$auth?.userId"
+      <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category <span v-if="auth?.userId"
           class="inline-flex cursor-pointer" @click="emit('edit-category'); isEditMode = !isEditMode">
         <icons-edit v-if="!isEditMode" class="h-4"/>
         <icons-close v-else class="h-4"/>
@@ -123,7 +123,7 @@ const {inputRef} = useCurrencyInput({
 })
 const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'add-category', 'edit-category'])
 
-const $auth = useAuth()
+const auth = useAuth()
 const categories = useCategories()
 
 
