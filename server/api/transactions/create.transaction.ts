@@ -1,14 +1,8 @@
-import {createTransaction} from "~/server/models/transactions";
+import {createTransaction, getTransactions} from "~/server/models/transactions";
+import {eventFirstTrxCreated} from "~/utils/logsnag";
 
 export default defineEventHandler(async (event) => {
-    const {date, description, amount, categoryId, secretPin} = await readBody(event);
-
-    // if(secretPin != useRuntimeConfig().APP_SECRET_PIN) {
-    //     throw createError({
-    //         statusCode: 401,
-    //         statusMessage: 'Unauthorized secret PIN is not valid',
-    //     })
-    // }
+    const {date, description, amount, categoryId} = await readBody(event);
 
     const cookies = parseCookies(event)
     const userId = cookies['user-id']
