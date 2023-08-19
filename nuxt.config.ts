@@ -39,6 +39,8 @@ export default defineNuxtConfig({
         public: {
             APP_SECRET_KEY: process.env.APP_SECRET_KEY,
             APP_DOMAIN: process.env.APP_DOMAIN,
+            APP_ID: process.env.APP_ID,
+            LOGSNAG_TOKEN: process.env.LOGSNAG_TOKEN,
         }
     },
 })

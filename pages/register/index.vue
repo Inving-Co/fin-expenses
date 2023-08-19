@@ -45,6 +45,7 @@ import {supabase} from "~/utils/functions";
 import { toast } from 'vue3-toastify';
 import {navigateTo} from "#app";
 import va from '@vercel/analytics';
+import {eventUserRegister} from "~/utils/logsnag";
 
 const email = ref<string>('')
 const password = ref<string>('')
@@ -66,7 +67,7 @@ async function onSubmitRegister() {
       throw 'Password Confirmation Invalid'
     }
 
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error: errorSignup } = await supabase.auth.signUp({
       email: email.value,
       password: password.value,
       options: {
@@ -74,11 +75,11 @@ async function onSubmitRegister() {
       }
     })
 
-    if(error) {
-      throw error.message
+    if(errorSignup) {
+      throw errorSignup.message
     }
 
-    const {data: _, status} = await useFetch('/api/users/create.user', {
+    const {data: _, status, error: errorCreateUser} = await useFetch('/api/users/create.user', {
       method: 'POST',
       body: JSON.stringify({
         email: email.value,
@@ -86,14 +87,20 @@ async function onSubmitRegister() {
       })
     })
 
+    if(errorCreateUser.value) {
+      throw errorCreateUser.value?.message
+    }
+
     if (status.value === 'success') {
       email.value = ''
       password.value = ''
       passwordConf.value = ''
+
+      toast.success('Register success, please check your email.')
+
+      return navigateTo('/')
     }
 
-    toast.success('Register success, please check your email.')
-    return navigateTo('/')
   } catch (e: any) {
     if(typeof(e) === "string") {
       toast.error(e)

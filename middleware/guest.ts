@@ -28,15 +28,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
             await checkAuth()
 
-            const result = await registerWhenNotExist(auth.value?.userId, auth.value?.email)
-            if (!result.status) {
-
-                toast.error(result.message)
-                from.hash = ''
-                loading.value = false
-
-                return await onSignOut()
-            }
+            await registerWhenNotExist(auth.value?.userId, auth.value?.email)
+            // if (!result.status) {
+            //
+            //     toast.error(result.message)
+            //     from.hash = ''
+            //     loading.value = false
+            //
+            //     return await onSignOut()
+            // }
 
             document.cookie = `user-id=${auth.value?.userId}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
 
