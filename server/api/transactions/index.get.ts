@@ -9,7 +9,7 @@ export default defineEventHandler((event) => {
     if (Array.isArray(categoryIds)) {
         proceedCategoryIds = categoryIds as string[] | undefined
     } else {
-        proceedCategoryIds = categoryIds ? [categoryIds as string] : undefined
+        proceedCategoryIds = categoryIds ? [categoryIds as string] : []
     }
 
     return getTransactions(key as string, {
