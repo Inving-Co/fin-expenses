@@ -58,7 +58,7 @@
 
         <dropdowns-filter-dates
             @on-filter-changed="startFilterDate = $event.start; endFilterDate = $event.end; filterDate = $event.label"/>
-        <dropdowns-filter-categories @on-filter-changed=""/>
+        <dropdowns-filter-categories />
 
         <button
             class="h-[38px] inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
@@ -144,7 +144,7 @@
               <select v-model="selectedTransaction.categoryId" id="categories"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       @change="onUpdate">
-                <option v-for="category in categories" :value="category.id" selected>
+                <option v-for="category in categories.data" :value="category.id" selected>
                   {{ capitalizeFirstLetter(category.name) }}
                 </option>
               </select>
@@ -281,6 +281,7 @@ function onSearchTransactions(value: string) {
 }
 
 async function onDelete(trxId: String) {
+  $transactions.value.isLoading = true
   const {status} = await useFetch('/api/transactions/delete.transaction', {
     query: {
       id: trxId,
@@ -293,9 +294,13 @@ async function onDelete(trxId: String) {
 
     await refreshTrx()
   }
+
+  $transactions.value.isLoading = false
 }
 
 async function onUpdate(trx: any) {
+  $transactions.value.isLoading = true
+
   const currentRow = selectedTransaction.value
 
   if (currentRow?.amount && currentRow.description && currentRow.id && currentRow.date && currentRow.categoryId) {
@@ -315,6 +320,8 @@ async function onUpdate(trx: any) {
       await refreshTrx()
     }
   }
+
+  $transactions.value.isLoading = false
 }
 
 function onDoubleClickRow(trx: any) {
