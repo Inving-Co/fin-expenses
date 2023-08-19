@@ -290,6 +290,7 @@ async function onDelete(trxId: String) {
   })
 
   if (status.value === 'success') {
+    resetAllIsEditMode()
     selectedTransaction.value = null
 
     await refreshTrx()

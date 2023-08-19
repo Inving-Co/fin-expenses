@@ -16,19 +16,21 @@ export async function eventUserRegister(uid: string, email: string) {
             email: email,
             uid: uid,
         }
-    })
+    }).catch((e: any) => console.log(e.body))
 }
 
-export async function eventFirstTrxCreated(uid: string, email: string, trxId: string) {
+export async function eventFirstTrxCreated(uid: string, email: string, trxId: string, description: string) {
     await logsnag.publish({
         channel: "first-transactions",
-        event: "First Transactions",
+        event: "User do the first transaction",
         description: `email: ${email}`,
         icon: "🔥",
         notify: true,
         tags: {
-            uid: uid,
-            trxId: trxId,
+            'uid': uid,
+            'email': email,
+            'trx-id': trxId,
+            'description': description,
         }
-    })
+    }).catch((e: any) => console.log(e.body))
 }
