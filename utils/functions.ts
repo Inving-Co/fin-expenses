@@ -1,6 +1,5 @@
 import {createClient} from "@supabase/supabase-js";
 import {navigateTo, useCookie} from "#app";
-import {useAuth} from "~/composables/auth.ts";
 
 /// https://github.com/prisma/studio/issues/614#issuecomment-1374116622
 declare global {
