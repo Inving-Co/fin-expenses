@@ -11,7 +11,7 @@
                  @keyup.enter="onSave">
         </div>
         <div>
-          <label for="datepicker" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date</label>
+          <label  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date</label>
           <VueDatePicker v-model="formTransaction.date" name="datepicker" id="datepicker" locale="id-ID"
                          format="dd/MM/yyyy"
                          input-class-name="dp-custom-input"
