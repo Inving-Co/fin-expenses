@@ -9,6 +9,9 @@ export async function createTransaction(date: string, description: string, amoun
             categoryId,
             userId,
             circleId
+        },
+        include: {
+            user: true
         }
     });
 }
