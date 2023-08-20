@@ -1,13 +1,12 @@
-<template>
+<template></template>
 
-</template>
+<script setup lang="ts">
 
-<script>
-export default {
-  name: "index"
-}
+definePageMeta({
+  title: "AssetsPlanner",
+  layout: 'heading',
+});
+
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
