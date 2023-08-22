@@ -1,51 +1,51 @@
 <template>
   <div
-      class="p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+    class="p-6 bg-white border border-gray-200 rounded-lg shadow hover:drop-shadow dark:bg-gray-800 dark:border-gray-700">
     <h3 class="font-bold">Cash Flow</h3>
-    <div class="flex-grow border-t mt-2 mb-4 border-gray-400"/>
+    <div class="flex-grow border-t mt-2 mb-4 border-gray-400" />
     <div class="mt-4 text-sm text-gray-500 font-bold dark:text-white">{{
-        capitalizeFirstLetter(labelTime)
-      }}</div>
+      capitalizeFirstLetter(labelTime)
+    }}</div>
     <div class="mb-3 text-2xl text-gray-500 font-bold dark:text-white">{{
-        currencyIDRFormatter.format(sumOfIncomeAmount - sumOfExpenseAmount)
-      }}</div>
+      currencyIDRFormatter.format(sumOfIncomeAmount - sumOfExpenseAmount)
+    }}</div>
     <div class="flex-col">
       <span class="flex justify-between">
-      <div class="mb-1 text-sm text-gray-500 font-medium dark:text-white">Income</div>
-      <div class="mb-1 text-sm text-gray-500 font-medium dark:text-white">{{
+        <div class="mb-1 text-sm text-gray-500 font-medium dark:text-white">Income</div>
+        <div class="mb-1 text-sm text-gray-500 font-medium dark:text-white">{{
           currencyIDRFormatter.format(sumOfIncomeAmount)
         }}</div>
-    </span>
+      </span>
       <div class="w-full h-6 bg-gray-200 rounded dark:bg-gray-700">
         <div class="h-6 bg-green-400 rounded dark:bg-green-300 transition-width transition-slowest ease-in-out"
-             :style="`width: ${percentageOfIncome}%`"></div>
+          :style="`width: ${percentageOfIncome}%`"></div>
       </div>
     </div>
     <div class="flex-col mt-4">
       <span class="flex justify-between">
-      <div class="mb-1 text-sm text-gray-500 font-medium dark:text-white">Expense</div>
-      <div class="mb-1 text-sm text-gray-500 font-medium dark:text-white">{{
+        <div class="mb-1 text-sm text-gray-500 font-medium dark:text-white">Expense</div>
+        <div class="mb-1 text-sm text-gray-500 font-medium dark:text-white">{{
           currencyIDRFormatter.format(sumOfExpenseAmount)
         }}</div>
-    </span>
+      </span>
       <div class="w-full h-6 bg-gray-200 rounded dark:bg-gray-700">
         <div class="h-6 bg-red-400 rounded dark:bg-red-300  transition-width transition-slowest ease-in-out"
-             :style="`width: ${percentageOfExpense}%`"></div>
+          :style="`width: ${percentageOfExpense}%`"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {Bar} from 'vue-chartjs'
-import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js'
+import { Bar } from 'vue-chartjs'
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import lodash from 'lodash';
-import {PropType} from "@vue/runtime-core";
-import {Transaction} from "~/utils/types";
+import { PropType } from "@vue/runtime-core";
+import { Transaction } from "~/utils/types";
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
-const {map, reduce, split} = lodash;
+const { map, reduce, split } = lodash;
 
 
 const props = defineProps({
@@ -72,6 +72,4 @@ const percentageOfExpense = computed<number>(() => !sumOfExpenseAmount.value ? 0
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
