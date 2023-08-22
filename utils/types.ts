@@ -11,6 +11,17 @@ export interface EditableTransaction {
     date: string,
     categoryId: number | null
 }
+
+export interface EditableAsset {
+    name: string,
+    amount: number | undefined,
+    estimatedReturnAmount: number | undefined,
+    estimatedReturnDate: string | undefined,
+    id: string | undefined,
+    paltform: string | undefined
+    type: string | undefined
+}
+
 export interface Transaction {
     id: string
     amount: number
@@ -22,6 +33,7 @@ export interface Transaction {
     userId?: number
     category: Category
     isEditMode?: boolean
+    circleId?: string
 }
 
 export interface Category {
@@ -52,4 +64,37 @@ export interface CircleUser {
     createdAt: string
     updatedAt: string
     receiveReport: boolean
+}
+
+export interface Asset {
+    id: string
+    name: string
+    amount: number
+    estimatedReturnAmount?: number
+    estimatedReturnDate?: string
+    type?: string
+    platform?: string
+    color?: string
+    createdAt: string
+    updatedAt: string
+    userId?: string
+    circleId?: string
+    assetHistory: AssetHistory[]
+}
+
+export interface AssetHistory {
+    id: string
+    name: string
+    amount: number
+    estimatedReturnAmount?: number
+    estimatedReturnDate?: string
+    type?: string
+    platform?: string
+    color?: string
+    createdAt: string
+    updatedAt: string
+    userId?: string
+    circleId?: string
+    assetId: string
+    asset: Asset
 }

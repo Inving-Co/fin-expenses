@@ -1,14 +1,14 @@
 <template>
   <div
-      class="p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+    class="p-6 bg-white border border-gray-200 rounded-lg shadow hover:drop-shadow dark:bg-gray-800 dark:border-gray-700">
     <h3 class="font-bold">Expenses Structure</h3>
-    <div class="flex-grow border-t mt-2 mb-4 border-gray-400"/>
+    <div class="flex-grow border-t mt-2 mb-4 border-gray-400" />
     <div class="mt-4 text-sm text-gray-500 font-bold dark:text-white">{{
-       capitalizeFirstLetter(labelTime)
-      }}</div>
+      capitalizeFirstLetter(labelTime)
+    }}</div>
     <div class="mb-3 text-2xl text-gray-500 font-bold dark:text-white">{{
-        currencyIDRFormatter.format(sumOfAmount)
-      }}</div>
+      currencyIDRFormatter.format(sumOfAmount)
+    }}</div>
     <Doughnut v-if="data.labels.length > 0" class="my-4" :data="data" :options="{
       responsive: true,
       elements: {
@@ -30,19 +30,19 @@
         }
       },
     }" :plugins="[{
-      id: 'centerText',
-      beforeDraw: onBeforeDraw
-    }]"/>
+  id: 'centerText',
+  beforeDraw: onBeforeDraw
+}]" />
   </div>
 </template>
 
 <script setup lang="ts">
-import {Doughnut} from 'vue-chartjs'
-import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js'
+import { Doughnut } from 'vue-chartjs'
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import lodash from 'lodash';
-import {PropType} from "@vue/runtime-core";
-import {Transaction} from "~/utils/types";
-import {capitalizeFirstLetter} from "~/utils/functions";
+import { PropType } from "@vue/runtime-core";
+import { Transaction } from "~/utils/types";
+import { capitalizeFirstLetter } from "~/utils/functions";
 
 
 interface Datasets {
@@ -52,7 +52,7 @@ interface Datasets {
 
 ChartJS.register(ArcElement, Tooltip, Legend,)
 
-const {forEach, groupBy, map, mapValues, omit, reduce, split} = lodash;
+const { forEach, groupBy, map, mapValues, omit, reduce, split } = lodash;
 
 const data = ref<{ labels: string[], datasets: Datasets[] }>({
   labels: [],
@@ -83,10 +83,10 @@ watch(() => props.transactions, (newVal, _) => {
   data.value = setData(newVal)
 })
 
-const sumOfAmount = computed(() => props.transactions?.filter((val:Transaction) => val.category.type !== 'income').reduce((sum: number, n: Transaction) => sum + n.amount, 0))
+const sumOfAmount = computed(() => props.transactions?.filter((val: Transaction) => val.category.type !== 'income').reduce((sum: number, n: Transaction) => sum + n.amount, 0))
 
 function setData(listTrx: Transaction[]): { labels: string[], datasets: Datasets[] } {
-  const groupedTrx = mapValues(groupBy(listTrx.filter((val:Transaction) => val.category.type !== 'income'), (trx: Transaction) => `${trx.category.id}/${trx.category.name}/${trx.category.color}`), (clist: Transaction[]) => clist.map((trx: Transaction) => omit(trx, `${trx.category.id}/${trx.category.name}/${trx.category.color}`)))
+  const groupedTrx = mapValues(groupBy(listTrx.filter((val: Transaction) => val.category.type !== 'income'), (trx: Transaction) => `${trx.category.id}/${trx.category.name}/${trx.category.color}`), (clist: Transaction[]) => clist.map((trx: Transaction) => omit(trx, `${trx.category.id}/${trx.category.name}/${trx.category.color}`)))
   const keys = Object.keys(groupedTrx)
   const values = Object.values(groupedTrx)
 
@@ -201,6 +201,4 @@ function onBeforeDraw(chart: any) {
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
