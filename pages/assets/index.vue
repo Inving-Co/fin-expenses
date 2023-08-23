@@ -6,13 +6,13 @@
     </template>
   </general-modal>
   <div class="pb-8">
-    <div class="flex justify-between items-center">
+    <div class="flex flex-wrap justify-between items-center">
       <div class="flex flex-col my-6">
         <span class="text-2xl text-gray-500">My Assets</span>
         <span class="text-md mt-2 text-gray-400">Track the value of your assets over time</span>
       </div>
       <button
-        class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+        class="h-[38px] w-full mb-4 sm:w-1/6 sm:mb-0 items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
         type="button" @click="selectedAsset = undefined; modalFormAsset?.show()">
         <span class="sr-only">Create Assets</span>
         Create Assets

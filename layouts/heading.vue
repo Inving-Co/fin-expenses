@@ -7,7 +7,7 @@
     {{ $transactions.isLoading }} -->
 
     <div v-if="!isRoot" class="pt-5 bg-white px-16 border-b">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between flex-wrap">
             <div class="flex items-center">
                 <img class="h-8" src="/app_icon.png" alt="login illustration" />
                 <span class="mx-2 text-gray-300">
@@ -19,22 +19,22 @@
                 <circles-selector />
             </div>
 
-            <general-signout />
+            <general-signout class="w-full sm:w-1/6" />
         </div>
 
         <div
             class="mt-4 text-sm font-medium text-center text-gray-500 border-gray-200 dark:text-gray-400 dark:border-gray-700">
-            <ul class="flex flex-wrap">
-                <li class="mr-2">
+            <ul class="flex flex-wrap gap-2">
+                <li>
                     <span class="hover:bg-gray-100 rounded-lg py-3"><nuxt-link to="/transactions" :class="isCurrentPathActive('/transactions')">Transactions</nuxt-link></span>
                 </li>
-                <li class="mr-2">
+                <li>
                     <span class="hover:bg-gray-100 rounded-lg py-3"><nuxt-link to="/assets" :class="isCurrentPathActive('/assets')">Assets Planner</nuxt-link></span>
                 </li>
             </ul>
         </div>
     </div>
-    <div class="sm:px-16">
+    <div class="px-6 sm:px-16">
         <slot />
     </div>
 </template>
