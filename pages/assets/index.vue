@@ -23,12 +23,38 @@
       <div v-for="(asset, index) of assets"
         class="w-full p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         <!-- <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ asset?.name }}</h5> -->
-        <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
-          {{ currencyIDRFormatter.format(asset?.amount) }}
-          <span :data-tooltip-target="`tooltip-estimated-return-amount-${index}`" class="text-green-500">+{{ (100 - ((asset?.amount /
-            asset?.estimatedReturnAmount) * 100)).toFixed(0)
-          }}%</span>
-        </h5>
+        <div class="flex justify-between mb-2">
+          <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
+            {{ currencyIDRFormatter.format(asset?.amount) }}
+            <span :data-tooltip-target="`tooltip-estimated-return-amount-${index}`"
+              class="text-green-500 text-sm align-top">+{{ (100 - ((asset?.amount /
+                asset?.estimatedReturnAmount) * 100)).toFixed(0)
+              }}%</span>
+          </h5>
+          <general-dropdown id="dropdownActionButton">
+            <template #trigger="{ activator }">
+              <button
+                class="inline-flex items-center text-gray-500 bg-white hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+                type="button" @click="activator">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path fill="currentColor"
+                    d="M12 16a2 2 0 0 1 2 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2m0-6a2 2 0 0 1 2 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2m0-6a2 2 0 0 1 2 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2Z" />
+                </svg>
+              </button>
+            </template>
+            <template #content="{ activator }">
+              <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
+                <li>
+                  <button type="button"
+                    class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    @click="onDelete(asset?.id)">Delete
+                  </button>
+                </li>
+              </ul>
+            </template>
+          </general-dropdown>
+
+        </div>
 
         <div :id="`tooltip-estimated-return-amount-${index}`" role="tooltip"
           class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
@@ -62,6 +88,7 @@ import { useLoading } from "~/composables/loading";
 import { parseISO, format } from 'date-fns';
 import { initTooltips } from 'flowbite';
 
+const $loading = useLoading();
 const $circleUsers = useCircleUsers()
 const selectedAsset = ref<EditableAsset | undefined>()
 const searchKey = ref<string>('')
@@ -92,12 +119,29 @@ const {
   },
   server: false,
   onRequest({ request, response }) {
-    useLoading().value = true
+    $loading.value = true
   },
   onResponse: (context) => {
-    useLoading().value = false
+    $loading.value = false
   },
   watch: [selectedCircle]
 })
+
+
+async function onDelete(assetId: String) {
+  $loading.value = true
+  const { status } = await useFetch('/api/assets/delete.asset', {
+    query: {
+      id: assetId,
+    },
+  })
+
+  if (status.value === 'success') {
+    await refreshAssets()
+  }
+
+  $loading.value = false
+}
+
 
 </script>
