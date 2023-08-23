@@ -1,6 +1,5 @@
 <template>
   <general-loading :is-loading="isLoading || isLoadingRequest" />
-
   <div class="sm:px-16">
     <slot />
   </div>

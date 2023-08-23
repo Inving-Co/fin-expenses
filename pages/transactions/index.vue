@@ -214,7 +214,6 @@ const searchKey = ref<string>('')
 const filterDate = ref<string>('this month')
 const startFilterDate = ref<string>(format(startOfMonth(new Date()), 'yyyy-MM-dd HH:mm'))
 const endFilterDate = ref<string>(format(endOfToday(), 'yyyy-MM-dd HH:mm'))
-const categoriesFilter = ref<string[]>([])
 const selectedTransaction = ref<EditableTransaction | null>(null)
 const categories = useCategories()
 const circleUsers = useCircleUsers()
@@ -222,6 +221,9 @@ const $transactions = useTransactions()
 
 let modalFormTransaction: ElementEvent | null = null
 let modalFormCategory: ElementEvent | null = null
+
+const selectedCircle = computed(() => circleUsers.value.selected)
+const selectedCategories = computed(() => categories.value.data.filter((cat: Category) => cat.checked).map((e) => e.id))
 
 definePageMeta({
   title: "Transactions",
@@ -249,7 +251,7 @@ const {
     key: searchKey,
     startDate: startFilterDate,
     endDate: endFilterDate,
-    categoryIds: categoriesFilter
+    categoryIds: selectedCategories
   },
   server: false,
   immediate: false,
@@ -265,10 +267,7 @@ const {
       onSignOut()
     }
   },
-})
-
-watch(() => categories.value.data.filter((cat: Category) => cat.checked), (values: Category[]) => {
-  categoriesFilter.value = values.map((cat: Category) => cat.id)
+  watch: [selectedCategories, selectedCircle]
 })
 
 

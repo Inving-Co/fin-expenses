@@ -51,4 +51,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             return navigateTo('/transactions')
         }
     }
+
+    loading.value = false
 })
