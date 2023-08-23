@@ -73,8 +73,7 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import { useCurrencyInput } from 'vue-currency-input'
 import { watchDebounced } from "@vueuse/shared";
-import { Category, EditableAsset } from "~/utils/types";
-import { useCategories } from "~/composables/categories";
+import { EditableAsset } from "~/utils/types";
 
 
 const props = defineProps({
@@ -85,7 +84,6 @@ const props = defineProps({
 
 const assetTypes = ['LIQUID', 'NON-LIQUID']
 
-const isEditMode = ref<boolean>(false)
 const isLoadingSubmit = ref<boolean>(false)
 const formAsset = ref<{
   name: string,
@@ -116,9 +114,6 @@ const { inputRef: inputRefEstimatedReturnAmount } = useCurrencyInput({
 })
 const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'change'])
 
-const auth = useAuth()
-const categories = useCategories()
-
 
 watchDebounced(formAsset.value, (value) => emit('update:modelValue', value), { debounce: 1000 })
 
@@ -129,56 +124,46 @@ watch(() => props.asset, (newVal, oldVal) => {
       amount: newVal?.amount,
       estimatedReturnAmount: newVal?.estimatedReturnAmount,
       estimatedReturnDate: newVal?.estimatedReturnDate,
-      platform: newVal?.paltform,
+      platform: newVal?.platform,
       type: newVal?.type,
     }
   }
 })
 
-watch(() => isEditMode.value, (val) => {
-  if (!val) {
-    categories.value.data.forEach((val: Category) => {
-      val.edited = false
-    })
-  }
-})
 
 async function onSave() {
   isLoadingSubmit.value = true
 
-  const currentForm = formAsset.value
-
-  if (!props.asset) {
-    // name, amount, estimatedReturnAmount, platform, type
-    const { data: result, status } = await useFetch('/api/assets/create.asset', {
-      method: 'POST',
-      body: JSON.stringify({
-        name: formAsset.value.name,
-        amount: formAsset.value.amount,
-        estimatedReturnAmount: formAsset.value.estimatedReturnAmount,
-        estimatedReturnDate: formAsset.value.estimatedReturnDate,
-        platform: formAsset.value.platform,
-        type: formAsset.value.type,
-      })
+  // name, amount, estimatedReturnAmount, platform, type
+  const { data: result, status } = await useFetch(props.asset ? '/api/assets/update.asset' : '/api/assets/create.asset', {
+    method: 'POST',
+    body: JSON.stringify({
+      id: props.asset?.id,
+      name: formAsset.value.name,
+      amount: formAsset.value.amount,
+      estimatedReturnAmount: formAsset.value.estimatedReturnAmount,
+      estimatedReturnDate: formAsset.value.estimatedReturnDate,
+      platform: formAsset.value.platform,
+      type: formAsset.value.type,
     })
+  })
 
-    if (status.value === 'success') {
-      formAsset.value = {
-        name: '',
-        amount: undefined,
-        estimatedReturnAmount: undefined,
-        estimatedReturnDate: undefined,
-        platform: undefined,
-        type: undefined,
-      }
-
-      emit('on-success')
+  if (status.value === 'success') {
+    formAsset.value = {
+      name: '',
+      amount: undefined,
+      estimatedReturnAmount: undefined,
+      estimatedReturnDate: undefined,
+      platform: undefined,
+      type: undefined,
     }
-    inputRefAmount.value.value = ''
-    inputRefEstimatedReturnAmount.value.value = ''
 
-    isLoadingSubmit.value = false
+    emit('on-success')
   }
+  inputRefAmount.value.value = ''
+  inputRefEstimatedReturnAmount.value.value = ''
+
+  isLoadingSubmit.value = false
 }
 </script>
 

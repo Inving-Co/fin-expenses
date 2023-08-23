@@ -85,7 +85,7 @@ import { watchDebounced } from "@vueuse/shared";
 import { Category, EditableTransaction } from "~/utils/types";
 import { useCategories } from "~/composables/categories";
 import { toast } from "vue3-toastify";
-import { useAuth } from "~/composables/auth.ts";
+import { useAuth } from "~/composables/auth";
 
 
 const props = defineProps({
@@ -155,7 +155,6 @@ async function onSave() {
           amount: formTransaction.value.amount,
           categoryId: formTransaction.value.categoryId,
           date: formTransaction.value.date,
-          secretPin: localStorage.getItem('secretPin')
         })
       })
 
@@ -178,7 +177,6 @@ async function onSave() {
           categoryId: formTransaction.value.categoryId,
           date: formTransaction.value.date,
           id: props.transaction.id,
-          secretPin: localStorage.getItem('secretPin')
         })
       })
 

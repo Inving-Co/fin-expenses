@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     try {
         const resultAsset = await createAsset(String(name).toLowerCase(), Number(amount), Number(estimatedReturnAmount), estimatedReturnDate, randColor, type, String(platform).toLowerCase(), userId, circle?.id);
         
-        await createAssetHistory(resultAsset.id, String(name).toLowerCase(), Number(amount), Number(estimatedReturnAmount), estimatedReturnDate, randColor, type, String(platform).toLowerCase(), userId, circle?.id)
+        await createAssetHistory(resultAsset.id, 'CREATE', String(name).toLowerCase(), Number(amount), Number(estimatedReturnAmount), estimatedReturnDate, randColor, type, String(platform).toLowerCase(), userId, circle?.id)
 
         return {
             status: 200,
