@@ -1,4 +1,4 @@
-import {createAsset} from "~/server/models/assets";
+import {createAsset, createAssetHistory} from "~/server/models/assets";
 import {predefinedColors} from "~/utils/functions";
 
 export default defineEventHandler(async (event) => {
@@ -10,8 +10,21 @@ export default defineEventHandler(async (event) => {
 
     const randColor = predefinedColors[Math.floor(Math.random() * predefinedColors.length)]
 
-    const result = await createAsset(String(name).toLowerCase(), Number(amount), Number(estimatedReturnAmount), estimatedReturnDate, randColor, type, String(platform).toLowerCase(), userId, circle?.id);
+    try {
+        const resultAsset = await createAsset(String(name).toLowerCase(), Number(amount), Number(estimatedReturnAmount), estimatedReturnDate, randColor, type, String(platform).toLowerCase(), userId, circle?.id);
+        
+        await createAssetHistory(resultAsset.id, String(name).toLowerCase(), Number(amount), Number(estimatedReturnAmount), estimatedReturnDate, randColor, type, String(platform).toLowerCase(), userId, circle?.id)
 
-    return result;
-
+        return {
+            status: 200,
+            message: 'Success to add asset',
+            data: resultAsset
+        }
+    } catch (e) {
+        throw createError({
+            status: 400,
+            message: 'Something went wrong',
+            data: e,
+        })
+    } 
 })
