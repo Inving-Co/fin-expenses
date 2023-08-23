@@ -8,17 +8,13 @@
 </template>
 
 <script setup lang="ts">
-import {onSignOut, supabase} from "~/utils/functions";
-import {navigateTo, useCookie} from "#app";
-import {initDropdowns} from "flowbite";
+import {onSignOut} from "~/utils/functions";
 import {useAuth} from "~/composables/auth";
 
-const isLoggedIn = ref<boolean>(false)
 const emit = defineEmits(['on-signout'])
 
-onMounted(() => {
-  isLoggedIn.value = useAuth().value?.userId !== undefined
-})
+const isLoggedIn = computed(() => useAuth().value?.userId !== undefined)
+
 
 </script>
 
