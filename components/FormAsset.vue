@@ -114,7 +114,7 @@ const { inputRef: inputRefEstimatedReturnAmount } = useCurrencyInput({
   locale: 'id-ID',
   precision: 0,
 })
-const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue'])
+const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'change'])
 
 const auth = useAuth()
 const categories = useCategories()
