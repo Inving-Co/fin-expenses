@@ -57,7 +57,7 @@
         </div>
 
         <div :id="`tooltip-estimated-return-amount-${index}`" role="tooltip"
-          class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
           {{ currencyIDRFormatter.format(asset?.estimatedReturnAmount) }}
           <div class="tooltip-arrow" data-popper-arrow></div>
         </div>
@@ -65,7 +65,7 @@
           <span class="w-1/2 mb-3 font-normal text-gray-500 dark:text-gray-400 break-words">
             {{ capitalizeFirstLetter(asset?.name) }}
           </span>
-          <span class="mb-3 font-normal text-gray-500 dark:text-gray-400">
+          <span class="mb-3 font-normal text-right text-gray-500 dark:text-gray-400">
             {{ asset?.type }}
           </span>
         </div>
