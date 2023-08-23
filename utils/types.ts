@@ -18,7 +18,7 @@ export interface EditableAsset {
     estimatedReturnAmount: number | undefined,
     estimatedReturnDate: string | undefined,
     id: string | undefined,
-    paltform: string | undefined
+    platform: string | undefined
     type: string | undefined
 }
 

@@ -111,4 +111,5 @@ model AssetHistory {
   asset                 Assets    @relation(fields: [assetId], references: [id])
   circle                Circles?  @relation(fields: [circleId], references: [id])
   user                  Users?    @relation(fields: [userId], references: [id])
+  actionName            String
 }
