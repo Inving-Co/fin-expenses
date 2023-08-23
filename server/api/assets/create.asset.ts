@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
 
     const randColor = predefinedColors[Math.floor(Math.random() * predefinedColors.length)]
 
-    const result = await createAsset(name, Number(amount), Number(estimatedReturnAmount), estimatedReturnDate, randColor, type, platform, userId, circle?.id);
+    const result = await createAsset(String(name).toLowerCase(), Number(amount), Number(estimatedReturnAmount), estimatedReturnDate, randColor, type, String(platform).toLowerCase(), userId, circle?.id);
 
     return result;
 

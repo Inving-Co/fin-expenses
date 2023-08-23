@@ -92,7 +92,6 @@ let selected = ref<string | null>(null)
 const isHasClose = ref<boolean>(false)
 
 const { data: circleUsers, refresh: refreshCircles } = await useFetch('/api/circleUsers', {
-  immediate: false,
   onRequest({ request, response }) {
     $circleUsers.value.isLoading = true
   },
@@ -126,6 +125,8 @@ watch(() => circleUsers.value, (value) => {
   } else {
     modalFormCircle?.show();
   }
+}, {
+  immediate: true
 })
 
 function onCircleChange(value: Circle) {

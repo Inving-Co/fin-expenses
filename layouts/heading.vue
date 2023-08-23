@@ -1,4 +1,11 @@
 <template>
+    <general-loading :is-loading="isLoading || isLoadingRequest" />
+
+    <!-- {{ isLoading }}
+    {{ $categories.isLoading }}
+     {{ $circleUsers.isLoading }}
+    {{ $transactions.isLoading }} -->
+
     <div v-if="!isRoot" class="pt-5 bg-white px-16 border-b">
         <div class="flex items-center justify-between">
             <div class="flex items-center">
@@ -36,12 +43,30 @@
 import CirclesSelector from "~/components/dropdowns/CirclesSelector.vue";
 import { useRoute } from "vue-router";
 
+import { useCategories } from "~/composables/categories";
+import { useCircleUsers } from "~/composables/circles";
+import { useTransactions } from "~/composables/transactions";
+import { useLoading } from "~/composables/loading";
+
+
 defineNuxtComponent({
     name: "HeadingLayout",
 })
 
 const route = useRoute()
 
+
+const isLoading = useLoading();
+const $categories = useCategories();
+const $circleUsers = useCircleUsers();
+const $transactions = useTransactions();
+
+const isLoadingRequest = computed(
+  () =>
+    $categories.value.isLoading ||
+    $circleUsers.value.isLoading ||
+    $transactions.value.isLoading
+);
 const isRoot = computed(() => route.fullPath === '/')
 
 const classNavigation = {
@@ -56,4 +81,5 @@ function isCurrentPathActive(path: string): string {
 
     return classNavigation[path === route.fullPath ? "active" : "inactive"];
 }
+
 </script>

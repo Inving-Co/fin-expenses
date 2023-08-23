@@ -1,9 +1,11 @@
 import {getTransactions} from "~/server/models/transactions";
 
 export default defineEventHandler((event) => {
-    const {key, startDate, endDate, categoryIds} = getQuery(event)
+    const {key, startDate, endDate} = getQuery(event)
     const cookies = parseCookies(event)
     const circle = cookies['selected-circle'] ? JSON.parse(cookies['selected-circle']) : undefined
+    const categoryIds = cookies[`${circle?.id}-current-filtered-categories-selected`] ? cookies[`${circle?.id}-current-filtered-categories-selected`].split(',') : undefined
+    
     let proceedCategoryIds: string[] | undefined = []
 
     if (Array.isArray(categoryIds)) {
