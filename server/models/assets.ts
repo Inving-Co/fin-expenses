@@ -51,7 +51,7 @@ export function getAssets(key: string, circleId: string | undefined) {
     })
 }
 
-export function createAssetHistory(assetId: string, name: string, amount: number, estimatedReturnAmount: number | undefined, estimatedReturnDate: string | undefined, color: string | undefined, type: string | undefined, platform: string | undefined, userId: string | undefined, circleId: string | undefined) {
+export function createAssetHistory(assetId: string, actionName: string, name: string, amount: number, estimatedReturnAmount: number | undefined, estimatedReturnDate: string | undefined, color: string | undefined, type: string | undefined, platform: string | undefined, userId: string | undefined, circleId: string | undefined) {
     return prisma.assetHistory.create({
         data: {
             name,
@@ -64,22 +64,9 @@ export function createAssetHistory(assetId: string, name: string, amount: number
             circleId,
             userId,
             assetId,
+            actionName
         }
     });
-}
-
-export function updateAssetHistory(assetHistoryId: string, name: string, amount: number, estimatedReturnAmount: number | undefined, estimatedReturnDate: string | undefined, color: string | undefined, type: string | undefined, platform: string | undefined) {
-    return prisma.assets.update({
-        where: { id: assetHistoryId }, data: {
-            name,
-            amount,
-            estimatedReturnAmount,
-            estimatedReturnDate,
-            type,
-            platform,
-            color,
-        }
-    })
 }
 
 export function deleteAssetHistory(assetId: string, userId: string | undefined) {
