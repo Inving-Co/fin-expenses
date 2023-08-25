@@ -10,9 +10,9 @@ This application are mean to be the tools for my family, the feature are based o
 - [x] Multiple family records (Circle)
 - [x] Invite user to circle
 - [x] Weekly report by Email
+- [x] Assets Planner
 
 ### Planned Features
-- [ ] Assets Planner
 - [ ] Assets Prediction
 - [ ] Integrate with ChatGPT
 
