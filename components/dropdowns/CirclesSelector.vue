@@ -119,7 +119,9 @@ onMounted(() => {
 
 watch(() => circleUsers.value, (value) => {
   if (value && value.length > 0) {
-    if (!selected.value) {
+  const selectedCircle = useCookie('selected-circle').value as Circle | null | undefined
+
+    if (!selectedCircle) {
       onCircleChange(value[0].circle as Circle)
     }
   } else {
