@@ -90,7 +90,7 @@ import { useAuth } from "~/composables/auth";
 
 const props = defineProps({
   transaction: {
-    type: Object as PropType<EditableTransaction> | null,
+    type: Object as PropType<EditableTransaction | undefined>,
   },
 })
 
@@ -128,6 +128,7 @@ watch(() => props.transaction, (newVal, oldVal) => {
       categoryId: newVal?.categoryId ?? null,
       date: newVal?.date ?? '',
     }
+    inputRef.value.value = newVal?.amount ?? ''
   }
 })
 
