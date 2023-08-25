@@ -8,15 +8,17 @@ datasource db {
 }
 
 model Users {
-  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email        String         @unique
-  name         String?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @default(now()) @updatedAt
-  Categories   Categories[]
-  circleUsers  CircleUsers[]
-  circles      Circles[]
-  transactions Transactions[]
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email         String         @unique
+  name          String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now()) @updatedAt
+  categories    Categories[]
+  circleUsers   CircleUsers[]
+  circles       Circles[]
+  transactions  Transactions[]
+  assets        Assets[]
+  historyAssets AssetHistory[]
 }
 
 model Circles {
@@ -25,10 +27,12 @@ model Circles {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @default(now()) @updatedAt
   userId       String?        @db.Uuid
-  Categories   Categories[]
+  categories   Categories[]
   circleUsers  CircleUsers[]
   user         Users?         @relation(fields: [userId], references: [id])
   transactions Transactions[]
+  assets       Assets[]
+  assetHistory AssetHistory[]
 }
 
 model CircleUsers {
@@ -69,5 +73,43 @@ model Categories {
   type         String?
   circle       Circles?       @relation(fields: [circleId], references: [id])
   user         Users?         @relation(fields: [userId], references: [id])
-  Transactions Transactions[]
+  transactions Transactions[]
+}
+
+model Assets {
+  id                    String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                  String
+  amount                Int
+  estimatedReturnAmount Int?
+  estimatedReturnDate   DateTime?
+  type                  String?
+  platform              String?
+  color                 String?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @default(now()) @updatedAt
+  circleId              String?        @db.Uuid
+  userId                String?        @db.Uuid
+  circle                Circles?       @relation(fields: [circleId], references: [id])
+  user                  Users?         @relation(fields: [userId], references: [id])
+  assetHistory          AssetHistory[]
+}
+
+model AssetHistory {
+  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                  String
+  amount                Int
+  estimatedReturnAmount Int?
+  estimatedReturnDate   DateTime?
+  type                  String?
+  platform              String?
+  color                 String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @default(now()) @updatedAt
+  assetId               String    @db.Uuid
+  circleId              String?   @db.Uuid
+  userId                String?   @db.Uuid
+  asset                 Assets    @relation(fields: [assetId], references: [id])
+  circle                Circles?  @relation(fields: [circleId], references: [id])
+  user                  Users?    @relation(fields: [userId], references: [id])
+  actionName            String
 }
