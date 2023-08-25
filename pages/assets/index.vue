@@ -19,17 +19,18 @@
       </button>
     </div>
 
-    <div v-if="assets?.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+    <div v-if="assets?.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <div v-for="(asset, index) of assets"
         class="w-full p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         <!-- <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ asset?.name }}</h5> -->
         <div class="flex justify-between mb-2">
           <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
             {{ currencyIDRFormatter.format(asset?.amount) }}
-            <span :data-tooltip-target="`tooltip-estimated-return-amount-${index}`"
-              class="text-green-500 text-sm align-top">+{{ (100 - ((asset?.amount /
+
+            <div :data-tooltip-target="`tooltip-estimated-return-amount-${index}`"
+              class="cursor-pointer inline-flex text-green-500 text-sm align-top">+{{ (100 - ((asset?.amount /
                 asset?.estimatedReturnAmount!) * 100)).toFixed(0)
-              }}%</span>
+              }}%</div>
           </h5>
           <general-dropdown :id="`dropdownActionButton-${index}`">
             <template #trigger="{ activator }">
@@ -59,13 +60,6 @@
               </ul>
             </template>
           </general-dropdown>
-
-        </div>
-
-        <div :id="`tooltip-estimated-return-amount-${index}`" role="tooltip"
-          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-          {{ currencyIDRFormatter.format(asset?.estimatedReturnAmount!) }}
-          <div class="tooltip-arrow" data-popper-arrow></div>
         </div>
         <div class="flex justify-between">
           <span class="w-1/2 mb-3 font-normal text-gray-500 dark:text-gray-400 break-words">
@@ -82,6 +76,11 @@
           <span class="font-normal text-gray-500 dark:text-gray-400">
             {{ asset?.platform?.toUpperCase() }}
           </span>
+        </div>
+        <div :id="`tooltip-estimated-return-amount-${index}`" role="tooltip"
+          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+          {{ currencyIDRFormatter.format(asset?.estimatedReturnAmount!) }}
+          <div class="tooltip-arrow" data-popper-arrow></div>
         </div>
       </div>
     </div>
@@ -116,7 +115,14 @@ definePageMeta({
 });
 
 onMounted(() => {
-  initTooltips()
+
+  /// The problem is that flowbite gets initialised before the loop is rendered. 
+  /// We need to make sure flowbite is initialised after the loop has rendered so that the data attributes are taken into account.
+  /// this was temporary solution
+  setTimeout(() => {
+    initTooltips()
+  }, 200)
+
 })
 
 const {
