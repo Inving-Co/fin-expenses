@@ -2,7 +2,7 @@
   <general-modal id="modal-form-transaction" title="Form Transaction" @on-mounted="modalFormTransaction = $event">
     <template #body>
       <form-transaction :transaction="selectedTransaction"
-        @on-success="modalFormTransaction?.hide(); refreshTrx(); selectedTransaction = null"
+        @on-success="modalFormTransaction?.hide(); refreshTrx(); selectedTransaction = undefined"
         @add-category="modalFormTransaction?.hide(); modalFormCategory?.show();" />
     </template>
   </general-modal>
@@ -47,7 +47,7 @@
               <li>
                 <button type="button"
                   class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                  @click="resetAllIsEditMode(); selectedTransaction = null; modalFormTransaction?.show()">Create
+                  @click="resetAllIsEditMode(); selectedTransaction = undefined; modalFormTransaction?.show()">Create
                 </button>
               </li>
             </ul>
@@ -60,7 +60,7 @@
 
         <button
           class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
-          type="button" @click="refreshTrx" :disabled="isLoading">
+          type="button" @click="(_) => refreshTrx" :disabled="isLoading">
           <span class="sr-only">Refresh</span>
           Refresh
           <icons-circular-indicator v-if="isLoading" class="inline w-4 h-4 ml-1 text-white animate-spin" />
@@ -80,7 +80,7 @@
           </div>
           <input :value="searchKey" :readonly="isLoading" type="text" id="table-search-transactions"
             class="w-full p-2 pl-10 pr-10 text-sm text-gray-900 drop-shadow hover:drop-shadow-md focus:drop-shadow-md rounded-lg border-none focus:ring-0"
-            placeholder="Search for transactions" v-on:keydown.enter="onSearchTransactions($event.target.value)">
+            placeholder="Search for transactions" v-on:keydown.enter="onSearchTransactions(($event.target as HTMLInputElement)?.value)">
         </div>
       </div>
     </div>
@@ -106,17 +106,17 @@
         <tbody class="overflow-y-scroll">
           <tr v-for="trx in transactions"
             class="bg-white hover:bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700"
-            v-on:dblclick="onDoubleClickRow(trx)" v-on:keydown.esc="trx.isEditMode = false; selectedTransaction = null">
+            v-on:dblclick="onDoubleClickRow(trx)" v-on:keydown.esc="trx.isEditMode = false; selectedTransaction = undefined">
             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
               <span v-if="!trx.isEditMode">{{ format(parseISO(trx.date), 'dd/MM/yyyy') }}</span>
-              <span v-else> <vue-date-picker v-model="selectedTransaction.date" format="dd/MM/yyyy"
+              <span v-else> <vue-date-picker v-model="selectedTransaction!.date" format="dd/MM/yyyy"
                   :enable-time-picker="false" name="datepicker" locale="id-ID" auto-apply
                   @update:model-value="onUpdate(trx)" /></span>
             </th>
             <td class="px-6 py-4">
               <span v-if="!trx.isEditMode">{{ capitalizeFirstLetter(trx.description) }}</span>
               <span v-else class="flex">
-                <input v-model="selectedTransaction.description" type="text" name="Description" id="Description"
+                <input v-model="selectedTransaction!.description" type="text" name="Description" id="Description"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                   v-on:keydown.enter="onUpdate">
                 <button class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
@@ -125,7 +125,7 @@
             </td>
             <td class="px-6 py-4">
               <span v-if="!trx.isEditMode">{{ currencyIDRFormatter.format(trx.amount) }}</span>
-              <span v-else><input v-model="selectedTransaction.amount" name="Amount"
+              <span v-else><input v-model="selectedTransaction!.amount" name="Amount"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                   type="text" placeholder="Example: 20000" v-on:keydown.enter="onUpdate" />
               </span>
@@ -133,7 +133,7 @@
             <td class="px-6 py-4">
               <span v-if="!trx.isEditMode">{{ capitalizeFirstLetter(trx.category.name) }}</span>
               <span v-else>
-                <select v-model="selectedTransaction.categoryId" id="categories"
+                <select v-model="selectedTransaction!.categoryId" id="categories"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                   @change="onUpdate">
                   <option v-for="category in categories.data" :value="category.id" selected>
@@ -146,7 +146,7 @@
         </tbody>
       </table>
       <div v-else>
-        <div v-for="(trx, index) of transactions"
+        <div v-for="(trx, index) of transactions?.data?.value ?? []"
           class="w-full my-3 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <span class="flex justify-between">
             <span class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
@@ -214,7 +214,7 @@ const searchKey = ref<string>('')
 const filterDate = ref<string>('this month')
 const startFilterDate = ref<string>(format(startOfMonth(new Date()), 'yyyy-MM-dd HH:mm'))
 const endFilterDate = ref<string>(format(endOfToday(), 'yyyy-MM-dd HH:mm'))
-const selectedTransaction = ref<EditableTransaction | null>(null)
+const selectedTransaction = ref<EditableTransaction | undefined>()
 const categories = useCategories()
 const circleUsers = useCircleUsers()
 const $transactions = useTransactions()
@@ -240,13 +240,7 @@ const {
   error: errorFetchTransactions,
   pending: isLoading,
   refresh: refreshTrx,
-} = await useFetch<{
-  at(index: number): Transaction;
-  forEach(arg0: (val: Transaction) => boolean): void;
-  indexOf(value: EditableTransaction | null): number;
-  data: Ref<Transaction[]>
-
-}>('/api/transactions', {
+} = await useFetch('/api/transactions', {
   query: {
     key: searchKey,
     startDate: startFilterDate,
@@ -286,7 +280,7 @@ async function onDelete(trxId: String) {
 
   if (status.value === 'success') {
     resetAllIsEditMode()
-    selectedTransaction.value = null
+    selectedTransaction.value = undefined
 
     await refreshTrx()
   }

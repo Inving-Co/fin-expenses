@@ -6,7 +6,9 @@
         @click="toggleDropdown(false)" />
       <div :id="props.id"
         class="mt-2 z-20 hidden bg-white absolute divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
-        <slot name="content" :activator="() => { toggleDropdown(!isVisible); }" />
+        <client-only>
+          <slot name="content" :activator="() => { toggleDropdown(!isVisible); }" />
+        </client-only>
       </div>
     </div>
   </div>
