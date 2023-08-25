@@ -127,6 +127,9 @@ watch(() => props.asset, (newVal, oldVal) => {
       platform: newVal?.platform,
       type: newVal?.type,
     }
+
+    inputRefAmount.value.value = newVal?.amount
+    inputRefEstimatedReturnAmount.value.value = newVal?.estimatedReturnAmount
   }
 })
 
