@@ -4,59 +4,51 @@
       <div class="flex gap-2">
         <div>
           <label for="description"
-                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
           <input v-model="formTransaction.description" type="text" name="description" id="description"
-                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                 placeholder="Example: Makan Siang" required
-                 @keyup.enter="onSave">
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+            placeholder="Example: Makan Siang" required @keyup.enter="onSave">
         </div>
         <div>
-          <label  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date</label>
+          <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date</label>
           <VueDatePicker v-model="formTransaction.date" name="datepicker" id="datepicker" locale="id-ID"
-                         format="dd/MM/yyyy"
-                         input-class-name="dp-custom-input"
-                         hide-input-icon
-                         :enable-time-picker="false" placeholder="Select Date"
-                         auto-apply/>
+            format="dd/MM/yyyy" input-class-name="dp-custom-input" hide-input-icon :enable-time-picker="false"
+            placeholder="Select Date" auto-apply />
         </div>
       </div>
 
       <div>
         <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
         <input ref="inputRef" name="amount" id="amount"
-               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-               type="text"
-               placeholder="Example: 20000" required @keyup.enter="onSave"
-               @input="formTransaction.amount = $event.target.value"/>
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+          type="text" placeholder="Example: 20000" required @keyup.enter="onSave"
+          @input="formTransaction.amount = $event.target.value" />
       </div>
       <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category <span v-if="auth?.userId"
           class="inline-flex cursor-pointer" @click="emit('edit-category'); isEditMode = !isEditMode">
-        <icons-edit v-if="!isEditMode" class="h-4"/>
-        <icons-close v-else class="h-4"/>
-      </span>
+          <icons-edit v-if="!isEditMode" class="h-4" />
+          <icons-close v-else class="h-4" />
+        </span>
       </label>
-      <div
-          v-if="!isEditMode"
-          class="h-10 w-10 inline-flex align-bottom mx-2 p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
-          style="margin-top: 0"
-          @click="emit('add-category')">
-        <icons-plus/>
+      <div v-if="!isEditMode"
+        class="h-10 w-10 inline-flex align-bottom mx-2 p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+        style="margin-top: 0" @click="emit('add-category')">
+        <icons-plus />
       </div>
-      <div v-else class="h-10 w-10 inline-flex mx-2 p-2" style="margin-top: 0"/>
+      <div v-else class="h-10 w-10 inline-flex mx-2 p-2" style="margin-top: 0" />
       <div v-for="(category, index) of categories.data" class="relative h-10 inline-flex items-center mb-4 mx-3">
         <div v-if="!category.edited">
           <div v-if="isEditMode && category.circleId">
             <icons-trash class="absolute -top-3 -left-2 w-5 h-5 rounded-md p-1 bg-red-500 text-white cursor-pointer"
-                         @click="onDeleteCategory(category.id)"/>
+              @click="onDeleteCategory(category.id)" />
             <icons-edit class="absolute -top-3 -right-2 w-5 h-5 rounded-md p-1 bg-purple-500 text-white cursor-pointer"
-                        @click="category.edited = true"/>
+              @click="category.edited = true" />
           </div>
           <input v-model="formTransaction.categoryId" :id="`radio-${category.id}`" type="radio" :value="category.id"
-                 class="w-4 h-4 hidden peer text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                 :name="`radio-${category.id}`" required
-                 @keyup.enter="onSave">
+            class="w-4 h-4 hidden peer text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            :name="`radio-${category.id}`" required @keyup.enter="onSave">
           <label :for="`radio-${category.id}`"
-                 class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+            class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
             <div class="text-lg font-semibold">
               {{ capitalizeFirstLetter(category.name) }}
             </div>
@@ -64,20 +56,19 @@
         </div>
         <div v-else class="relative align-bottom" style="margin-top: 0">
           <icons-check class="absolute -top-3 -right-2 w-5 h-5 rounded-md p-1 bg-green-500 text-white cursor-pointer"
-                       @click="onUpdateCategory(index, category.id, category.name)"/>
+            @click="onUpdateCategory(index, category.id, category.name)" />
           <input name="category-name" id="category-name" :value="category.name"
-                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-20 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                 type="text"
-                 placeholder="Example: Food" required @input="category.name = $event.target.value" v-on:keydown.enter="onUpdateCategory(index, category.id, $event.target.value)"/>
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-20 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+            type="text" placeholder="Example: Food" required @input="category.name = $event.target.value"
+            v-on:keydown.enter="onUpdateCategory(index, category.id, $event.target.value)" />
         </div>
       </div>
 
-      <button type="button"
-              :disabled="isLoadingSubmit"
-              class="w-full text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              @click="onSave">
+      <button type="button" :disabled="isLoadingSubmit"
+        class="w-full text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+        @click="onSave">
         <span v-if="isLoadingSubmit">
-          <icons-circular-indicator class="inline w-4 h-4 mr-3 text-white animate-spin"/>
+          <icons-circular-indicator class="inline w-4 h-4 mr-3 text-white animate-spin" />
           Loading...
         </span>
         <span v-else>Save</span>
@@ -89,17 +80,17 @@
 <script setup lang="ts">
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-import {useCurrencyInput} from 'vue-currency-input'
-import {watchDebounced} from "@vueuse/shared";
-import {Category, EditableTransaction} from "~/utils/types";
-import {useCategories} from "~/composables/categories";
-import {toast} from "vue3-toastify";
-import {useAuth} from "~/composables/auth.ts";
+import { useCurrencyInput } from 'vue-currency-input'
+import { watchDebounced } from "@vueuse/shared";
+import { Category, EditableTransaction } from "~/utils/types";
+import { useCategories } from "~/composables/categories";
+import { toast } from "vue3-toastify";
+import { useAuth } from "~/composables/auth";
 
 
 const props = defineProps({
   transaction: {
-    type: Object as PropType<EditableTransaction> | null,
+    type: Object as PropType<EditableTransaction | undefined>,
   },
 })
 
@@ -116,7 +107,7 @@ const formTransaction = ref<{
   categoryId: null,
   date: '',
 })
-const {inputRef} = useCurrencyInput({
+const { inputRef } = useCurrencyInput({
   currency: 'IDR',
   locale: 'id-ID',
   precision: 0,
@@ -127,7 +118,7 @@ const auth = useAuth()
 const categories = useCategories()
 
 
-watchDebounced(formTransaction.value, (value) => emit('update:modelValue', value), {debounce: 1000})
+watchDebounced(formTransaction.value, (value) => emit('update:modelValue', value), { debounce: 1000 })
 
 watch(() => props.transaction, (newVal, oldVal) => {
   if (newVal != oldVal) {
@@ -137,6 +128,7 @@ watch(() => props.transaction, (newVal, oldVal) => {
       categoryId: newVal?.categoryId ?? null,
       date: newVal?.date ?? '',
     }
+    inputRef.value.value = newVal?.amount ?? ''
   }
 })
 
@@ -157,14 +149,13 @@ async function onSave() {
 
     // Create new Transaction
     if (!props.transaction) {
-      const {data: result, status} = await useFetch('/api/transactions/create.transaction', {
+      const { data: result, status } = await useFetch('/api/transactions/create.transaction', {
         method: 'POST',
         body: JSON.stringify({
           description: formTransaction.value.description,
           amount: formTransaction.value.amount,
           categoryId: formTransaction.value.categoryId,
           date: formTransaction.value.date,
-          secretPin: localStorage.getItem('secretPin')
         })
       })
 
@@ -179,7 +170,7 @@ async function onSave() {
         emit('on-success')
       }
     } else {
-      const {data: result, status} = await useFetch('/api/transactions/update.transaction', {
+      const { data: result, status } = await useFetch('/api/transactions/update.transaction', {
         method: 'POST',
         body: JSON.stringify({
           description: formTransaction.value.description,
@@ -187,7 +178,6 @@ async function onSave() {
           categoryId: formTransaction.value.categoryId,
           date: formTransaction.value.date,
           id: props.transaction.id,
-          secretPin: localStorage.getItem('secretPin')
         })
       })
 
@@ -210,7 +200,7 @@ async function onSave() {
 }
 
 async function onUpdateCategory(index: number, categoryId: string, name: string) {
-  const {data, error, status} = await useFetch('/api/categories/update.category', {
+  const { data, error, status } = await useFetch('/api/categories/update.category', {
     method: 'POST',
     body: JSON.stringify({
       id: categoryId,
@@ -226,7 +216,7 @@ async function onUpdateCategory(index: number, categoryId: string, name: string)
 }
 
 async function onDeleteCategory(categoryId: string) {
-  const {error, status} = await useFetch('/api/categories/delete.category', {
+  const { error, status } = await useFetch('/api/categories/delete.category', {
     query: {
       id: categoryId,
     },
