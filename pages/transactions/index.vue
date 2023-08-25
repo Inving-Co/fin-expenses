@@ -80,12 +80,21 @@
           </div>
           <input :value="searchKey" :readonly="isLoading" type="text" id="table-search-transactions"
             class="w-full p-2 pl-10 pr-10 text-sm text-gray-900 drop-shadow hover:drop-shadow-md focus:drop-shadow-md rounded-lg border-none focus:ring-0"
-            placeholder="Search for transactions" v-on:keydown.enter="onSearchTransactions(($event.target as HTMLInputElement)?.value)">
+            placeholder="Search for transactions"
+            v-on:keydown.enter="onSearchTransactions(($event.target as HTMLInputElement)?.value)">
         </div>
       </div>
     </div>
-    <div v-if="!circleUsers.isLoading && !categories.isLoading" class="relative overflow-x-auto shadow-md sm:rounded-lg"
-      style="height: 500px !important">
+    <div v-if="transactions?.length === 0"
+      class="flex flex-col text-2xl justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 font-semibold p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">
+      <vue3-lottie :animationData="EmptyJSON" :height="400" :width="400" />
+      <button type="button"
+        class="w-1/5 mb-4 text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+        @click="modalFormTransaction?.show()">Create
+      </button>
+    </div>
+    <div v-else-if="!circleUsers.isLoading && !categories.isLoading"
+      class="relative overflow-x-auto shadow-md sm:rounded-lg" style="height: 500px !important">
       <table v-if="!$isMobile()" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 sticky top-0 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -106,7 +115,8 @@
         <tbody class="overflow-y-scroll">
           <tr v-for="trx in transactions"
             class="bg-white hover:bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700"
-            v-on:dblclick="onDoubleClickRow(trx)" v-on:keydown.esc="trx.isEditMode = false; selectedTransaction = undefined">
+            v-on:dblclick="onDoubleClickRow(trx)"
+            v-on:keydown.esc="trx.isEditMode = false; selectedTransaction = undefined">
             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
               <span v-if="!trx.isEditMode">{{ format(parseISO(trx.date), 'dd/MM/yyyy') }}</span>
               <span v-else> <vue-date-picker v-model="selectedTransaction!.date" format="dd/MM/yyyy"
@@ -146,7 +156,7 @@
         </tbody>
       </table>
       <div v-else>
-        <div v-for="(trx, index) of transactions?.data?.value ?? []"
+        <div v-for="(trx, index) of transactions ?? []"
           class="w-full my-3 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <span class="flex justify-between">
             <span class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
@@ -195,6 +205,9 @@
 </template>
 
 <script setup lang="ts">
+import { Vue3Lottie } from "vue3-lottie";
+import EmptyJSON from '~/assets/lottie/empty.json'
+
 import { initDropdowns } from "flowbite";
 import { endOfToday, format, parseISO, startOfMonth, } from 'date-fns'
 import { capitalizeFirstLetter, checkAuth, currencyIDRFormatter, onSignOut } from "~/utils/functions";
