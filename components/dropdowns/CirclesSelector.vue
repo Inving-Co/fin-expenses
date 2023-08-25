@@ -1,50 +1,48 @@
 <template>
   <general-modal id="modal-form-circle" title="Create Circle" subtitle="Circle mean to be your group"
-                 :is-has-close="isHasClose" @on-mounted="modalFormCircle = $event">
+    :is-has-close="isHasClose" @on-mounted="modalFormCircle = $event">
     <template #body>
-      <form-circle @on-success="modalFormCircle?.hide(); refreshCircles(); "/>
+      <form-circle @on-success="modalFormCircle?.hide(); refreshCircles();" />
     </template>
   </general-modal>
 
   <general-modal id="modal-form-circle-invitation" title="Invite Member"
-                 subtitle="Invite your family or friends to this circle"
-                 @on-mounted="modalFormCircleInvitation = $event">
+    subtitle="Invite your family or friends to this circle" @on-mounted="modalFormCircleInvitation = $event">
     <template #body>
-<!--      <form-circle-invitation :circle-id="selected ?? undefined"/>-->
+      <!--      <form-circle-invitation :circle-id="selected ?? undefined"/>-->
     </template>
   </general-modal>
 
-  <general-modal id="modal-setting" title="Setting" subtitle="Change your circle settings here" @on-mounted="modalSetting = $event">
+  <general-modal id="modal-setting" title="Setting" subtitle="Change your circle settings here"
+    @on-mounted="modalSetting = $event">
     <template #body>
-        <form-circle-setting :circle-id="selected ?? undefined"/>
+      <form-circle-setting :circle-id="selected ?? undefined" />
     </template>
   </general-modal>
 
   <general-dropdown id="dropdownCircles">
-    <template #trigger="{activator}">
+    <template #trigger="{ activator }">
       <button
-          class="h-[38px] inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-          type="button" @click="activator">
+        class="h-[38px] inline-flex items-center text-gray-500 focus:outline-none hover:bg-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600"
+        type="button" @click="activator">
         <span class="sr-only">Circles button</span>
-        Circles
+        {{ $circleUsers.selected?.name ?? "Circles" }}
         <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-             viewBox="0 0 10 6">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="m1 1 4 4 4-4"/>
+          viewBox="0 0 10 6">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
         </svg>
       </button>
     </template>
-    <template #content="{activator}">
+    <template #content="{ activator }">
       <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200">
         <li v-for="circleUser in circleUsers">
           <div class="flex justify-between">
             <div class="flex p-2 w-full rounded hover:bg-gray-100 dark:hover:bg-gray-600">
               <div class="flex items-center h-5">
-                <input :id="circleUser?.circleId + `-radio`" :name="circleUser?.circleId + `-radio`"
-                       type="radio" :value="circleUser?.circleId"
-                       :checked="selected === circleUser?.circleId"
-                       class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                       @change="onCircleChange(circleUser?.circle);"/>
+                <input :id="circleUser?.circleId + `-radio`" :name="circleUser?.circleId + `-radio`" type="radio"
+                  :value="circleUser?.circleId" :checked="selected === circleUser?.circleId"
+                  class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                  @change="onCircleChange(circleUser?.circle);" />
               </div>
               <div class="ml-2 text-sm flex justify-between w-full gap-2">
                 <label :for="circleUser?.circleId + `-radio`" class="font-medium text-gray-900 dark:text-gray-300">
@@ -52,22 +50,21 @@
                 </label>
               </div>
             </div>
-            <button
-                v-if="$auth?.userId"
-                class="rounded-md text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                type="button" @click="onCircleChange(circleUser?.circle); modalSetting?.show()">
+            <button v-if="$auth?.userId"
+              class="rounded-md text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+              type="button" @click="onCircleChange(circleUser?.circle); modalSetting?.show()">
               <span class="sr-only">Setting</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path fill="currentColor"
-                      d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97c0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1c0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66Z"/>
+                  d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97c0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1c0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66Z" />
               </svg>
             </button>
           </div>
         </li>
         <li>
           <button
-              class="w-full mt-2 text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-              type="button" @click="isHasClose = true; modalFormCircle?.show()">
+            class="w-full mt-2 text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+            type="button" @click="isHasClose = true; modalFormCircle?.show()">
             <span class="sr-only">Create</span>
             Create
           </button>
@@ -78,11 +75,11 @@
 </template>
 
 <script setup lang="ts">
-import {capitalizeFirstLetter, checkAuth} from "~/utils/functions";
-import {Circle, ElementEvent} from "~/utils/types";
+import { capitalizeFirstLetter, checkAuth } from "~/utils/functions";
+import { Circle, ElementEvent } from "~/utils/types";
 import FormCircleSetting from "~/components/FormCircleSetting.vue";
-import {useCircleUsers} from "~/composables/circles";
-import {useAuth} from "~/composables/auth";
+import { useCircleUsers } from "~/composables/circles";
+import { useAuth } from "~/composables/auth";
 
 const emit = defineEmits(['on-mounted', 'circle-changed'])
 let modalFormCircle: ElementEvent | null = null
@@ -94,13 +91,12 @@ const $circleUsers = useCircleUsers()
 let selected = ref<string | null>(null)
 const isHasClose = ref<boolean>(false)
 
-const {data: circleUsers, refresh: refreshCircles} = await useFetch('/api/circleUsers', {
-  immediate: false,
-  onRequest({request, response}) {
+const { data: circleUsers, refresh: refreshCircles } = await useFetch('/api/circleUsers', {
+  onRequest({ request, response }) {
     $circleUsers.value.isLoading = true
   },
   onResponse({ request, response, options }) {
-    if(response.ok) {
+    if (response.ok) {
       $circleUsers.value.data = response._data
     }
 
@@ -113,7 +109,7 @@ onMounted(() => {
 
   const value = useCookie('selected-circle').value as Circle | null | undefined
 
-  if(value) {
+  if (value) {
     $circleUsers.value.selected = value
     selected.value = value?.id
   }
@@ -123,12 +119,16 @@ onMounted(() => {
 
 watch(() => circleUsers.value, (value) => {
   if (value && value.length > 0) {
-    if(!selected.value) {
+  const selectedCircle = useCookie('selected-circle').value as Circle | null | undefined
+
+    if (!selectedCircle) {
       onCircleChange(value[0].circle as Circle)
     }
   } else {
     modalFormCircle?.show();
   }
+}, {
+  immediate: true
 })
 
 function onCircleChange(value: Circle) {
@@ -147,6 +147,4 @@ function onCircleChange(value: Circle) {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
