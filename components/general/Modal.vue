@@ -1,9 +1,9 @@
 <template>
   <slot name="trigger" :activator="() => { toggleModal(true); emit('on-trigger-click') }"/>
   <div :id=props.id tabindex="-1" aria-hidden="true"
-       class="fixed flex justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 hidden bg-black bg-opacity-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">
+       class="backdrop-blur-sm fixed flex justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 hidden bg-black bg-opacity-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">
     <div class="relative w-full max-w-md max-h-full">
-      <div class=" relative bg-white rounded-lg shadow dark:bg-gray-700 p-10">
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 p-10">
         <div class="mb-4 flex items-start justify-between">
           <div>
             <h3 class="text-xl font-semibold text-gray-800 dark:text-white">
@@ -29,6 +29,8 @@
 <script setup lang="ts">
 
 import {ElementEvent} from "~/utils/types";
+import { useModal } from '../../composables/modal';
+import {Modal} from "flowbite";
 
 const emit = defineEmits(['on-mounted', 'on-modal-closed'])
 const props = defineProps({
@@ -69,6 +71,7 @@ const toggleModal = (value: boolean) => {
     $modal?.classList.add('animate-fade-in')
     $modal?.classList.remove('hidden')
     $modal?.classList.remove('animate-fade-out')
+
   } else {
     $modal?.classList.remove('animate-fade-in')
     $modal?.classList.add('animate-fade-out')
@@ -80,6 +83,7 @@ const toggleModal = (value: boolean) => {
   }
 
   isVisible.value = value
+  useModal().value = !useModal().value
 }
 
 
