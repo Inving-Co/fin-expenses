@@ -9,9 +9,9 @@
     <div class="flex flex-wrap justify-between items-center">
       <div class="flex flex-col my-6">
         <span class="text-2xl text-gray-500">My Assets
-            <span
+            <span v-if="summaryAssets?._sum"
               class="inline-flex text-green-500 font-semibold tracking-tight">
-              {{ currencyIDRFormatter.format(summaryAssets?._sum?.amount ?? 0) }}
+              {{ currencyIDRFormatter.format(summaryAssets?._sum.amount ?? 0) }}
           </span>
         </span>
         <span class="text-md mt-2 text-gray-400">Track the value of your assets over time</span>
@@ -26,8 +26,7 @@
 
     <div v-if="assets?.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <div v-for="(asset, index) of assets"
-           class="w-full p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-        <!-- <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ asset?.name }}</h5> -->
+           class="w-full p-6 bg-white border border-gray-200 rounded-lg drop-shadow-soft dark:bg-gray-800 dark:border-gray-700">
         <div class="flex justify-between mb-2">
           <div class="flex flex-col mb-2">
             <h5 class="text-2xl text-gray-500 dark:text-white">

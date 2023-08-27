@@ -1,6 +1,6 @@
 <template>
   <div
-    class="p-6 bg-white border border-gray-200 rounded-lg shadow hover:drop-shadow dark:bg-gray-800 dark:border-gray-700">
+    class="p-6 bg-white border border-gray-200 rounded-lg  drop-shadow-soft hover:drop-shadow-xl dark:bg-gray-800 dark:border-gray-700">
     <h3 class="font-bold">Expenses Structure</h3>
     <div class="flex-grow border-t mt-2 mb-4 border-gray-400" />
     <div class="mt-4 text-sm text-gray-500 font-bold dark:text-white">{{
