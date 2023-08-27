@@ -26,7 +26,7 @@
         <debt-percentage-by-income :label-time="filterDate" :transactions="transactions" />
       </div>
     </div>
-    <div class="sm:flex p-4 justify-center sm:justify-between bg-white dark:bg-gray-900">
+    <div class="sm:flex p-4 justify-center drop-shadow-soft sm:rounded-t-lg sm:justify-between bg-white dark:bg-gray-900">
       <div class="flex flex-wrap gap-2 justify-center">
         <general-dropdown id="dropdownActionButton">
           <template #trigger="{ activator }">
@@ -94,7 +94,7 @@
       </button>
     </div>
     <div v-else-if="!circleUsers.isLoading && !categories.isLoading"
-      class="relative overflow-x-auto shadow-md sm:rounded-lg" style="height: 500px !important">
+      class="relative overflow-x-auto drop-shadow-soft" style="height: 500px !important">
       <table v-if="!$isMobile()" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 sticky top-0 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -157,7 +157,7 @@
       </table>
       <div v-else>
         <div v-for="(trx, index) of transactions ?? []"
-          class="w-full my-3 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+          class="w-full my-3 p-6 bg-white border border-gray-200 rounded-lg drop-shadow-sm dark:bg-gray-800 dark:border-gray-700">
           <span class="flex justify-between">
             <span class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
               {{ currencyIDRFormatter.format(trx.amount) }}</span>
@@ -165,7 +165,7 @@
               <general-dropdown :id="`action-menu-mobile-trx-${index}`">
                 <template #trigger="{ activator }">
                   <button
-                    class="inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+                    class="inline-flex items-center text-gray-500 bg-white drop-shadow focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                     type="button" @click="activator">
                     <icons-kebab-menu />
                   </button>
