@@ -19,7 +19,7 @@
         <circles-selector/>
       </div>
 
-      <general-dropdown class="w-full mt-4 sm:mt-0 md:w-[80px]" :id="`action-menu`">
+      <general-dropdown id="dropdownActionMenuButton" class="w-full mt-4 sm:mt-0 md:w-[80px]">
         <template #trigger="{ activator }">
           <button
               class="h-[38px] w-full inline-flex items-center justify-between text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
