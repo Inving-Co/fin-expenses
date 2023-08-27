@@ -54,6 +54,18 @@ export function getAssets(key: string, circleId: string | undefined) {
     })
 }
 
+export function summaryOfAssets(circleId: string | undefined) {
+    return prisma.assets.aggregate({
+        where: {
+            circleId: circleId,
+        },
+        _sum: {
+            amount: true,
+            estimatedReturnAmount: true,
+        }
+    })
+}
+
 export function createAssetHistory(assetId: string, actionName: string, name: string, amount: number, estimatedReturnAmount: number | undefined, estimatedReturnDate: string | undefined, color: string | undefined, type: string | undefined, platform: string | undefined, userId: string | undefined, circleId: string | undefined) {
     return prisma.assetHistory.create({
         data: {

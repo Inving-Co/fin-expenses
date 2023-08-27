@@ -8,7 +8,12 @@
   <div class="pb-8">
     <div class="flex flex-wrap justify-between items-center">
       <div class="flex flex-col my-6">
-        <span class="text-2xl text-gray-500">My Assets</span>
+        <span class="text-2xl text-gray-500">My Assets
+            <span
+              class="inline-flex text-green-500 font-semibold tracking-tight">
+              {{ currencyIDRFormatter.format(summaryAssets?._sum?.amount ?? 0) }}
+          </span>
+        </span>
         <span class="text-md mt-2 text-gray-400">Track the value of your assets over time</span>
       </div>
       <button
@@ -70,11 +75,11 @@
           </general-dropdown>
         </div>
         <div class="flex justify-between">
-          <span class="w-1/2 mb-3 font-normal text-gray-500 dark:text-gray-400 break-words">
+          <span class="w-1/2 mb-3 text-gray-500 dark:text-gray-400 break-words">
             {{ asset?.name?.toUpperCase() }}
           </span>
-          <span class="mb-3 font-normal text-right text-gray-500 dark:text-gray-400">
-            {{ asset?.type }}
+          <span class="mb-3 font-normal text-sm text-right text-gray-500 dark:text-gray-400">
+            {{ asset?.type.replaceAll('_', ' ') }}
           </span>
         </div>
         <div class="flex justify-between">
@@ -127,6 +132,21 @@ const {
   query: {
     key: searchKey,
   },
+  server: false,
+  onRequest({request, response}) {
+    $loading.value = true
+  },
+  onResponse: (context) => {
+    $loading.value = false
+  },
+  watch: [selectedCircle]
+})
+
+const {
+  data: summaryAssets,
+  pending: isLoadingSummary,
+  refresh: refreshSummary,
+} = await useFetch('/api/assets/summary.asset', {
   server: false,
   onRequest({request, response}) {
     $loading.value = true
