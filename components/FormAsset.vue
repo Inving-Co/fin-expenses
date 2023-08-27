@@ -40,15 +40,15 @@
       </div>
 
       <div class="mb-1">
-        <label class="block mb-5 text-sm font-medium text-gray-900 dark:text-white">Asset Type</label>
-        <div v-for="assetType of assetTypes" class="relative h-6 inline-flex items-center mx-1">
+        <label class="block text-sm font-medium text-gray-900 dark:text-white">Asset Type</label>
+        <div v-for="assetType of assetTypes" class="relative my-2 inline-flex items-center mx-1">
           <input v-model="formAsset.type" :id="`radio-${assetType}`" type="radio" :value="assetType"
             class="w-4 h-4 hidden peer text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
             :name="`radio-${assetType}`" required @keyup.enter="onSave">
           <label :for="`radio-${assetType}`"
             class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
             <div class="text-lg font-semibold">
-              {{ capitalizeFirstLetter(assetType) }}
+              {{ capitalizeFirstLetter(assetType.replaceAll('_', ' ')) }}
             </div>
           </label>
         </div>
@@ -82,7 +82,7 @@ const props = defineProps({
   },
 })
 
-const assetTypes = ['LIQUID', 'NON-LIQUID']
+const assetTypes = ['LIQUID_ASSETS', 'ILLIQUID_ASSETS', 'CASH_AND_CASH_EQUIVALENTS', 'INTANGIBLE_ASSETS']
 
 const isLoadingSubmit = ref<boolean>(false)
 const formAsset = ref<{
