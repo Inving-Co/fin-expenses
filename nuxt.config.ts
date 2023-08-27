@@ -1,3 +1,5 @@
+import pkg from './package.json'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 // @ts-ignore
 export default defineNuxtConfig({
@@ -41,6 +43,7 @@ export default defineNuxtConfig({
             APP_DOMAIN: process.env.APP_DOMAIN,
             APP_ID: process.env.APP_ID,
             LOGSNAG_TOKEN: process.env.LOGSNAG_TOKEN,
+            CLIENT_VERSION: pkg.version,
         }
     },
 })
