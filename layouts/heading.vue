@@ -19,10 +19,10 @@
         <circles-selector/>
       </div>
 
-      <general-dropdown :id="`action-menu-mobile-trx-${index}`">
+      <general-dropdown class="w-full mt-4 sm:mt-0 md:w-[80px]" :id="`action-menu`">
         <template #trigger="{ activator }">
           <button
-              class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+              class="h-[38px] w-full inline-flex items-center justify-between text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
               type="button" @click="activator">
             Menu
             <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
