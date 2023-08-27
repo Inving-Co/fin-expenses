@@ -10,7 +10,7 @@
       <div class="flex flex-col my-6">
         <span class="text-2xl text-gray-500">My Assets
             <span v-if="summaryAssets?._sum"
-              class="inline-flex text-green-500 font-semibold tracking-tight">
+                  class="inline-flex text-green-500 font-semibold tracking-tight">
               {{ currencyIDRFormatter.format(summaryAssets?._sum.amount ?? 0) }}
           </span>
         </span>
@@ -94,7 +94,10 @@
     </div>
     <div v-else
          class="flex text-2xl justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 font-semibold p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">
-      <vue3-lottie :animationData="EmptyJSON" :height="400" :width="400"/>
+      <div class="w-full sm:w-1/2">
+
+        <vue3-lottie :animationData="EmptyJSON"/>
+      </div>
     </div>
   </div>
 </template>
