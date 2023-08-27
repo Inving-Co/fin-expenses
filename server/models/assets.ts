@@ -45,6 +45,9 @@ export function getAssets(key: string, circleId: string | undefined) {
             },
             circleId: circleId,
         },
+        orderBy: {
+            createdAt: 'desc'
+        },
         include: {
             assetHistory: true,
         }

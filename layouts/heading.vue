@@ -29,7 +29,7 @@
                     <span class="hover:bg-gray-100 rounded-lg py-3"><nuxt-link to="/transactions" :class="isCurrentPathActive('/transactions')">Transactions</nuxt-link></span>
                 </li>
                 <li>
-                    <span class="hover:bg-gray-100 rounded-lg py-3"><nuxt-link to="/assets" :class="isCurrentPathActive('/assets')">Assets Planner</nuxt-link></span>
+                    <span class="hover:bg-gray-100 rounded-lg py-3"><nuxt-link to="/assets" :class="isCurrentPathActive('/assets')">Your Portfolio</nuxt-link></span>
                 </li>
             </ul>
         </div>
