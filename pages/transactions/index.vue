@@ -157,7 +157,7 @@
       </table>
       <div v-else>
         <div v-for="(trx, index) of transactions ?? []"
-          class="w-full my-3 p-6 bg-white border border-gray-200 rounded-lg drop-shadow-sm dark:bg-gray-800 dark:border-gray-700">
+          class="w-full my-3 p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
           <span class="flex justify-between">
             <span class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
               {{ currencyIDRFormatter.format(trx.amount) }}</span>
