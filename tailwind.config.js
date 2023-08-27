@@ -11,6 +11,9 @@ module.exports = {
     ],
     theme: {
         extend: {
+            dropShadow: {
+                'soft': '0 10px 12px rgba(0, 0, 0, 0.1)'
+            },
             colors: {
                 primary: {
                     50: "#F5BA8A",
