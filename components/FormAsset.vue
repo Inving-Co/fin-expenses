@@ -82,7 +82,7 @@ const props = defineProps({
   },
 })
 
-const assetTypes = ['LIQUID_ASSETS', 'ILLIQUID_ASSETS', 'CASH_AND_CASH_EQUIVALENTS', 'INTANGIBLE_ASSETS']
+const assetTypes = ['LIQUID_ASSETS', 'ILLIQUID_ASSETS', 'CASH_AND_CASH_EQUIVALENTS']
 
 const isLoadingSubmit = ref<boolean>(false)
 const formAsset = ref<{
