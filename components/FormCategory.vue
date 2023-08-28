@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="mb-5">
-      <label for="secret-pin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category Name</label>
+      <label for="category-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category Name</label>
       <input v-model="name" ref="inputRef" name="category-name" id="category-name"
              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
              type="text" placeholder="Example: Food" required v-on:keydown.enter="onSave"/>
     </div>
 
-    <label for="secret-pin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select type</label>
+    <label for="type-category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select type</label>
     <div v-for="definedType in definedTypes" class="inline-flex h-10 items-center mb-4 mx-3">
       <div :data-tooltip-target="`tooltip-default-${definedType.name}`" class="w-full">
         <input v-model="type" :id="`radio-${definedType}`" type="radio" :value="definedType"
