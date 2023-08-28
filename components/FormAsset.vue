@@ -96,13 +96,13 @@ const props = defineProps({
 })
 
 const assetTypes = [{
-  name: 'LIQUID_ASSETS',
+  name: 'liquid_assets',
   description: 'Liquid assets can be quickly sold or converted to cash without significantly affecting their value.'
 }, {
-  name: 'ILLIQUID_ASSETS',
+  name: 'illiquid_assets',
   description: 'Illiquid assets, may take longer to convert into cash, and their value may change in the process.'
 }, {
-  name: 'CASH_AND_CASH_EQUIVALENTS',
+  name: 'cash_and_cash_equivalents',
   description: 'This includes money in checking or savings accounts, as well as other forms of easily accessible funds.'
 }]
 
