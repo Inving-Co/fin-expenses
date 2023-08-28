@@ -1,10 +1,11 @@
 import {prisma} from './prisma'
 
-export async function createTransaction(date: string, description: string, amount: number, categoryId: string, userId: string | undefined, circleId: string | undefined) {
+export async function createTransaction(date: string, description: string, amount: number, currency: string, categoryId: string, userId: string | undefined, circleId: string | undefined) {
     return prisma.transactions.create({
         data: {
             amount,
             date,
+            currency,
             description: description.toLowerCase(),
             categoryId,
             userId,
