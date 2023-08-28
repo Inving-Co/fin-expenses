@@ -19,11 +19,22 @@ model Users {
   transactions  Transactions[]
   assets        Assets[]
   historyAssets AssetHistory[]
+  UserSettings  UserSettings[]
+}
+
+model UserSettings {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  locale    String   @default("en")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  userId    String?  @db.Uuid
+  user      Users?   @relation(fields: [userId], references: [id])
 }
 
 model Circles {
   id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name         String
+  currency     String         @default("IDR")
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @default(now()) @updatedAt
   userId       String?        @db.Uuid
@@ -52,6 +63,7 @@ model Transactions {
   amount      Int
   description String
   date        DateTime
+  currency    String     @default("IDR")
   categoryId  String     @db.Uuid
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @default(now()) @updatedAt
