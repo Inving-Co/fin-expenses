@@ -2,14 +2,15 @@
   <general-modal id="modal-form-transaction" title="Form Transaction" @on-mounted="modalFormTransaction = $event">
     <template #body>
       <form-transaction :transaction="selectedTransaction"
+                        @on-mounted="refreshInputAmount = $event"
                         @on-success="modalFormTransaction?.hide(); refreshTrx(); selectedTransaction = undefined"
                         @add-category="modalFormTransaction?.hide(); modalFormCategory?.show();"/>
     </template>
   </general-modal>
   <general-modal id="modal-form-category" title="Form Category" @on-mounted="modalFormCategory = $event"
-                 @on-modal-closed="modalFormTransaction?.show();">
+                 @on-modal-closed="refreshInputAmount?.setInputAmount(); modalFormTransaction?.show();">
     <template #body>
-      <form-category @category-created="modalFormCategory?.hide(); modalFormTransaction?.show();"/>
+      <form-category @category-created="modalFormCategory?.hide(); refreshInputAmount?.setInputAmount(); modalFormTransaction?.show();"/>
     </template>
   </general-modal>
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
@@ -48,7 +49,7 @@
               <li>
                 <button type="button"
                         class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                        @click="resetAllIsEditMode(); selectedTransaction = undefined; modalFormTransaction?.show()">
+                        @click="resetAllIsEditMode(); selectedTransaction = undefined; refreshInputAmount?.setInputAmount(); modalFormTransaction?.show()">
                   Create
                 </button>
               </li>
@@ -94,7 +95,7 @@
       </div>
       <button type="button"
               class="w-full sm:w-1/5 mb-4 text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              @click="modalFormTransaction?.show()">Create
+              @click="refreshInputAmount?.setInputAmount(); modalFormTransaction?.show()">Create
       </button>
     </div>
     <div v-else-if="!$circleUsers.isLoading && !categories.isLoading"
@@ -183,7 +184,7 @@
                     <li>
                       <button class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                               type="button"
-                              @click="selectedTransaction = trx; modalFormTransaction?.show(); activator()">Edit</button>
+                              @click="selectedTransaction = trx; refreshInputAmount?.setInputAmount(); modalFormTransaction?.show(); activator()">Edit</button>
                     </li>
                     <li>
                       <button class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
@@ -241,6 +242,7 @@ const $transactions = useTransactions()
 
 let modalFormTransaction: ElementEvent | null = null
 let modalFormCategory: ElementEvent | null = null
+let refreshInputAmount: any = null
 
 const selectedCircle = computed(() => $circleUsers.value.selected)
 const selectedCategories = computed(() => categories.value.data.filter((cat: Category) => cat.checked).map((e) => e.id))
