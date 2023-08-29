@@ -2,6 +2,7 @@
   <general-modal id="modal-form-asset" title="Form Asset" @on-mounted="modalFormAsset = $event">
     <template #body>
       <form-asset :asset="selectedAsset"
+                  @on-mounted="refreshInputAmount = $event"
                   @on-success="modalFormAsset?.hide(); selectedAsset = undefined; refreshAssets()"/>
     </template>
   </general-modal>
@@ -18,7 +19,7 @@
       </div>
       <button
           class="h-[38px] w-full mb-4 sm:w-1/6 sm:mb-0 items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
-          type="button" @click="selectedAsset = undefined; modalFormAsset?.show()">
+          type="button" @click="selectedAsset = undefined; refreshInputAmount?.setInputAmount(); modalFormAsset?.show()">
         <span class="sr-only">Create Assets</span>
         Create Assets
       </button>
@@ -118,6 +119,7 @@ const selectedAsset = ref<EditableAsset | undefined>()
 const searchKey = ref<string>('')
 
 let modalFormAsset: ElementEvent | null = null
+let refreshInputAmount: any = null
 const selectedCircle = computed(() => $circleUsers.value.selected)
 
 

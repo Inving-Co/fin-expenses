@@ -60,7 +60,7 @@ model CircleUsers {
 
 model Transactions {
   id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  amount      Int
+  amount      Float
   description String
   date        DateTime
   currency    String     @default("IDR")
@@ -91,7 +91,7 @@ model Categories {
 model Assets {
   id                    String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name                  String
-  amount                Int
+  amount                Float
   estimatedReturnAmount Int?
   estimatedReturnDate   DateTime?
   type                  String?
@@ -109,7 +109,7 @@ model Assets {
 model AssetHistory {
   id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name                  String
-  amount                Int
+  amount                Float
   estimatedReturnAmount Int?
   estimatedReturnDate   DateTime?
   type                  String?
