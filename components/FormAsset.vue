@@ -82,11 +82,18 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import {useCurrencyInput} from 'vue-currency-input'
 import {watchDebounced} from "@vueuse/shared";
-import {EditableAsset} from "~/utils/types";
+import {Circle, EditableAsset} from "~/utils/types";
 import {initTooltips} from "flowbite";
+import {useCircleUsers} from "~/composables/circles";
+
+
+const $circleUsers = useCircleUsers()
 
 onMounted(() => {
   initTooltips()
+  emit('on-mounted', {
+    setInputAmount: () => setInputAmount()
+  })
 })
 
 const props = defineProps({
@@ -96,13 +103,13 @@ const props = defineProps({
 })
 
 const assetTypes = [{
-  name: 'LIQUID_ASSETS',
+  name: 'liquid_assets',
   description: 'Liquid assets can be quickly sold or converted to cash without significantly affecting their value.'
 }, {
-  name: 'ILLIQUID_ASSETS',
+  name: 'illiquid_assets',
   description: 'Illiquid assets, may take longer to convert into cash, and their value may change in the process.'
 }, {
-  name: 'CASH_AND_CASH_EQUIVALENTS',
+  name: 'cash_and_cash_equivalents',
   description: 'This includes money in checking or savings accounts, as well as other forms of easily accessible funds.'
 }]
 
@@ -123,19 +130,14 @@ const formAsset = ref<{
   type: undefined
 })
 
-const {inputRef: inputRefAmount} = useCurrencyInput({
+const {inputRef: inputRefAmount, setOptions: setOptionsAmount} = useCurrencyInput({
   currency: 'IDR',
-  locale: 'id-ID',
-  precision: 0,
 })
 
-const {inputRef: inputRefEstimatedReturnAmount} = useCurrencyInput({
+const {inputRef: inputRefEstimatedReturnAmount, setOptions: setOptionsEstimatedReturnAmount} = useCurrencyInput({
   currency: 'IDR',
-  locale: 'id-ID',
-  precision: 0,
 })
-const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'change'])
-
+const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'change', 'on-mounted'])
 
 watchDebounced(formAsset.value, (value) => emit('update:modelValue', value), {debounce: 1000})
 
@@ -155,6 +157,20 @@ watch(() => props.asset, (newVal, oldVal) => {
   }
 })
 
+function setInputAmount() {
+  const value = $circleUsers.value.selected?.currency
+  if(value) {
+    setOptionsAmount({
+      currency: value ?? 'IDR',
+      precision: value == 'IDR' ? 0 : undefined
+    })
+
+    setOptionsEstimatedReturnAmount({
+      currency: value ?? 'IDR',
+      precision: value == 'IDR' ? 0 : undefined
+    })
+  }
+}
 
 async function onSave() {
   isLoadingSubmit.value = true

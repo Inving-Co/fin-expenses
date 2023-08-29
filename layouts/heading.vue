@@ -1,11 +1,6 @@
 <template>
   <general-loading :is-loading="isLoading || isLoadingRequest"/>
 
-  <!-- {{ isLoading }}
-  {{ $categories.isLoading }}
-   {{ $circleUsers.isLoading }}
-  {{ $transactions.isLoading }} -->
-
   <div v-if="!isRoot" class="pt-5 bg-white px-16 border-b">
     <div class="flex items-center justify-between flex-wrap">
       <div class="flex items-center">
