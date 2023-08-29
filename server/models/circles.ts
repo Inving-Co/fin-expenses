@@ -1,9 +1,9 @@
 import {prisma} from "~/server/models/prisma";
 
-export async function createCircle(name: string, userId: string | undefined) {
+export async function createCircle(name: string, currency: string, userId: string | undefined) {
     return prisma.circles.create({
         data: {
-            name, userId
+            name, currency, userId
         }
     });
 }

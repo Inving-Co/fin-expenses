@@ -8,8 +8,9 @@
     }}</div>
     <div class="flex justify-between">
       <span class="mb-3 text-2xl text-gray-500 font-bold dark:text-white">{{
-        currencyIDRFormatter.format(sumOfDebtAmount)
-      }}</span>
+            currencyIDRFormatter($circleUsers.selected.currency, sumOfDebtAmount)
+
+        }}</span>
       <span class="mb-3 text-2xl text-gray-500 font-bold dark:text-white">{{
         percentageOfDebtByIncome.toFixed(2)
       }}%</span>
@@ -43,9 +44,7 @@ const props = defineProps({
   }
 })
 
-
-watch(() => props.transactions, (newVal, _) => {
-})
+const $circleUsers = useCircleUsers()
 
 const sumOfIncomeAmount = computed(() => props.transactions?.filter((val: Transaction) => val.category.type === 'income').reduce((sum: number, n: Transaction) => sum + n.amount, 0) ?? 0)
 const sumOfDebtAmount = computed(() => props.transactions?.filter((val: Transaction) => val.category.type === 'debt').reduce((sum: number, n: Transaction) => sum + n.amount, 0) ?? 0)

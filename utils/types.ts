@@ -54,6 +54,7 @@ export interface Circle {
     name: string
     createdAt: string
     updatedAt: string
+    currency: string
     userId?: string
     circleUsers: CircleUser[]
 }
