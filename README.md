@@ -9,6 +9,7 @@ This application are mean to be the tools for my family, the feature are based o
   - [x] Debt Percentage by Income
 - [x] Multiple family records (Circle)
 - [x] Invite user to circle
+- [x] Currency based on circle
 - [x] Weekly report by Email
 - [x] Assets Planner
 
