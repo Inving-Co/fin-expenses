@@ -38,7 +38,7 @@
         <icons-plus/>
       </div>
       <div v-else class="h-10 w-10 inline-flex mx-2 p-2" style="margin-top: 0"/>
-      <div v-for="(category, index) of categories.data" class="relative h-10 inline-flex items-center mb-4 mx-3">
+      <div v-for="(category, index) of $categories.data" class="relative h-10 inline-flex items-center mb-4 mx-3">
         <div v-if="!category.edited">
           <div v-if="isEditMode && category.circleId">
             <icons-trash class="absolute -top-3 -left-2 w-5 h-5 rounded-md p-1 bg-red-500 text-white cursor-pointer"
@@ -89,6 +89,7 @@ import {useCategories} from "~/composables/categories";
 import {toast} from "vue3-toastify";
 import {useAuth} from "~/composables/auth";
 import {useCircleUsers} from "~/composables/circles";
+import {initTooltips} from "flowbite";
 
 const props = defineProps({
   transaction: {
@@ -109,17 +110,25 @@ const formTransaction = ref<{
   categoryId: null,
   date: '',
 })
-const {inputRef} = useCurrencyInput({
-  currency: 'IDR',
-  locale: 'id-ID',
-  precision: 0,
-})
-const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'add-category', 'edit-category'])
+
+const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'add-category', 'edit-category', 'on-mounted'])
 
 const auth = useAuth()
-const categories = useCategories()
-const circleUsers = useCircleUsers()
+const $categories = useCategories()
+const $circleUsers = useCircleUsers()
 
+const {inputRef, setOptions} = useCurrencyInput({
+  currency: 'IDR',
+})
+
+onMounted(() => {
+  emit('on-mounted', {
+    setInputAmount: () => setOptions({
+      currency: $circleUsers.value.selected?.currency ?? 'IDR',
+      precision: $circleUsers.value.selected?.currency == 'IDR' ? 0 : undefined
+    })
+  })
+})
 
 watchDebounced(formTransaction.value, (value) => emit('update:modelValue', value), {debounce: 1000})
 
@@ -137,7 +146,7 @@ watch(() => props.transaction, (newVal, oldVal) => {
 
 watch(() => isEditMode.value, (val) => {
   if (!val) {
-    categories.value.data.forEach((val: Category) => {
+    $categories.value.data.forEach((val: Category) => {
       val.edited = false
     })
   }
@@ -159,7 +168,7 @@ async function onSave() {
           amount: formTransaction.value.amount,
           categoryId: formTransaction.value.categoryId,
           date: formTransaction.value.date,
-          currency: circleUsers.value.selected?.currency
+          currency: $circleUsers.value.selected?.currency
         })
       })
 
@@ -182,7 +191,7 @@ async function onSave() {
           categoryId: formTransaction.value.categoryId,
           date: formTransaction.value.date,
           id: props.transaction.id,
-          currency: circleUsers.value.selected?.currency
+          currency: $circleUsers.value.selected?.currency
         })
       })
 
@@ -214,7 +223,7 @@ async function onUpdateCategory(index: number, categoryId: string, name: string)
   })
 
   if (status.value === 'success') {
-    categories.value.data[index] = data.value as Category
+    $categories.value.data[index] = data.value as Category
   } else {
     toast.error(error.value?.statusMessage ?? '')
   }
@@ -228,7 +237,7 @@ async function onDeleteCategory(categoryId: string) {
   })
 
   if (status.value === 'success') {
-    categories.value.data = categories.value.data.filter((val: Category) => val.id !== categoryId)
+    $categories.value.data = $categories.value.data.filter((val: Category) => val.id !== categoryId)
   } else {
     toast.error(error.value?.statusMessage ?? '')
   }
