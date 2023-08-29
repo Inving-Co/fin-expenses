@@ -11,7 +11,7 @@
         <span class="text-2xl text-gray-500">My Assets
             <span v-if="summaryAssets?._sum"
                   class="inline-flex text-green-500 font-semibold tracking-tight">
-              {{ currencyIDRFormatter.format(summaryAssets?._sum.amount ?? 0) }}
+              {{ currencyIDRFormatter($circleUsers.selected.currency, summaryAssets?._sum.amount ?? 0) }}
           </span>
         </span>
         <span class="text-md mt-2 text-gray-400">Track the value of your assets over time</span>
@@ -30,7 +30,7 @@
         <div class="flex justify-between mb-2">
           <div class="flex flex-col mb-2">
             <h5 class="text-2xl text-gray-500 dark:text-white">
-              {{ currencyIDRFormatter.format(asset?.amount) }}
+              {{ currencyIDRFormatter($circleUsers.selected.currency, asset?.amount) }}
 
               <div
                   v-if="asset?.estimatedReturnAmount"
@@ -41,7 +41,8 @@
               </div>
             </h5>
             <div v-if="asset?.estimatedReturnAmount" class="text-md text-green-500 font-semibold tracking-tight">
-              {{ currencyIDRFormatter.format(asset?.estimatedReturnAmount) }}
+              {{ currencyIDRFormatter($circleUsers.selected.currency, asset?.estimatedReturnAmount) }}
+
             </div>
           </div>
           <general-dropdown :id="`dropdownActionButton-${index}`">

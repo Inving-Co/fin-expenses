@@ -1,19 +1,21 @@
 <template>
   <div
-    class="p-6 bg-white border border-gray-200 rounded-lg  drop-shadow-soft hover:drop-shadow-xl dark:bg-gray-800 dark:border-gray-700">
+      class="p-6 bg-white border border-gray-200 rounded-lg  drop-shadow-soft hover:drop-shadow-xl dark:bg-gray-800 dark:border-gray-700">
     <h3 class="font-bold">Expenses Structure</h3>
-    <div class="flex-grow border-t mt-2 mb-4 border-gray-400" />
+    <div class="flex-grow border-t mt-2 mb-4 border-gray-400"/>
     <div class="mt-4 text-sm text-gray-500 font-bold dark:text-white">{{
-      capitalizeFirstLetter(labelTime)
-    }}</div>
+        capitalizeFirstLetter(labelTime)
+      }}
+    </div>
     <div class="mb-3 text-2xl text-gray-500 font-bold dark:text-white">{{
-      currencyIDRFormatter.format(sumOfAmount)
-    }}</div>
+        currencyIDRFormatter($circleUsers.selected.currency, sumOfAmount)
+      }}
+    </div>
     <Doughnut v-if="data.labels.length > 0" class="my-4" :data="data" :options="{
       responsive: true,
       elements: {
         center: {
-          text: currencyIDRFormatter.format(sumOfAmount),
+          text: currencyIDRFormatter($circleUsers.selected.currency, sumOfAmount),
           color: '#9F9384', // Default is #000000
           fontStyle: 'Arial', // Default is Arial
           sidePadding: 50, // Default is 20 (as a percentage)
@@ -32,17 +34,18 @@
     }" :plugins="[{
   id: 'centerText',
   beforeDraw: onBeforeDraw
-}]" />
+}]"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Doughnut } from 'vue-chartjs'
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+import {Doughnut} from 'vue-chartjs'
+import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js'
 import lodash from 'lodash';
-import { PropType } from "@vue/runtime-core";
-import { Transaction } from "~/utils/types";
-import { capitalizeFirstLetter } from "~/utils/functions";
+import {PropType} from "@vue/runtime-core";
+import {Transaction} from "~/utils/types";
+import {capitalizeFirstLetter} from "~/utils/functions";
+import {useCircleUsers} from "~/composables/circles";
 
 
 interface Datasets {
@@ -52,7 +55,7 @@ interface Datasets {
 
 ChartJS.register(ArcElement, Tooltip, Legend,)
 
-const { forEach, groupBy, map, mapValues, omit, reduce, split } = lodash;
+const {forEach, groupBy, map, mapValues, omit, reduce, split} = lodash;
 
 const data = ref<{ labels: string[], datasets: Datasets[] }>({
   labels: [],
@@ -61,6 +64,8 @@ const data = ref<{ labels: string[], datasets: Datasets[] }>({
     data: []
   }]
 })
+
+const $circleUsers = useCircleUsers()
 
 const props = defineProps({
   labelTime: {

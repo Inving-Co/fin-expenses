@@ -7,14 +7,14 @@
       capitalizeFirstLetter(labelTime)
     }}</div>
     <div class="mb-3 text-2xl text-gray-500 font-bold dark:text-white">{{
-      currencyIDRFormatter.format(sumOfIncomeAmount - sumOfExpenseAmount)
+      currencyIDRFormatter($circleUsers.selected.currency, sumOfIncomeAmount - sumOfExpenseAmount)
     }}</div>
     <div class="flex-col">
       <span class="flex justify-between">
         <div class="mb-1 text-sm text-gray-500 font-medium dark:text-white">Income</div>
         <div class="mb-1 text-sm text-gray-500 font-medium dark:text-white">{{
-          currencyIDRFormatter.format(sumOfIncomeAmount)
-        }}</div>
+            currencyIDRFormatter($circleUsers.selected.currency, sumOfIncomeAmount)
+          }}</div>
       </span>
       <div class="w-full h-6 bg-gray-200 rounded dark:bg-gray-700">
         <div class="h-6 bg-green-400 rounded dark:bg-green-300 transition-width transition-slowest ease-in-out"
@@ -25,8 +25,8 @@
       <span class="flex justify-between">
         <div class="mb-1 text-sm text-gray-500 font-medium dark:text-white">Expense</div>
         <div class="mb-1 text-sm text-gray-500 font-medium dark:text-white">{{
-          currencyIDRFormatter.format(sumOfExpenseAmount)
-        }}</div>
+            currencyIDRFormatter($circleUsers.selected.currency, sumOfExpenseAmount)
+          }}</div>
       </span>
       <div class="w-full h-6 bg-gray-200 rounded dark:bg-gray-700">
         <div class="h-6 bg-red-400 rounded dark:bg-red-300  transition-width transition-slowest ease-in-out"
@@ -59,9 +59,7 @@ const props = defineProps({
   }
 })
 
-
-watch(() => props.transactions, (newVal, _) => {
-})
+const $circleUsers = useCircleUsers()
 
 const sumOfIncomeAmount = computed(() => props.transactions?.filter((val: Transaction) => val.category.type === 'income').reduce((sum: number, n: Transaction) => sum + n.amount, 0) ?? 0)
 const sumOfExpenseAmount = computed(() => props.transactions?.filter((val: Transaction) => val.category.type !== 'income').reduce((sum: number, n: Transaction) => sum + n.amount, 0) ?? 0)
