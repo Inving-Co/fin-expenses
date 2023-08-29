@@ -91,11 +91,11 @@ export function capitalizeFirstLetter(str: string | null | undefined): string {
 }
 
 
-export const currencyIDRFormatter = Intl.NumberFormat('ID', {
+export const currencyIDRFormatter = (currency: string | undefined | null, value:number) => Intl.NumberFormat('ID', {
     style: 'currency',
-    currency: 'IDR',
-    maximumFractionDigits: 0
-})
+    currency: currency ?? 'IDR',
+    maximumFractionDigits: currency == 'IDR' ? 0 : undefined
+}).format(value)
 
 export const supabase = createClient('', '')
 
