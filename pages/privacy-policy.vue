@@ -139,10 +139,6 @@
             <h2>Contact Us</h2>
             <p>If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact
               us.</p>
-            <hr/>
-            <p>
-              Generated using <a href="https://www.privacypolicygenerator.info">Privacy Policy Generator</a>
-            </p>
           </div>
         </div>
       </div>
