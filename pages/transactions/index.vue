@@ -124,8 +124,8 @@
             v-on:keydown.esc="trx.isEditMode = false; selectedTransaction = undefined">
           <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
             <span v-if="!trx.isEditMode">{{ format(parseISO(trx.date), 'dd/MM/yyyy') }}</span>
-            <span v-else> <vue-date-picker v-model="selectedTransaction!.date" format="dd/MM/yyyy"
-                                           :enable-time-picker="false" name="datepicker" locale="id-ID" auto-apply
+            <span v-else><vue-date-picker v-model="selectedTransaction!.date" format="dd/MM/yyyy"
+                                           :enable-time-picker="false" name="datepicker" locale="id-ID" auto-apply :teleport="true"
                                            @update:model-value="onUpdate(trx)"/></span>
           </th>
           <td class="px-6 py-4">
@@ -354,3 +354,13 @@ function resetAllIsEditMode() {
 
 
 </script>
+
+<style lang="scss">
+.dp-custom-calendar {
+    
+  overflow: visible;
+  .dp__calendar_item {
+    border: 1px solid var(--dp-border-color-hover);
+  }
+}
+</style>
