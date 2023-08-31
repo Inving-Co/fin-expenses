@@ -30,32 +30,12 @@
     <div class="sm:flex p-4 justify-center sm:rounded-t-lg sm:justify-between bg-white dark:bg-gray-900"
          style="box-shadow: 0 10px 12px rgba(0, 0, 0, 0.1)">
       <div class="flex flex-wrap gap-2 justify-center">
-        <general-dropdown id="dropdownActionButton">
-          <template #trigger="{ activator }">
-            <button
-                class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
-                type="button" @click="activator">
-              <span class="sr-only">Action button</span>
-              Action
-              <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                   viewBox="0 0 10 6">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="m1 1 4 4 4-4"/>
-              </svg>
-            </button>
-          </template>
-          <template #content="{ activator }">
-            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
-              <li>
-                <button type="button"
-                        class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+        <button type="button"
+                        class="h-[38px] inline-flex items-center text-white bg-primary-500 drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                         @click="resetAllIsEditMode(); selectedTransaction = undefined; refreshInputAmount?.setInputAmount(); modalFormTransaction?.show()">
-                  Create
-                </button>
-              </li>
-            </ul>
-          </template>
-        </general-dropdown>
+          <icons-plus class="mr-1"/>
+          Create
+        </button>
 
         <dropdowns-filter-dates
             @on-filter-changed="startFilterDate = $event.start; endFilterDate = $event.end; filterDate = $event.label"/>
@@ -64,10 +44,9 @@
         <button
             class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
             type="button" @click="(_) => refreshTrx()" :disabled="isLoading">
-          <span class="sr-only">Refresh</span>
+          <icons-circular-indicator v-if="isLoading" class="inline w-4 h-4 mr-1 text-white animate-spin"/>
+          <icons-refresh v-else class="w-4 h-4 text-gray-500 dark:text-gray-400 mr-1"/>
           Refresh
-          <icons-circular-indicator v-if="isLoading" class="inline w-4 h-4 ml-1 text-white animate-spin"/>
-          <icons-refresh v-else class="w-4 h-4 text-gray-500 dark:text-gray-400 ml-1"/>
         </button>
 
       </div>
@@ -90,13 +69,10 @@
     </div>
     <div v-if="transactions?.length === 0"
          class="flex flex-col text-2xl justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 font-semibold p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">
-      <div class="w-full sm:w-1/2">
+      <div class="w-full sm:w-1/3 my-5 text-center">
         <vue3-lottie :animationData="EmptyJSON"/>
+        <p class="text-gray-500 dark:text-gray-400">No transactions found.</p>
       </div>
-      <button type="button"
-              class="w-full sm:w-1/5 mb-4 text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              @click="refreshInputAmount?.setInputAmount(); modalFormTransaction?.show()">Create
-      </button>
     </div>
     <div v-else-if="!$circleUsers.isLoading && !categories.isLoading"
          class="relative overflow-x-auto drop-shadow-soft" style="height: 500px !important">
