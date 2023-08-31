@@ -31,7 +31,7 @@
          style="box-shadow: 0 10px 12px rgba(0, 0, 0, 0.1)">
       <div class="flex flex-wrap gap-2 justify-center">
         <button type="button"
-                        class="h-[38px] inline-flex items-center text-white bg-primary-500 drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+                        class="h-[38px] inline-flex items-center text-white bg-primary-500 dark:bg-primary-700 dark:text-white drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                         @click="resetAllIsEditMode(); selectedTransaction = undefined; refreshInputAmount?.setInputAmount(); modalFormTransaction?.show()">
           <icons-plus class="mr-1"/>
           Create
@@ -61,7 +61,7 @@
             </svg>
           </div>
           <input :value="searchKey" :readonly="isLoading" type="text" id="table-search-transactions"
-                 class="w-full p-2 pl-10 pr-10 text-sm text-gray-900 drop-shadow hover:drop-shadow-md focus:drop-shadow-md rounded-lg border-none focus:ring-0"
+                 class="w-full p-2 pl-10 pr-10 text-sm text-gray-900 dark:text-gray-400 dark:bg-gray-800 drop-shadow hover:drop-shadow-md focus:drop-shadow-md rounded-lg border-none focus:ring-0"
                  placeholder="Search for transactions"
                  v-on:keydown.enter="onSearchTransactions(($event.target as HTMLInputElement)?.value)">
         </div>
