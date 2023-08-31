@@ -18,7 +18,7 @@
         <span class="text-md mt-2 text-gray-400">Track the value of your assets over time</span>
       </div>
       <button
-          class="h-[38px] w-full mb-4 sm:w-1/6 sm:mb-0 items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+          class="h-[38px] w-full mb-4 sm:w-1/6 sm:mb-0 items-center text-white bg-primary-500 drop-shadow-md hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
           type="button" @click="selectedAsset = undefined; refreshInputAmount?.setInputAmount(); modalFormAsset?.show()">
         <span class="sr-only">Create Assets</span>
         Create Assets
@@ -95,10 +95,11 @@
       </div>
     </div>
     <div v-else
-         class="flex text-2xl justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 font-semibold p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">
-      <div class="w-full sm:w-1/2">
+        class="flex text-2xl justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 font-semibold p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">
+      <div class="w-full sm:w-1/3 my-5 text-center">
 
         <vue3-lottie :animationData="EmptyJSON"/>
+        <p class="text-gray-500 dark:text-gray-400">No assets found.</p>
       </div>
     </div>
   </div>
