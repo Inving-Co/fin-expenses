@@ -6,10 +6,10 @@
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 p-10">
         <div class="mb-4 flex items-start justify-between">
           <div>
-            <h3 class="text-xl font-semibold text-gray-800 dark:text-white">
+            <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-300">
               {{ props.title }}
             </h3>
-            <h5 v-if="props.subtitle" class="text-md text-gray-900 dark:text-white">
+            <h5 v-if="props.subtitle" class="text-md text-gray-900 dark:text-gray-300">
               {{ props.subtitle }}
             </h5>
           </div>

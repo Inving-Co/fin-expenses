@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50 m-0">
+  <div class="bg-gray-50 dark:bg-gray-900 m-0">
     <NuxtLayout>
       <NuxtLoadingIndicator color="orange" />
       <NuxtPage />
@@ -9,10 +9,15 @@
 
 <script setup lang="ts">
 import 'vue3-toastify/dist/index.css';
-import {onMounted} from "@vue/runtime-core";
-import {AuthChangeEvent, Session} from "@supabase/gotrue-js/src/lib/types";
+import { onMounted } from "@vue/runtime-core";
+import { AuthChangeEvent, Session } from "@supabase/gotrue-js/src/lib/types";
 
 onMounted(() => {
+  if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark')
+  }
   supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
     if (event === 'SIGNED_OUT') {
       // delete cookies on sign out
