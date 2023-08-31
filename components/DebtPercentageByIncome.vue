@@ -1,17 +1,17 @@
 <template>
   <div
     class="p-6 bg-white border border-gray-200 rounded-lg drop-shadow-soft hover:drop-shadow-xl dark:bg-gray-800 dark:border-gray-700">
-    <h3 class="font-bold">Debt Percentage by Income</h3>
+    <h3 class="font-bold dark:text-gray-300">Debt Percentage by Income</h3>
     <div class="flex-grow border-t mt-2 mb-4 border-gray-400" />
-    <div class="mt-4 text-sm text-gray-500 font-bold dark:text-white">{{
+    <div class="mt-4 text-sm text-gray-500 font-bold dark:text-gray-300">{{
       capitalizeFirstLetter(labelTime)
     }}</div>
     <div class="flex justify-between">
-      <span class="mb-3 text-2xl text-gray-500 font-bold dark:text-white">{{
+      <span class="mb-3 text-2xl text-gray-500 font-bold dark:text-gray-300">{{
             currencyIDRFormatter($circleUsers.selected.currency, sumOfDebtAmount)
 
         }}</span>
-      <span class="mb-3 text-2xl text-gray-500 font-bold dark:text-white">{{
+      <span class="mb-3 text-2xl text-gray-500 font-bold dark:text-gray-300">{{
         percentageOfDebtByIncome.toFixed(2)
       }}%</span>
     </div>
