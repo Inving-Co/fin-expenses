@@ -69,7 +69,7 @@
     </div>
     <div v-if="transactions?.length === 0"
          class="flex flex-col text-2xl justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 font-semibold p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">
-      <div class="w-full sm:w-1/3 my-5 text-center">
+      <div class="w-full sm:w-1/5 my-5 text-center">
         <vue3-lottie :animationData="EmptyJSON"/>
         <p class="text-gray-500 dark:text-gray-400">No transactions found.</p>
       </div>
