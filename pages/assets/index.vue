@@ -6,7 +6,7 @@
                   @on-success="modalFormAsset?.hide(); selectedAsset = undefined; refreshAssets()"/>
     </template>
   </general-modal>
-  <div class="pb-8">
+  <div class="pb-8 h-full">
     <div class="flex flex-wrap justify-between items-center">
       <div class="flex flex-col my-6">
         <span class="text-2xl text-gray-500">My Assets
@@ -20,14 +20,12 @@
       <button
           class="h-[38px] w-full mb-4 sm:w-1/6 sm:mb-0 items-center text-white bg-primary-500 drop-shadow-md hover:drop-shadow-md focus:outline-none dark:text-white font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-primary-700 dark:hover:bg-gray-700"
           type="button" @click="selectedAsset = undefined; modalFormAsset?.show()">
-        <span class="sr-only">Create Assets</span>
         Create Assets
       </button>
     </div>
 
     <div v-if="assets?.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div v-for="(asset, index) of assets"
-           class="w-full p-6 bg-white border border-gray-200 rounded-lg drop-shadow-soft dark:bg-gray-800 dark:border-gray-700">
+      <div v-for="(asset, index) of assets" class="w-full p-6 bg-white border border-gray-200 rounded-lg drop-shadow-soft dark:bg-gray-800 dark:border-gray-700">
         <div class="flex justify-between mb-2">
           <div class="flex flex-col mb-2">
             <h5 class="text-2xl text-gray-500 dark:text-white">
@@ -80,7 +78,7 @@
             {{ asset?.name?.toUpperCase() }}
           </span>
           <span class="mb-3 font-normal text-sm text-right text-gray-500 dark:text-gray-400">
-            {{ asset?.type.replaceAll('_', ' ') }}
+            {{ asset?.type?.replaceAll('_', ' ') }}
           </span>
         </div>
         <div class="flex justify-between">
@@ -96,8 +94,7 @@
     </div>
     <div v-else
         class="flex text-2xl justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 font-semibold p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">
-      <div class="w-full sm:w-1/3 my-5 text-center">
-
+      <div class="w-full sm:w-1/5 my-5 text-center">
         <vue3-lottie :animationData="EmptyJSON"/>
         <p class="text-gray-500 dark:text-gray-400">No assets found.</p>
       </div>
