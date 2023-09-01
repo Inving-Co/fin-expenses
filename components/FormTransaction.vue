@@ -20,7 +20,7 @@
 
       <div>
         <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
-            <general-currency-field @on-change="formTransaction.amount = $event" @keyup.enter="onSave" />
+            <general-currency-field v-model="formTransaction.amount" @keyup.enter="onSave" />
       </div>
       <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category <span v-if="auth?.userId"
                                                                                                  class="inline-flex cursor-pointer"
