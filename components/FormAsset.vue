@@ -10,19 +10,14 @@
 
       <div class="mb-1">
         <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
-        <input ref="inputRefAmount" name="amount" id="amount"
-               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-               type="text" placeholder="Example: Rp2.000.000" required @keyup.enter="onSave"
-               @input="formAsset.amount = $event.target?.value"/>
+          <general-currency-field name="amount" :amount="currencyIDRFormatter($circleUsers.selected?.currency, formAsset.amount ?? 0)" @on-change="formAsset.amount = $event" @keyup.enter="onSave" />
       </div>
 
       <div class="mb-1">
         <label for="estimatedReturnAmount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estimated
           Return Amount</label>
-        <input ref="inputRefEstimatedReturnAmount" name="estimatedReturnAmount" id="estimatedReturnAmount"
-               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-               type="text" placeholder="Example: Rp2.000.000" required @keyup.enter="onSave"
-               @input="formAsset.estimatedReturnAmount = $event.target?.value"/>
+          <general-currency-field name="estimatedReturnAmount" :amount="currencyIDRFormatter($circleUsers.selected?.currency, formAsset.estimatedReturnAmount ?? 0)" @on-change="formAsset.estimatedReturnAmount = $event" @keyup.enter="onSave" />
+
       </div>
 
       <div class="mb-1">
@@ -91,9 +86,7 @@ const $circleUsers = useCircleUsers()
 
 onMounted(() => {
   initTooltips()
-  emit('on-mounted', {
-    setInputAmount: () => setInputAmount()
-  })
+  emit('on-mounted')
 })
 
 const props = defineProps({
@@ -130,13 +123,6 @@ const formAsset = ref<{
   type: undefined
 })
 
-const {inputRef: inputRefAmount, setOptions: setOptionsAmount} = useCurrencyInput({
-  currency: 'IDR',
-})
-
-const {inputRef: inputRefEstimatedReturnAmount, setOptions: setOptionsEstimatedReturnAmount} = useCurrencyInput({
-  currency: 'IDR',
-})
 const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'change', 'on-mounted'])
 
 watchDebounced(formAsset.value, (value) => emit('update:modelValue', value), {debounce: 1000})
@@ -151,26 +137,8 @@ watch(() => props.asset, (newVal, oldVal) => {
       platform: newVal?.platform,
       type: newVal?.type,
     }
-
-    inputRefAmount.value.value = newVal?.amount
-    inputRefEstimatedReturnAmount.value.value = newVal?.estimatedReturnAmount
   }
 })
-
-function setInputAmount() {
-  const value = $circleUsers.value.selected?.currency
-  if(value) {
-    setOptionsAmount({
-      currency: value ?? 'IDR',
-      precision: value == 'IDR' ? 0 : undefined
-    })
-
-    setOptionsEstimatedReturnAmount({
-      currency: value ?? 'IDR',
-      precision: value == 'IDR' ? 0 : undefined
-    })
-  }
-}
 
 async function onSave() {
   isLoadingSubmit.value = true
@@ -201,9 +169,6 @@ async function onSave() {
 
     emit('on-success')
   }
-  inputRefAmount.value.value = ''
-  inputRefEstimatedReturnAmount.value.value = ''
-
   isLoadingSubmit.value = false
 }
 </script>
