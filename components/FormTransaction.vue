@@ -226,17 +226,25 @@ async function onDeleteCategory(categoryId: string) {
 }
 </script>
 
-<style lang="scss">
-//bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white
+<style>
 .dp-custom-input {
-  background: #F9FAFB;
-  border-color: #D1D5DB;
-  color: gray;
   font-size: 0.875rem;
   line-height: 1.25rem;
   padding: 0.625rem;
   display: block;
   width: 100%;
   border-radius: 0.5rem;
+}
+
+.light .dp-custom-input {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: gray;
+}
+
+.dark .dp-custom-input {
+  background: #4b5563;
+  border-color: #6b7280;
+  color: #D1D5DB;
 }
 </style>
