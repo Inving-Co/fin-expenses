@@ -27,11 +27,11 @@
         <debt-percentage-by-income :label-time="filterDate" :transactions="transactions"/>
       </div>
     </div>
-    <div class="sm:flex p-4 justify-center sm:rounded-t-lg sm:justify-between bg-white dark:bg-gray-900"
+    <div class="sm:flex p-4 justify-center sm:rounded-t-lg sm:justify-between bg-white dark:bg-gray-700"
          style="box-shadow: 0 10px 12px rgba(0, 0, 0, 0.1)">
       <div class="flex flex-wrap gap-2 justify-center">
         <button type="button"
-                        class="h-[38px] inline-flex items-center text-white bg-primary-500 dark:bg-primary-700 dark:text-white drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+                        class="h-[38px] inline-flex items-center text-white bg-primary-500 dark:bg-primary-700 dark:text-white drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:hover:bg-gray-700"
                         @click="resetAllIsEditMode(); selectedTransaction = undefined; refreshInputAmount?.setInputAmount(); modalFormTransaction?.show()">
           <icons-plus class="mr-1"/>
           Create
@@ -118,9 +118,8 @@
             <span v-if="!trx.isEditMode">
                         {{ currencyIDRFormatter($circleUsers.selected.currency, trx.amount) }}
             </span>
-            <span v-else><input v-model="selectedTransaction!.amount" name="Amount"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                type="text" placeholder="Example: 20000" v-on:keydown.enter="onUpdate"/>
+            <span v-else>
+                  <general-currency-field :amount="currencyIDRFormatter($circleUsers.selected.currency, selectedTransaction!.amount)" @on-change="selectedTransaction!.amount = $event" @keydown.enter="onUpdate" />
               </span>
           </td>
           <td class="px-6 py-4">
