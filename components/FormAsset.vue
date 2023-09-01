@@ -10,13 +10,13 @@
 
       <div class="mb-1">
         <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
-          <general-currency-field name="amount" :amount="currencyIDRFormatter($circleUsers.selected?.currency, formAsset.amount ?? 0)" @on-change="formAsset.amount = $event" @keyup.enter="onSave" />
+          <general-currency-field name="amount" v-model="formAsset.amount" @keyup.enter="onSave" />
       </div>
 
       <div class="mb-1">
         <label for="estimatedReturnAmount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estimated
           Return Amount</label>
-          <general-currency-field name="estimatedReturnAmount" :amount="currencyIDRFormatter($circleUsers.selected?.currency, formAsset.estimatedReturnAmount ?? 0)" @on-change="formAsset.estimatedReturnAmount = $event" @keyup.enter="onSave" />
+          <general-currency-field name="estimatedReturnAmount" v-model="formAsset.estimatedReturnAmount" @keyup.enter="onSave" />
 
       </div>
 
