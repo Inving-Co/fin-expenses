@@ -84,6 +84,7 @@ const toggleDarkMode = () => {
     isDarkMode.value = !isDarkMode.value;
     document.documentElement.classList.toggle('dark', isDarkMode.value);
     localStorage.setItem('dark-mode', JSON.stringify(isDarkMode.value));
+    localStorage.setItem('nuxt-color-mode', isDarkMode.value ? 'dark':'light')
 
     if(isDarkMode.value) {
       document.documentElement.style.backgroundColor = '#101827';

@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     ssr: true,
     // router: { middleware: [] },
     devtools: {enabled: true},
-    modules: ['@nuxtjs/tailwindcss', ['@nuxtjs/google-fonts', {
+    modules: ['@nuxtjs/color-mode', '@nuxtjs/tailwindcss', ['@nuxtjs/google-fonts', {
         families: {
             Roboto: true,
             Inter: [400, 700],
@@ -46,4 +46,14 @@ export default defineNuxtConfig({
             CLIENT_VERSION: pkg.version,
         }
     },
+    colorMode: {
+        classSuffix: '',
+        classPrefix: '',
+        preference: 'system', // default value of $colorMode.preference
+        fallback: 'light', // fallback value if not system preference found
+        hid: 'nuxt-color-mode-script',
+        globalName: '__NUXT_COLOR_MODE__',
+        componentName: 'ColorScheme',
+        storageKey: 'nuxt-color-mode'
+    }
 })
