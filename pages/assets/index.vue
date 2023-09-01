@@ -12,14 +12,14 @@
         <span class="text-2xl text-gray-500">My Assets
             <span v-if="summaryAssets?._sum"
                   class="inline-flex text-green-500 font-semibold tracking-tight">
-              {{ currencyIDRFormatter($circleUsers.selected.currency, summaryAssets?._sum.amount ?? 0) }}
+              {{ currencyIDRFormatter($circleUsers.selected?.currency, summaryAssets?._sum.amount ?? 0) }}
           </span>
         </span>
         <span class="text-md mt-2 text-gray-400">Track the value of your assets over time</span>
       </div>
       <button
-          class="h-[38px] w-full mb-4 sm:w-1/6 sm:mb-0 items-center text-white bg-primary-500 drop-shadow-md hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
-          type="button" @click="selectedAsset = undefined; refreshInputAmount?.setInputAmount(); modalFormAsset?.show()">
+          class="h-[38px] w-full mb-4 sm:w-1/6 sm:mb-0 items-center text-white bg-primary-500 drop-shadow-md hover:drop-shadow-md focus:outline-none dark:text-white font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-primary-700 dark:hover:bg-gray-700"
+          type="button" @click="selectedAsset = undefined; modalFormAsset?.show()">
         <span class="sr-only">Create Assets</span>
         Create Assets
       </button>
@@ -31,7 +31,7 @@
         <div class="flex justify-between mb-2">
           <div class="flex flex-col mb-2">
             <h5 class="text-2xl text-gray-500 dark:text-white">
-              {{ currencyIDRFormatter($circleUsers.selected.currency, asset?.amount) }}
+              {{ currencyIDRFormatter($circleUsers.selected?.currency, asset?.amount) }}
 
               <div
                   v-if="asset?.estimatedReturnAmount"
@@ -42,7 +42,7 @@
               </div>
             </h5>
             <div v-if="asset?.estimatedReturnAmount" class="text-md text-green-500 font-semibold tracking-tight">
-              {{ currencyIDRFormatter($circleUsers.selected.currency, asset?.estimatedReturnAmount) }}
+              {{ currencyIDRFormatter($circleUsers.selected?.currency, asset?.estimatedReturnAmount) }}
 
             </div>
           </div>
