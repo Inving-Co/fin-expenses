@@ -6,22 +6,28 @@
 
 <script setup lang="ts">
 import { Circle } from '~/utils/types';
+import { watchDebounced } from '@vueuse/shared';
 
-const emit = defineEmits(['on-change'])
+const emit = defineEmits(['on-change', 'update:modelValue'])
 
 const props = defineProps({
+    modelValue: {
+        type: Number,
+        required: true,
+    },
     amount: {
         type: String,
     },
 })
 
 const $circleUsers = useCircleUsers()
-const inputValue = ref('')
+const inputValue = ref()
 const amount = ref(0)
 const currency = ref('IDR')
 
 onMounted(() => {
     initial(props.amount)
+    inputValue.value = ''
 })
 
 watch(() => props.amount, (val) => {
@@ -34,8 +40,18 @@ watch(() => $circleUsers.value.selected, (val: Circle | null) => {
     }
 })
 
+watch(() => props.modelValue, (val) => {
+    if(!val) {
+        inputValue.value = ''
+    }
+})
+
+watchDebounced(() => amount.value, (value) => {
+    emit('update:modelValue', value);
+}, {debounce: 1000})
+
 watch(() => inputValue.value, (val) => {
-    if (val[val.length - 1] === ',') {
+    if (val[val.length - 1] === ',' || val === '') {
         return
     }
 
