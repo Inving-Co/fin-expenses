@@ -37,7 +37,7 @@
       <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200">
         <li v-for="circleUser in circleUsers">
           <div class="flex justify-between">
-            <div class="flex p-2 w-full rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+            <div class="flex p-2 mr-4 w-full rounded hover:bg-gray-100 dark:hover:bg-gray-600">
               <div class="flex items-center h-5">
                 <input :id="circleUser?.circleId + `-radio`" :name="circleUser?.circleId + `-radio`" type="radio"
                   :value="circleUser?.circleId" :checked="selected === circleUser?.circleId"
@@ -51,7 +51,7 @@
               </div>
             </div>
             <button v-if="$auth?.userId"
-              class="rounded-md text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+              class="rounded-md text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100  focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-900 dark:hover:border-gray-600 dark:focus:ring-gray-700"
               type="button" @click="onCircleChange(circleUser?.circle); modalSetting?.show()">
               <span class="sr-only">Setting</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
