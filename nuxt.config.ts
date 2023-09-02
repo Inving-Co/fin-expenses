@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     ssr: true,
     // router: { middleware: [] },
     devtools: {enabled: true},
-    modules: ['@nuxtjs/color-mode', '@nuxtjs/tailwindcss', ['@nuxtjs/google-fonts', {
+    modules: ['@nuxt/image', '@nuxtjs/color-mode', '@nuxtjs/tailwindcss', ['@nuxtjs/google-fonts', {
         families: {
             Roboto: true,
             Inter: [400, 700],
