@@ -70,7 +70,15 @@
       </div>
 
       <div class="m-8 w-1/2 md:block hidden">
-        <img class="rounded-lg" src="/images/login-unsplash.jpg" alt="login illustration">
+        <NuxtImg 
+          class="rounded-lg"
+          sizes="md:800px"
+          loading="lazy" 
+          format="webp" 
+          src="/images/login-unsplash.jpg" 
+          alt="login illustration"
+        />
+
         <span class="w-full text-center text-slate-400 text-[12px]">Photo by <a
             href="https://unsplash.com/@kellysikkema?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
             target="_blank">Kelly Sikkema</a> on <a
