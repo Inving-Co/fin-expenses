@@ -13,6 +13,25 @@
       <form-category @category-created="modalFormCategory?.hide(); refreshInputAmount?.setInputAmount(); modalFormTransaction?.show();"/>
     </template>
   </general-modal>
+  
+  <general-modal id="modal-confirmation-delete" title="Confirmation" @on-mounted="modalConfDelete = $event">
+    <template #body>
+      <p class="text-gray-500">Are you sure you want to delete this data?</p>
+
+      <div class="flex mt-4">
+
+        <button 
+          type="button" 
+          class="text-white bg-primary-600 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+          @click="modalConfDelete?.hide()">No</button>
+        <button 
+          type="button" 
+          class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+          @click="onDelete(selectedTransaction.id); modalConfDelete?.hide()">Yes</button>
+      </div>
+    </template>
+  </general-modal>
+
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
     <div class="flex flex-col my-6">
@@ -111,7 +130,7 @@
                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                        v-on:keydown.enter="onUpdate">
                 <button class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                        type="button" @click="onDelete(trx.id);"><icons-trash/></button>
+                        type="button" @click="modalConfDelete?.show()"><icons-trash/></button>
               </span>
           </td>
           <td class="px-6 py-4">
@@ -217,6 +236,7 @@ const $transactions = useTransactions()
 
 let modalFormTransaction: ElementEvent | null = null
 let modalFormCategory: ElementEvent | null = null
+let modalConfDelete: ElementEvent | null = null
 let refreshInputAmount: any = null
 
 const selectedCircle = computed(() => $circleUsers.value.selected)
