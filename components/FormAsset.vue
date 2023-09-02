@@ -10,7 +10,7 @@
 
       <div class="mb-1">
         <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
-          <general-currency-field name="amount" v-model="formAsset.amount" @keyup.enter="onSave" />
+        <general-currency-field name="amount" v-model="formAsset.amount" @keyup.enter="onSave" />
       </div>
 
       <div class="mb-1">
@@ -75,9 +75,8 @@
 <script setup lang="ts">
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-import {useCurrencyInput} from 'vue-currency-input'
 import {watchDebounced} from "@vueuse/shared";
-import {Circle, EditableAsset} from "~/utils/types";
+import {EditableAsset} from "~/utils/types";
 import {initTooltips} from "flowbite";
 import {useCircleUsers} from "~/composables/circles";
 
