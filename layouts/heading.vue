@@ -4,7 +4,7 @@
   <div v-if="!isRoot" class="pt-5 bg-white dark:bg-gray-800 px-16 border-b h-[25vh] sm:h-[15vh] flex flex-col justify-between">
     <div class="flex justify-between flex-col sm:flex-row">
       <div class="flex items-center">
-        <NuxtImg height="35" src="/app_icon.png" alt="app icon"/>
+        <NuxtImg class="h-8" src="/app_icon.png" alt="app icon"/>
         <span class="mx-2 text-gray-300">
                     <svg class="h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
