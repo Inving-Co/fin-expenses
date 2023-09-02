@@ -1,7 +1,7 @@
 <template>
   <general-loading :is-loading="isLoading || isLoadingRequest"/>
 
-  <div v-if="!isRoot" class="pt-5 bg-white dark:bg-gray-800 px-16 border-b h-[20vh] sm:h-[15vh] flex flex-col justify-between">
+  <div v-if="!isRoot" class="pt-5 bg-white dark:bg-gray-800 px-16 border-b h-[25vh] sm:h-[15vh] flex flex-col justify-between">
     <div class="flex justify-between flex-col sm:flex-row">
       <div class="flex items-center">
         <img class="h-8" src="/app_icon.png" alt="login illustration"/>
