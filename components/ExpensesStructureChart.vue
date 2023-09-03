@@ -43,7 +43,7 @@ import {Doughnut} from 'vue-chartjs'
 import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js'
 import lodash from 'lodash';
 import {PropType} from "@vue/runtime-core";
-import {Transaction} from "~/utils/types";
+import {Record} from "~/utils/types";
 import {capitalizeFirstLetter} from "~/utils/functions";
 import {useCircleUsers} from "~/composables/circles";
 
@@ -73,7 +73,7 @@ const props = defineProps({
     required: true,
   },
   transactions: {
-    type: Object as PropType<Transaction[]>,
+    type: Object as PropType<Record[]>,
     required: true,
   }
 })
@@ -88,10 +88,10 @@ watch(() => props.transactions, (newVal, _) => {
   data.value = setData(newVal)
 })
 
-const sumOfAmount = computed(() => props.transactions?.filter((val: Transaction) => val.category.type !== 'income').reduce((sum: number, n: Transaction) => sum + n.amount, 0))
+const sumOfAmount = computed(() => props.transactions?.filter((val: Record) => val.category.type !== 'income').reduce((sum: number, n: Record) => sum + n.amount, 0))
 
-function setData(listTrx: Transaction[]): { labels: string[], datasets: Datasets[] } {
-  const groupedTrx = mapValues(groupBy(listTrx.filter((val: Transaction) => val.category.type !== 'income'), (trx: Transaction) => `${trx.category.id}/${trx.category.name}/${trx.category.color}`), (clist: Transaction[]) => clist.map((trx: Transaction) => omit(trx, `${trx.category.id}/${trx.category.name}/${trx.category.color}`)))
+function setData(listTrx: Record[]): { labels: string[], datasets: Datasets[] } {
+  const groupedTrx = mapValues(groupBy(listTrx.filter((val: Record) => val.category.type !== 'income'), (trx: Record) => `${trx.category.id}/${trx.category.name}/${trx.category.color}`), (clist: Record[]) => clist.map((trx: Record) => omit(trx, `${trx.category.id}/${trx.category.name}/${trx.category.color}`)))
   const keys = Object.keys(groupedTrx)
   const values = Object.values(groupedTrx)
 
@@ -105,7 +105,7 @@ function setData(listTrx: Transaction[]): { labels: string[], datasets: Datasets
     colors.add(`#${splitted[2]}`)
   })
 
-  const data = map(values, (values: Transaction[]) => reduce(values, (sum: number, n: Transaction) => sum + n.amount, 0))
+  const data = map(values, (values: Record[]) => reduce(values, (sum: number, n: Record) => sum + n.amount, 0))
 
   return {
     labels: Array.from(names) as string[],

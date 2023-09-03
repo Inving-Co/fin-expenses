@@ -1,4 +1,4 @@
-import {getTransactions} from "~/server/models/transactions";
+import {getRecords} from "../../models/records";
 
 export default defineEventHandler((event) => {
     const {key, startDate, endDate} = getQuery(event)
@@ -14,7 +14,7 @@ export default defineEventHandler((event) => {
         proceedCategoryIds = categoryIds ? [categoryIds as string] : []
     }
 
-    return getTransactions(key as string, {
+    return getRecords(key as string, {
         start: startDate as string,
         end: endDate as string
     }, circle?.id, proceedCategoryIds)

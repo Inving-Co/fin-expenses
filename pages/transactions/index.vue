@@ -213,7 +213,7 @@ import EmptyJSON from '~/assets/lottie/empty.json'
 import {initDropdowns} from "flowbite";
 import {endOfToday, format, parseISO, startOfMonth,} from 'date-fns'
 import {capitalizeFirstLetter, checkAuth, currencyIDRFormatter, onSignOut} from "~/utils/functions";
-import {Category, EditableTransaction, ElementEvent, Transaction} from "~/utils/types";
+import {Category, EditableRecord, ElementEvent} from "~/utils/types";
 import FormTransaction from "~/components/FormTransaction.vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -229,7 +229,7 @@ const searchKey = ref<string>('')
 const filterDate = ref<string>('this month')
 const startFilterDate = ref<string>(format(startOfMonth(new Date()), 'yyyy-MM-dd HH:mm'))
 const endFilterDate = ref<string>(format(endOfToday(), 'yyyy-MM-dd HH:mm'))
-const selectedTransaction = ref<EditableTransaction | undefined>()
+const selectedTransaction = ref<EditableRecord | undefined>()
 const categories = useCategories()
 const $circleUsers = useCircleUsers()
 const $transactions = useTransactions()
@@ -257,7 +257,7 @@ const {
   error: errorFetchTransactions,
   pending: isLoading,
   refresh: refreshTrx,
-} = await useFetch('/api/transactions', {
+} = await useFetch('/api/records', {
   query: {
     key: searchKey,
     startDate: startFilterDate,
@@ -288,7 +288,7 @@ function onSearchTransactions(value: string) {
 
 async function onDelete(trxId: String) {
   $transactions.value.isLoading = true
-  const {status} = await useFetch('/api/transactions/delete.transaction', {
+  const {status} = await useFetch('/api/records/delete.record', {
     query: {
       id: trxId,
       secretPin: localStorage.getItem('secretPin')
@@ -311,7 +311,7 @@ async function onUpdate(trx: any) {
   const currentRow = selectedTransaction.value
 
   if (currentRow?.amount && currentRow.description && currentRow.id && currentRow.date && currentRow.categoryId) {
-    const {status} = await useFetch('/api/transactions/update.transaction', {
+    const {status} = await useFetch('/api/records/update.record', {
       method: 'POST',
       body: JSON.stringify({
         id: currentRow.id,
