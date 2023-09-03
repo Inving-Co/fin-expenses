@@ -1,4 +1,3 @@
-import {deleteTransaction} from "~/server/models/transactions";
 import {deleteCategory} from "~/server/models/categories";
 
 export default defineEventHandler((event) => {

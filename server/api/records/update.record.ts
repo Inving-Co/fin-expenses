@@ -1,4 +1,4 @@
-import {updateTransaction} from "~/server/models/transactions";
+import {updateRecord} from "../../models/records";
 
 export default defineEventHandler(async (event) => {
     const {id, description, amount, date, categoryId, secretPin } = await readBody(event);
@@ -10,5 +10,5 @@ export default defineEventHandler(async (event) => {
     //     })
     // }
 
-    return updateTransaction(id, description, amount, date, categoryId)
+    return updateRecord(id, description, amount, date, categoryId)
 })
