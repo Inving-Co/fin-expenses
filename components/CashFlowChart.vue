@@ -41,7 +41,7 @@ import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import lodash from 'lodash';
 import { PropType } from "@vue/runtime-core";
-import { Transaction } from "~/utils/types";
+import { Record } from "~/utils/types";
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -54,15 +54,15 @@ const props = defineProps({
     required: true,
   },
   transactions: {
-    type: Object as PropType<Transaction[]> || null,
+    type: Object as PropType<Record[]> || null,
     required: true,
   }
 })
 
 const $circleUsers = useCircleUsers()
 
-const sumOfIncomeAmount = computed(() => props.transactions?.filter((val: Transaction) => val.category.type === 'income').reduce((sum: number, n: Transaction) => sum + n.amount, 0) ?? 0)
-const sumOfExpenseAmount = computed(() => props.transactions?.filter((val: Transaction) => val.category.type !== 'income').reduce((sum: number, n: Transaction) => sum + n.amount, 0) ?? 0)
+const sumOfIncomeAmount = computed(() => props.transactions?.filter((val: Record) => val.category.type === 'income').reduce((sum: number, n: Record) => sum + n.amount, 0) ?? 0)
+const sumOfExpenseAmount = computed(() => props.transactions?.filter((val: Record) => val.category.type !== 'income').reduce((sum: number, n: Record) => sum + n.amount, 0) ?? 0)
 
 
 const percentageOfIncome = computed<number>(() => !sumOfIncomeAmount.value ? 0 : sumOfIncomeAmount.value / (sumOfIncomeAmount.value + sumOfExpenseAmount.value) * 100)

@@ -1,4 +1,4 @@
-import {createTransaction, getTransactions} from "~/server/models/transactions";
+import {createRecord, getRecords} from "../../models/records";
 import {eventFirstTrxCreated} from "~/utils/logsnag";
 
 export default defineEventHandler(async (event) => {
@@ -8,8 +8,8 @@ export default defineEventHandler(async (event) => {
     const userId = cookies['user-id']
     const circle = cookies['selected-circle'] ? JSON.parse(cookies['selected-circle']) : undefined
 
-    let result = await createTransaction(date, description, Number(amount), currency, categoryId, userId, circle?.id)
-    let transactions = await getTransactions('', undefined, circle?.id, undefined)
+    let result = await createRecord(date, description, Number(amount), currency, categoryId, userId, circle?.id)
+    let transactions = await getRecords('', undefined, circle?.id, undefined)
 
     if (transactions.length === 1 && result.user) {
         await eventFirstTrxCreated(result.user!.id, result.user!.email, result.id, result.description)
