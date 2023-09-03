@@ -1,7 +1,7 @@
-import {Transaction} from "~/utils/types";
+import {Record} from "~/utils/types";
 import {Ref} from "vue";
 
-interface TransactionCompose { isLoading: boolean, data: Transaction[], selected: Transaction | null }
+interface TransactionCompose { isLoading: boolean, data: Record[], selected: Record | null }
 
 export const useTransactions = () => useState<TransactionCompose>('useTransactions', () => {
     return {isLoading: false, data: [], selected: null}

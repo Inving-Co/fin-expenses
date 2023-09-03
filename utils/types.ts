@@ -4,7 +4,7 @@ export interface ElementEvent {
     toggle: () => void,
 }
 
-export interface EditableTransaction {
+export interface EditableRecord {
     description: string,
     amount: number | null,
     id: string | null,
@@ -22,7 +22,7 @@ export interface EditableAsset {
     type: string | undefined
 }
 
-export interface Transaction {
+export interface Record {
     id: string
     amount: number
     description: string
