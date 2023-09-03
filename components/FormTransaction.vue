@@ -145,7 +145,7 @@ async function onSave() {
 
     // Create new Transaction
     if (!props.transaction) {
-      const {data: result, status} = await useFetch('/api/transactions/create.transaction', {
+      const {data: result, status} = await useFetch('/api/records/create.record', {
         method: 'POST',
         body: JSON.stringify({
           description: formTransaction.value.description,
@@ -167,7 +167,7 @@ async function onSave() {
         emit('on-success')
       }
     } else {
-      const {data: result, status} = await useFetch('/api/transactions/update.transaction', {
+      const {data: result, status} = await useFetch('/api/records/update.record', {
         method: 'POST',
         body: JSON.stringify({
           description: formTransaction.value.description,

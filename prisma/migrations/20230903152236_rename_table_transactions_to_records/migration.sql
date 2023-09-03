@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS "Transactions" RENAME TO "Records";
