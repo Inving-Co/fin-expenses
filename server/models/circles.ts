@@ -61,10 +61,10 @@ export async function getCircleUsers(key: string, userId: string | undefined) {
     })
 }
 
-export async function createCircleUser(userId: string, circleId: string) {
+export async function createCircleUser(userId: string | undefined, circleId: string) {
     return prisma.circleUsers.create({
         data: {
-            userId, circleId
+            userId, circleId, receiveReport: userId !== undefined
         }
     })
 }
