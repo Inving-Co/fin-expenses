@@ -1,4 +1,4 @@
-import {deleteTransaction} from "~/server/models/transactions";
+import {deleteRecord} from "../../models/records";
 
 export default defineEventHandler((event) => {
     const {id, secretPin} = getQuery(event);
@@ -15,5 +15,5 @@ export default defineEventHandler((event) => {
     const userId = cookies['user-id']
 
     // @ts-ignore getQuery convert the params to be string
-    return deleteTransaction(id, userId)
+    return deleteRecord(id, userId)
 })
