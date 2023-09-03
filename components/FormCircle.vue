@@ -91,7 +91,7 @@ async function onSave() {
 
       $circleUsers.value.selected = result.value as Circle | null
 
-      emit('on-success', result)
+      emit('on-success', result.value)
     }
   }
 }

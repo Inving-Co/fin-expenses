@@ -2,7 +2,7 @@
   <general-modal id="modal-form-circle" title="Create Circle" subtitle="Circle mean to be your group"
     :is-has-close="isHasClose" @on-mounted="modalFormCircle = $event">
     <template #body>
-      <form-circle @on-success="modalFormCircle?.hide(); refreshCircles();" />
+      <form-circle @on-success="modalFormCircle?.hide(); refreshCircles().then(() => selected = $event.id); " />
     </template>
   </general-modal>
 
