@@ -9,7 +9,9 @@ export interface EditableRecord {
     amount: number | null,
     id: string | null,
     date: string,
-    categoryId: number | null
+    categoryId: string | null
+    assetId: string | null
+    asset: Asset | null
 }
 
 export interface EditableAsset {
@@ -57,6 +59,7 @@ export interface Circle {
     currency: string
     userId?: string
     circleUsers: CircleUser[]
+    assets: Asset[]
 }
 
 export interface CircleUser {
