@@ -8,7 +8,7 @@
     }}</div>
     <div class="flex justify-between">
       <span class="mb-3 text-2xl text-gray-500 font-bold dark:text-gray-300">{{
-            currencyIDRFormatter($circleUsers.selected.currency, sumOfDebtAmount)
+            currencyIDRFormatter($circleUsers.selected?.currency, sumOfDebtAmount)
 
         }}</span>
       <span class="mb-3 text-2xl text-gray-500 font-bold dark:text-gray-300">{{

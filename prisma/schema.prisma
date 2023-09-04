@@ -18,7 +18,7 @@ model Users {
   categories    Categories[]
   circleUsers   CircleUsers[]
   circles       Circles[]
-  records  Records[]
+  records       Records[]
   UserSettings  UserSettings[]
 }
 
@@ -43,7 +43,7 @@ model Circles {
   categories   Categories[]
   circleUsers  CircleUsers[]
   user         Users?         @relation(fields: [userId], references: [id])
-  records Records[]
+  records      Records[]
 }
 
 model CircleUsers {
@@ -69,23 +69,25 @@ model Records {
   userId      String?    @db.Uuid
   circleId    String?    @db.Uuid
   currency    String     @default("IDR")
+  assetId     String?    @db.Uuid
   category    Categories @relation(fields: [categoryId], references: [id])
   circle      Circles?   @relation(fields: [circleId], references: [id])
   user        Users?     @relation(fields: [userId], references: [id])
+  asset       Assets?    @relation(fields: [assetId], references: [id])
 }
 
 model Categories {
-  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name         String
-  color        String?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @default(now()) @updatedAt
-  circleId     String?        @db.Uuid
-  userId       String?        @db.Uuid
-  type         String?
-  circle       Circles?       @relation(fields: [circleId], references: [id])
-  user         Users?         @relation(fields: [userId], references: [id])
-  records Records[]
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  color     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  circleId  String?   @db.Uuid
+  userId    String?   @db.Uuid
+  type      String?
+  circle    Circles?  @relation(fields: [circleId], references: [id])
+  user      Users?    @relation(fields: [userId], references: [id])
+  records   Records[]
 }
 
 model Assets {
@@ -97,11 +99,13 @@ model Assets {
   color                 String?
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @default(now()) @updatedAt
+  recordedAt            DateTime       @default(now())
   circleId              String?        @db.Uuid
   userId                String?        @db.Uuid
   estimatedReturnAmount Int?
   estimatedReturnDate   DateTime?
   assetHistory          AssetHistory[]
+  records               Records[]
   circle                Circles?       @relation(fields: [circleId], references: [id])
   user                  Users?         @relation(fields: [userId], references: [id])
 }
@@ -124,4 +128,12 @@ model AssetHistory {
   asset                 Assets    @relation(fields: [assetId], references: [id])
   circle                Circles?  @relation(fields: [circleId], references: [id])
   user                  Users?    @relation(fields: [userId], references: [id])
+}
+
+model BulkRecords {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+  assetHistoryId String   @db.Uuid
+  recordId       String   @db.Uuid
 }

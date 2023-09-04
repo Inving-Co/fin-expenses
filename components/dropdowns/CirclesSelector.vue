@@ -16,7 +16,7 @@
   <general-modal id="modal-setting" title="Setting" subtitle="Change your circle settings here"
     @on-mounted="modalSetting = $event">
     <template #body>
-      <form-circle-setting :circle-id="selected ?? undefined" />
+      <form-circle-setting />
     </template>
   </general-modal>
 
@@ -42,7 +42,8 @@
                 <input :id="circleUser?.circleId + `-radio`" :name="circleUser?.circleId + `-radio`" type="radio"
                   :value="circleUser?.circleId" :checked="selected === circleUser?.circleId"
                   class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                  @change="onCircleChange(circleUser?.circle);" />
+                  @change="onCircleChange(circleUser?.circle);" 
+                />
               </div>
               <div class="ml-2 text-sm flex justify-between w-full gap-2">
                 <label :for="circleUser?.circleId + `-radio`" class="font-medium text-gray-900 dark:text-gray-300">
@@ -52,7 +53,9 @@
             </div>
             <button v-if="$auth?.userId"
               class="rounded-md text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100  focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-900 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-              type="button" @click="onCircleChange(circleUser?.circle); modalSetting?.show()">
+              type="button" 
+              @click="onCircleChange(circleUser?.circle); modalSetting?.show()"
+            >
               <span class="sr-only">Setting</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path fill="currentColor"
@@ -75,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { capitalizeFirstLetter, checkAuth } from "~/utils/functions";
+import { capitalizeFirstLetter } from "~/utils/functions";
 import { Circle, ElementEvent } from "~/utils/types";
 import FormCircleSetting from "~/components/FormCircleSetting.vue";
 import { useCircleUsers } from "~/composables/circles";
@@ -102,7 +105,31 @@ const { data: circleUsers, refresh: refreshCircles } = await useFetch('/api/circ
 
     $circleUsers.value.isLoading = false
   },
+  server: false,
 })
+
+watch(() => selected.value, async (value) => {
+  if (value) {
+    $circleUsers.value.isLoading = true
+
+    await activatorLoad(value)
+
+    $circleUsers.value.isLoading = false
+  }
+})
+
+const activatorLoad = async (value: string) => {
+  const { data } = await useFetch(`/api/circles/${value}`, {
+      server: false,
+    })
+
+    $circleUsers.value.selected = data.value as Circle | undefined
+
+    useCookie('selected-circle', {
+      secure: true,
+      sameSite: 'lax',
+    }).value = JSON.stringify(data.value)
+}
 
 onMounted(() => {
   emit('on-mounted')
@@ -113,13 +140,11 @@ onMounted(() => {
     $circleUsers.value.selected = value
     selected.value = value?.id
   }
-
-  refreshCircles()
 })
 
 watch(() => circleUsers.value, (value) => {
   if (value && value.length > 0) {
-  const selectedCircle = useCookie('selected-circle').value as Circle | null | undefined
+    const selectedCircle = useCookie('selected-circle').value as Circle | null | undefined
 
     if (!selectedCircle) {
       onCircleChange(value[0].circle as Circle)
@@ -127,18 +152,10 @@ watch(() => circleUsers.value, (value) => {
   } else {
     modalFormCircle?.show();
   }
-}, {
-  immediate: true
 })
 
 function onCircleChange(value: Circle) {
-  useCookie('selected-circle', {
-    secure: true,
-    sameSite: 'lax',
-  }).value = JSON.stringify(value)
-
   selected.value = value.id
-  $circleUsers.value.selected = value
 
   /// I think the cookie itself was async, it means that when I put new value on circle
   /// It will still use the old value when I refresh the trx, so I need to delay some milliseconds

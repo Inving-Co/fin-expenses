@@ -18,7 +18,8 @@ export async function getCircle(circleId: string | undefined) {
                 include: {
                     user: true
                 }
-            }
+            },
+            assets: true
         }
     })
 }
