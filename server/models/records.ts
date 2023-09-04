@@ -1,6 +1,6 @@
 import {prisma} from './prisma'
 
-export async function createRecord(date: string, description: string, amount: number, currency: string, categoryId: string, userId: string | undefined, circleId: string | undefined) {
+export async function createRecord(date: string, description: string, amount: number, currency: string, categoryId: string, userId: string | undefined, circleId: string | undefined, assetId: string | undefined) {
     return prisma.records.create({
         data: {
             amount,
@@ -9,7 +9,8 @@ export async function createRecord(date: string, description: string, amount: nu
             description: description.toLowerCase(),
             categoryId,
             userId,
-            circleId
+            circleId,
+            assetId
         },
         include: {
             user: true
@@ -47,4 +48,13 @@ export async function getRecords(key: string, dateFilter: { start: string, end: 
             category: true
         }
     })
+}
+
+
+export async function createBulkRecord(assetHistoryId: string, recordId: string) {
+    return prisma.bulkRecords.create({
+        data: {
+            assetHistoryId, recordId
+        }
+    });
 }

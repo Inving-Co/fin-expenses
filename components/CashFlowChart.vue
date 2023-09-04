@@ -7,13 +7,13 @@
       capitalizeFirstLetter(labelTime)
     }}</div>
     <div class="mb-3 text-2xl text-gray-500 font-bold dark:text-gray-300">{{
-      currencyIDRFormatter($circleUsers.selected.currency, sumOfIncomeAmount - sumOfExpenseAmount)
+      currencyIDRFormatter($circleUsers.selected?.currency, sumOfIncomeAmount - sumOfExpenseAmount)
     }}</div>
     <div class="flex-col">
       <span class="flex justify-between">
         <div class="mb-1 text-sm text-gray-500 font-medium dark:text-gray-300">Income</div>
         <div class="mb-1 text-sm text-gray-500 font-medium dark:text-gray-300">{{
-            currencyIDRFormatter($circleUsers.selected.currency, sumOfIncomeAmount)
+            currencyIDRFormatter($circleUsers.selected?.currency, sumOfIncomeAmount)
           }}</div>
       </span>
       <div class="w-full h-6 bg-gray-200 rounded dark:bg-gray-700">
@@ -25,7 +25,7 @@
       <span class="flex justify-between">
         <div class="mb-1 text-sm text-gray-500 font-medium dark:text-gray-300">Expense</div>
         <div class="mb-1 text-sm text-gray-500 font-medium dark:text-gray-300">{{
-            currencyIDRFormatter($circleUsers.selected.currency, sumOfExpenseAmount)
+            currencyIDRFormatter($circleUsers.selected?.currency, sumOfExpenseAmount)
           }}</div>
       </span>
       <div class="w-full h-6 bg-gray-200 rounded dark:bg-gray-700">
