@@ -4,13 +4,14 @@
       <div class="flex gap-2">
         <div>
           <label for="description"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description <span class="text-red-500">*</span></label>
+            
           <input v-model="formTransaction.description" type="text" name="description" id="description"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
             placeholder="Example: Makan Siang" required @keyup.enter="onSave">
         </div>
         <div>
-          <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date</label>
+          <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date <span class="text-red-500">*</span></label>
           <VueDatePicker v-model="formTransaction.date" name="datepicker" id="datepicker" locale="id-ID"
             format="dd/MM/yyyy" input-class-name="dp-custom-input" hide-input-icon :enable-time-picker="false"
             placeholder="Select Date" auto-apply />
@@ -18,10 +19,10 @@
       </div>
 
       <div>
-        <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
+        <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount <span class="text-red-500">*</span></label>
         <general-currency-field v-model="formTransaction.amount" name="amount" @keyup.enter="onSave" />
       </div>
-      <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category <span v-if="auth?.userId"
+      <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category  <span class="text-red-500">*</span> <span v-if="auth?.userId"
           class="inline-flex cursor-pointer" @click="emit('edit-category'); isEditMode = !isEditMode">
           <icons-edit v-if="!isEditMode" class="h-4" />
           <icons-close v-else class="h-4" />
@@ -68,8 +69,8 @@
               class="h-[38px] flex w-full justify-between items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
               type="button" @click="activator">
               {{ formTransaction.asset ? 
-                `${capitalizeFirstLetter(formTransaction.asset?.name)} (
-                            ${capitalizeFirstLetter(formTransaction.asset?.platform)} )` : 'Select Asset'}}
+                `${capitalizeFirstLetter(formTransaction.asset?.name)} ${formTransaction.asset?.platform ? '(': ''}
+                            ${capitalizeFirstLetter(formTransaction.asset?.platform)} ${formTransaction.asset?.platform ? ')': ''}` : 'Select Asset'}}
               <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                 viewBox="0 0 10 6">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -86,7 +87,7 @@
                     class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                   <label :for="`${index}-asset-radio`"
                     class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ `
-                    ${capitalizeFirstLetter(asset.name)} ( ${capitalizeFirstLetter(asset.platform)} )`
+                    ${capitalizeFirstLetter(asset.name)} ${asset?.platform ? '(': ''} ${capitalizeFirstLetter(asset.platform)} ${asset?.platform ? ')': ''}`
                     }}</label>
                 </div>
               </li>
@@ -94,9 +95,8 @@
           </template>
         </general-dropdown>
       </div>
-
-      <button type="button" :disabled="isLoadingSubmit"
-        class="w-full text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+      <button type="button" :disabled="isLoadingSubmit || !isButtonEnabled"
+        :class="`${!isButtonEnabled? 'bg-gray-500':'bg-primary-700 hover:bg-primary-800 dark:bg-primary-600 dark:hover:bg-primary-700'} w-full text-white focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-primary-800`"
         @click="onSave">
         <span v-if="isLoadingSubmit">
           <icons-circular-indicator class="inline w-4 h-4 mr-3 text-white animate-spin" />
@@ -168,6 +168,15 @@ watch(() => isEditMode.value, (val) => {
       val.edited = false
     })
   }
+})
+
+const isButtonEnabled = computed(() => {
+  const description = formTransaction.value.description
+  const amount = formTransaction.value.amount
+  const date = formTransaction.value.date
+  const categoryId = formTransaction.value.categoryId
+
+  return (!!description && !!amount && !!date && !!categoryId)
 })
 
 async function onSave() {

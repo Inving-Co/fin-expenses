@@ -129,6 +129,9 @@ export async function refreshAsset(assetId: string) {
                 orderBy: {
                     date: 'desc'
                 },
+                include: {
+                    category: true
+                }
             })
 
             if (resultRecords.length === 0) throw new Error("Result record not found");
@@ -149,10 +152,12 @@ export async function refreshAsset(assetId: string) {
                 }
             })
 
-            let amount = 0
+            let decreasedAmount = 0
+            let increasedAmount = 0
         
             for (const record of resultRecords) {
-                amount += record.amount
+                if (record.category.type === 'income') increasedAmount += record.amount
+                else decreasedAmount += record.amount
 
                 await tx.bulkRecords.create({
                     data: {
@@ -166,7 +171,7 @@ export async function refreshAsset(assetId: string) {
             await prisma.assets.update({
                 where: { id: assetId },
                 data: {
-                    amount: resultAsset!.amount - amount,
+                    amount: resultAsset!.amount - decreasedAmount + increasedAmount,
                     recordedAt: new Date(),                    
                 },
             });
