@@ -2,7 +2,7 @@
   <general-modal id="modal-form-circle" title="Create Circle" subtitle="Circle mean to be your group"
     :is-has-close="isHasClose" @on-mounted="modalFormCircle = $event">
     <template #body>
-      <form-circle @on-success="modalFormCircle?.hide(); refreshCircles().then(() => selected = $event.id); " />
+      <form-circle @on-success="modalFormCircle?.hide(); refreshCircles().then(() => selected = $event.id);" />
     </template>
   </general-modal>
 
@@ -42,8 +42,7 @@
                 <input :id="circleUser?.circleId + `-radio`" :name="circleUser?.circleId + `-radio`" type="radio"
                   :value="circleUser?.circleId" :checked="selected === circleUser?.circleId"
                   class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                  @change="onCircleChange(circleUser?.circle);" 
-                />
+                  @change="onCircleChange(circleUser?.circle);" />
               </div>
               <div class="ml-2 text-sm flex justify-between w-full gap-2">
                 <label :for="circleUser?.circleId + `-radio`" class="font-medium text-gray-900 dark:text-gray-300">
@@ -53,9 +52,7 @@
             </div>
             <button v-if="$auth?.userId"
               class="rounded-md text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100  focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-900 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-              type="button" 
-              @click="onCircleChange(circleUser?.circle); modalSetting?.show()"
-            >
+              type="button" @click="onCircleChange(circleUser?.circle); modalSetting?.show()">
               <span class="sr-only">Setting</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path fill="currentColor"
@@ -83,6 +80,7 @@ import { Circle, ElementEvent } from "~/utils/types";
 import FormCircleSetting from "~/components/FormCircleSetting.vue";
 import { useCircleUsers } from "~/composables/circles";
 import { useAuth } from "~/composables/auth";
+import va from '@vercel/analytics';
 
 const emit = defineEmits(['on-mounted', 'circle-changed'])
 let modalFormCircle: ElementEvent | null = null
@@ -120,15 +118,20 @@ watch(() => selected.value, async (value) => {
 
 const activatorLoad = async (value: string) => {
   const { data } = await useFetch(`/api/circles/${value}`, {
-      server: false,
-    })
+    server: false,
+  })
 
-    $circleUsers.value.selected = data.value as Circle | undefined
+  $circleUsers.value.selected = data.value  as Circle | undefined
 
-    useCookie('selected-circle', {
-      secure: true,
-      sameSite: 'lax',
-    }).value = JSON.stringify(data.value)
+  const circle = {
+    ...data.value,
+    assets: undefined,
+  };
+
+  useCookie('selected-circle', {
+    secure: true,
+    sameSite: 'lax',
+  }).value = JSON.stringify(circle)
 }
 
 onMounted(() => {
@@ -139,10 +142,13 @@ onMounted(() => {
   if (value) {
     $circleUsers.value.selected = value
     selected.value = value?.id
+  } else {
+    refreshCircles()
   }
 })
 
 watch(() => circleUsers.value, (value) => {
+  console.log(value)
   if (value && value.length > 0) {
     const selectedCircle = useCookie('selected-circle').value as Circle | null | undefined
 

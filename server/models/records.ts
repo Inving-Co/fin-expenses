@@ -26,7 +26,7 @@ export async function deleteRecord(trxId: string, userId: string | undefined) {
     return prisma.records.delete({where: {id: trxId, userId}})
 }
 
-export async function getRecords(key: string, dateFilter: { start: string, end: string } | undefined, circleId: string | undefined, categoryIds: string[] | undefined) {
+export async function getRecords(key: string, dateFilter: { start: string, end: string } | undefined, circleId: string | undefined, categoryIds: string[] | undefined, assetId: string | undefined) {
     return prisma.records.findMany({
         where: {
             description: {
@@ -39,7 +39,8 @@ export async function getRecords(key: string, dateFilter: { start: string, end: 
             circleId: circleId ?? null,
             categoryId: {
                 in: categoryIds
-            }
+            },
+            assetId
         },
         orderBy: {
             date: 'desc'
@@ -49,7 +50,6 @@ export async function getRecords(key: string, dateFilter: { start: string, end: 
         }
     })
 }
-
 
 export async function createBulkRecord(assetHistoryId: string, recordId: string) {
     return prisma.bulkRecords.create({
