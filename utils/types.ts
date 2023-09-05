@@ -58,8 +58,8 @@ export interface Circle {
     updatedAt: string
     currency: string
     userId?: string
-    circleUsers: CircleUser[]
-    assets: Asset[]
+    circleUsers: CircleUser[] | undefined
+    assets: Asset[] | undefined
 }
 
 export interface CircleUser {
