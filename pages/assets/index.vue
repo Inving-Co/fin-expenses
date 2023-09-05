@@ -50,7 +50,7 @@
     </div>
 
     <div v-if="assets?.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div v-for="(asset, index) of assets" class="w-full p-6 bg-white border border-gray-200 rounded-lg drop-shadow-soft dark:bg-gray-800 dark:border-gray-700">
+      <div v-for="(asset, index) of assets" class="w-full p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
         <div class="flex justify-between mb-2">
           <div class="flex flex-col mb-2">
             <h5 class="text-2xl text-gray-500 dark:text-white">
