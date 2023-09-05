@@ -111,7 +111,7 @@
             {{ format(parseISO(asset?.estimatedReturnDate!), 'dd/MM/yyyy') }}
           </span>
           <span v-else></span>
-          <span class="font-normal text-gray-500 dark:text-gray-400">
+          <span v-if="asset?.platform !== 'undefined'" class="font-normal text-gray-500 dark:text-gray-400">
             {{ asset?.platform?.toUpperCase() }}
           </span>
         </div>
