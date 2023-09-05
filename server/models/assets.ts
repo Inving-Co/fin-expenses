@@ -54,6 +54,17 @@ export function getAssets(key: string, circleId: string | undefined) {
     })
 }
 
+export function getAssetDetail(assetId: string) {
+    return prisma.assets.findUnique({
+        where: {
+            id: assetId,
+        },
+        include: {
+            assetHistory: true,
+        },
+    });
+}
+
 export function summaryOfAssets(circleId: string | undefined) {
     return prisma.assets.aggregate({
         where: {
@@ -91,4 +102,79 @@ export function deleteAssetHistory(assetId: string, userId: string | undefined) 
             userId,
         }
     })
+}
+
+
+export async function refreshAsset(assetId: string) {
+    return prisma.$transaction(
+        async (tx) => {
+            const resultAsset = await tx.assets.findUnique({
+                where: {
+                    id: assetId,
+                },
+                include: {
+                    assetHistory: true,
+                },
+            });
+
+            if (!resultAsset) throw new Error("Result asset not found");
+
+            const resultRecords = await tx.records.findMany({
+                where: {
+                    assetId,
+                    createdAt: {
+                        gte: resultAsset?.recordedAt
+                    }
+                },
+                orderBy: {
+                    date: 'desc'
+                },
+            })
+
+            if (resultRecords.length === 0) throw new Error("Result record not found");
+        
+            const resultAssetHistory = await tx.assetHistory.create({
+                data: {
+                    assetId: assetId,
+                    actionName: 'REFRESH',
+                    name: resultAsset!.name,
+                    amount: resultAsset!.amount,
+                    estimatedReturnAmount: resultAsset?.estimatedReturnAmount,
+                    estimatedReturnDate: resultAsset?.estimatedReturnDate,
+                    type: resultAsset?.type,
+                    platform: resultAsset?.platform,
+                    color: resultAsset!.color,
+                    circleId: resultAsset!.circleId,
+                    userId: resultAsset!.userId,
+                }
+            })
+
+            let amount = 0
+        
+            for (const record of resultRecords) {
+                amount += record.amount
+
+                await tx.bulkRecords.create({
+                    data: {
+                        assetHistoryId: resultAssetHistory?.id,
+                        recordId: record.id
+                    }
+                })
+                
+            }
+
+            await prisma.assets.update({
+                where: { id: assetId },
+                data: {
+                    amount: resultAsset!.amount - amount,
+                    recordedAt: new Date(),                    
+                },
+            });
+            
+        },
+        {
+            maxWait: 5000,
+            timeout: 10000,
+        }
+    )
 }

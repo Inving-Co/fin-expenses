@@ -88,6 +88,12 @@
                           @click="selectedAsset = asset; modalConfDelete?.show()">Delete
                   </button>
                 </li>
+                <li>
+                  <button type="button"
+                          class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          @click="onRefreshAsset(asset.id)">Refresh
+                  </button>
+                </li>
               </ul>
             </template>
           </general-dropdown>
@@ -128,7 +134,6 @@ import EmptyJSON from '~/assets/lottie/empty.json'
 import {ElementEvent, EditableAsset} from "~/utils/types";
 import {useLoading} from "~/composables/loading";
 import {parseISO, format} from 'date-fns';
-import {initTooltips} from 'flowbite';
 
 const $loading = useLoading();
 const $circleUsers = useCircleUsers()
@@ -184,6 +189,22 @@ const {
 async function onDelete(assetId: String) {
   $loading.value = true
   const {status} = await useFetch('/api/assets/delete.asset', {
+    query: {
+      id: assetId,
+    },
+  })
+
+  if (status.value === 'success') {
+    await refreshAssets()
+  }
+
+  $loading.value = false
+}
+
+
+async function onRefreshAsset(assetId: String) {
+  $loading.value = true
+  const {status} = await useFetch('/api/assets/refresh.asset', {
     query: {
       id: assetId,
     },
