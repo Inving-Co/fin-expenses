@@ -25,6 +25,12 @@
     </template>
   </general-modal>
 
+  <general-modal id="modal-asset-history" class-modal="mx-20" title="Asset History" @on-mounted="modalAssetHistory = $event">
+    <template #body>
+      <asset-history :asset="selectedAsset" />
+    </template>
+  </general-modal>
+
   <div class="pb-8 h-full">
     <div class="flex flex-wrap justify-between items-center">
       <div class="flex flex-col my-6">
@@ -49,7 +55,6 @@
           <div class="flex flex-col mb-2">
             <h5 class="text-2xl text-gray-500 dark:text-white">
               {{ currencyIDRFormatter($circleUsers.selected?.currency, asset?.amount) }}
-
               <div
                   v-if="asset?.estimatedReturnAmount"
                   class="inline-flex text-green-500 text-sm align-top font-semibold tracking-tight">+{{
@@ -60,7 +65,6 @@
             </h5>
             <div v-if="asset?.estimatedReturnAmount" class="text-md text-green-500 font-semibold tracking-tight">
               {{ currencyIDRFormatter($circleUsers.selected?.currency, asset?.estimatedReturnAmount) }}
-
             </div>
           </div>
           <general-dropdown :id="`dropdownActionButton-${index}`">
@@ -92,6 +96,12 @@
                   <button type="button"
                           class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                           @click="onRefreshAsset(asset.id)">Refresh
+                  </button>
+                </li>
+                <li>
+                  <button type="button"
+                          class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          @click="selectedAsset = asset; modalAssetHistory?.show()">History
                   </button>
                 </li>
               </ul>
@@ -131,20 +141,22 @@
 import {Vue3Lottie} from "vue3-lottie";
 import EmptyJSON from '~/assets/lottie/empty.json'
 
-import {ElementEvent, EditableAsset} from "~/utils/types";
+import {ElementEvent, Asset} from "~/utils/types";
 import {useLoading} from "~/composables/loading";
 import {parseISO, format} from 'date-fns';
 
 const $loading = useLoading();
 const $circleUsers = useCircleUsers()
-const selectedAsset = ref<EditableAsset | undefined>()
+const selectedAsset = ref<Asset | undefined>()
 const searchKey = ref<string>('')
 
 let modalFormAsset: ElementEvent | null = null
 let modalConfDelete: ElementEvent | null = null
-let refreshInputAmount: any = null
-const selectedCircle = computed(() => $circleUsers.value.selected)
+let modalAssetHistory: ElementEvent | null = null
 
+let refreshInputAmount: any = null
+
+const selectedCircle = computed(() => $circleUsers.value.selected)
 
 definePageMeta({
   title: "AssetsPlanner",

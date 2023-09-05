@@ -104,6 +104,18 @@ export function deleteAssetHistory(assetId: string, userId: string | undefined) 
     })
 }
 
+export function getAssetHistory(assetId: string, circleId: string | undefined) {
+    return prisma.assetHistory.findMany({
+        where: {
+            assetId,
+            circleId 
+        },
+        orderBy: {
+            createdAt: 'desc',
+        },
+    });
+    
+}
 
 export async function refreshAsset(assetId: string) {
     return prisma.$transaction(

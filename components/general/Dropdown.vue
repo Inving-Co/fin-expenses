@@ -2,10 +2,10 @@
   <div>
     <slot name="trigger" :activator="() => { toggleDropdown(!isVisible); emit('on-trigger-click') }" />
     <div :id="`${props.id}-wrapper-dropdown`" class="flex">
-      <div :id="`${props.id}-background`" class="fixed bg-transparent z-10 hidden left-0 right-0 bottom-0 top-0"
+      <div :id="`${props.id}-background`" class="fixed bg-transparent z-20 hidden left-0 right-0 bottom-0 top-0"
         @click="toggleDropdown(false)" />
       <div :id="props.id"
-        class="mt-2 z-20 hidden bg-white absolute divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
+        class="mt-2 z-30 hidden bg-white absolute divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
         <client-only>
           <slot name="content" :activator="() => { toggleDropdown(!isVisible); }" />
         </client-only>
