@@ -54,7 +54,7 @@ const $auth = useAuth()
 
 watch(() => $circleUsers.value.selected, ((val) => {
   copiedLink.value = `${window.location.origin}/circles/${val?.id}`
-  const myCircles = $circleUsers.value?.selected?.circleUsers.filter((e: CircleUser) => e.userId === $auth.value?.userId) ?? []
+  const myCircles = $circleUsers.value?.selected?.circleUsers?.filter((e: CircleUser) => e.userId === $auth.value?.userId) ?? []
   circleUser.value = myCircles.length > 0 ? myCircles[0] : null
 }))
 
