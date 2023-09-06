@@ -15,7 +15,7 @@
     <div class="page">
       <div class="container">
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-12 dark:text-white">
             <h1>Privacy Policy for Inving.co</h1>
             <p>At Inving.co, accessible from https://inving.co/, one of our main priorities is the privacy of
               our visitors. This Privacy Policy document contains types of information that is collected and

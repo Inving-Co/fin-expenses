@@ -1,6 +1,55 @@
 <template>
   <general-loading :is-loading="isLoading || isLoadingRequest"/>
 
+  <general-modal id="modal-about" title="About Inving" @on-mounted="modalAbout = $event">
+    <template #body>
+      <div class="flex w-full text-slate-500 text-[14px] mt-3">
+        <span class="mr-1">
+          Please read
+        </span>
+        <a 
+          class="underline-offset-1 font-semibold underline" 
+          target="_blank"
+          href="https://money.inving.co/privacy-policy">
+          Our Privacy Policy
+        </a>
+      </div>
+      <div class="flex flex-col justify-start	w-full text-slate-500 text-[14px] mt-3">
+        Sign In Page Banner
+        <span class="w-full text-slate-600 text-[14px]">Photo by <a
+            class="font-semibold"
+            href="https://unsplash.com/@kellysikkema?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
+            target="_blank">Kelly Sikkema</a> on <a
+            class="font-semibold"
+            href="https://unsplash.com/photos/3-Tc_5LROrM?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
+            target="_blank">Unsplash</a>
+        </span>
+      </div>
+      <div class="flex flex-col justify-start	w-full text-slate-500 text-[14px] mt-3">
+        Loading Paper Plane
+        <span class="w-full text-slate-600 text-[14px]">Animation by <a 
+            class="font-semibold"
+            href="https://lottiefiles.com/zeffchris"
+            target="_blank">Jeffrey Christopher</a> on <a
+            class="font-semibold"
+            href="https://lottiefiles.com/animations/loading-40-paperplane-pXSmJB5J2C"
+            target="_blank">LottieFiles</a>
+        </span>
+      </div>
+      <div class="flex flex-col justify-start	w-full text-slate-500 text-[14px] mt-3">
+        Empty Animation
+        <span class="w-full text-slate-600 text-[14px]">Animation by <a 
+            class="font-semibold"
+            href="https://lottiefiles.com/netebjj3gh"
+            target="_blank">CorelleDesign</a> on <a
+            class="font-semibold"
+            href="https://lottiefiles.com/animations/empty-box-quj8cXrfR0"
+            target="_blank">LottieFiles</a>
+        </span>
+      </div>
+    </template>
+  </general-modal>
+
   <div v-if="!isRoot" class="pt-5 bg-white dark:bg-gray-800 px-16 border-b h-[25vh] sm:h-[15vh] flex flex-col justify-between">
     <div class="flex justify-between flex-col sm:flex-row">
       <div class="flex items-center">
@@ -36,9 +85,18 @@
         <template #content="{ activator }">
           <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
             <li>
-              <span class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">v{{
+              <span class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-default dark:hover:text-white">v{{
                   useRuntimeConfig().public.CLIENT_VERSION
                 }}</span>
+            </li>
+            <li>
+              <div class="block dark:hover:bg-gray-600">
+                <button
+                  class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  type="button" @click="modalAbout?.show()">
+                  About
+                </button>
+              </div>
             </li>
             <li>
               <general-signout class="block px-4 py-2 dark:hover:bg-gray-600"/>
@@ -76,6 +134,8 @@ import {useCategories} from "~/composables/categories";
 import {useCircleUsers} from "~/composables/circles";
 import {useTransactions} from "~/composables/transactions";
 import {useLoading} from "~/composables/loading";
+
+let modalAbout: ElementEvent | null = null
 
 
 const isDarkMode = ref<boolean>(false);
