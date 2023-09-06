@@ -83,7 +83,8 @@
             href="https://unsplash.com/@kellysikkema?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
             target="_blank">Kelly Sikkema</a> on <a
             href="https://unsplash.com/photos/3-Tc_5LROrM?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
-            target="_blank">Unsplash</a></span>
+            target="_blank">Unsplash</a>
+        </span>
       </div>
     </div>
   </section>
