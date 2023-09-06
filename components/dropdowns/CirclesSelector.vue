@@ -35,7 +35,7 @@
     </template>
     <template #content="{ activator }">
       <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200">
-        <li v-for="circleUser in circleUsers">
+        <li v-for="circleUser in $circleUsers.data">
           <div class="flex justify-between">
             <div class="flex p-2 mr-4 w-full rounded hover:bg-gray-100 dark:hover:bg-gray-600">
               <div class="flex items-center h-5">
@@ -46,7 +46,7 @@
               </div>
               <div class="ml-2 text-sm flex justify-between w-full gap-2">
                 <label :for="circleUser?.circleId + `-radio`" class="font-medium text-gray-900 dark:text-gray-300">
-                  <span>{{ capitalizeFirstLetter(circleUser?.circle.name) }}</span>
+                  <span>{{ capitalizeFirstLetter(circleUser?.circle?.name) }}</span>
                 </label>
               </div>
             </div>
@@ -80,7 +80,6 @@ import { Circle, ElementEvent } from "~/utils/types";
 import FormCircleSetting from "~/components/FormCircleSetting.vue";
 import { useCircleUsers } from "~/composables/circles";
 import { useAuth } from "~/composables/auth";
-import va from '@vercel/analytics';
 
 const emit = defineEmits(['on-mounted', 'circle-changed'])
 let modalFormCircle: ElementEvent | null = null
@@ -118,20 +117,29 @@ watch(() => selected.value, async (value) => {
 
 const activatorLoad = async (value: string) => {
   const { data } = await useFetch(`/api/circles/${value}`, {
+    onResponse({ request, response, options }) {
+      if (response.ok) {
+        $circleUsers.value.selected = response._data  as Circle | undefined
+      }
+
+      $circleUsers.value.isLoading = false
+    },
     server: false,
   })
-
-  $circleUsers.value.selected = data.value  as Circle | undefined
 
   const circle = {
     ...data.value,
     assets: undefined,
+    circleSetting: undefined,
   };
 
   useCookie('selected-circle', {
     secure: true,
     sameSite: 'lax',
   }).value = JSON.stringify(circle)
+
+  $circleUsers.value.refreshSelected = activatorLoad
+
 }
 
 onMounted(() => {
@@ -148,7 +156,6 @@ onMounted(() => {
 })
 
 watch(() => circleUsers.value, (value) => {
-  console.log(value)
   if (value && value.length > 0) {
     const selectedCircle = useCookie('selected-circle').value as Circle | null | undefined
 
