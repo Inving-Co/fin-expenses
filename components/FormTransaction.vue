@@ -187,7 +187,7 @@ watch(() => props.transaction, (newVal, oldVal) => {
   }
 })
 
-watch(() => $circleUsers.value.selected, () => {
+watchEffect(() => {
   formTransaction.value.asset = asset.value
 })
 
