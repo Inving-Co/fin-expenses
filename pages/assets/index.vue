@@ -93,6 +93,12 @@
                           @click="selectedAsset = asset; modalConfDelete?.show()">Delete
                   </button>
                 </li>
+                <li>
+                  <button type="button"
+                          class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          @click="onRefreshAsset(asset.id)">Refresh
+                  </button>
+                </li>
               </ul>
             </template>
           </general-dropdown>
@@ -123,13 +129,10 @@
                   @click="selectedAsset = asset; modalAssetHistory?.show()">
             <span>History</span>
           </button>
-          <button type="button"
-                  class="w-full text-gray-400 hover:text-white bg-gray-100 hover:bg-primary-500 border-transparent focus:border-transparent focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:bg-gray-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                  @click="onRefreshAsset(asset.id)">
-            <span>Refresh</span>
-          </button>
         </div>
-
+        <div class="flex justify-end mt-4">
+          <div class="text-sm text-gray-400">Latest updated at : {{ format(parseISO(asset?.updatedAt!), 'dd/MM/yyyy') }}</div>
+        </div>
       </div>
     </div>
     <div v-else
