@@ -57,7 +57,7 @@
               {{ currencyIDRFormatter($circleUsers.selected?.currency, asset?.amount) }}
               <div
                   v-if="asset?.estimatedReturnAmount"
-                  class="inline-flex text-green-500 text-sm align-top font-semibold tracking-tight">+{{
+                  class="h-6 inline-flex text-green-500 text-sm align-top font-semibold tracking-tight">+{{
                   (100 - ((asset?.amount /
                       asset?.estimatedReturnAmount!) * 100)).toFixed(0)
                 }}%
@@ -66,6 +66,7 @@
             <div v-if="asset?.estimatedReturnAmount" class="text-md text-green-500 font-semibold tracking-tight">
               {{ currencyIDRFormatter($circleUsers.selected?.currency, asset?.estimatedReturnAmount) }}
             </div>
+            <div v-else class="h-6"></div>
           </div>
           <general-dropdown :id="`dropdownActionButton-${index}`">
             <template #trigger="{ activator }">
@@ -92,24 +93,12 @@
                           @click="selectedAsset = asset; modalConfDelete?.show()">Delete
                   </button>
                 </li>
-                <li>
-                  <button type="button"
-                          class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                          @click="onRefreshAsset(asset.id)">Refresh
-                  </button>
-                </li>
-                <li>
-                  <button type="button"
-                          class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                          @click="selectedAsset = asset; modalAssetHistory?.show()">History
-                  </button>
-                </li>
               </ul>
             </template>
           </general-dropdown>
         </div>
         <div class="flex justify-between">
-          <span class="w-1/2 mb-3 text-gray-500 dark:text-gray-400 break-words">
+          <span class="w-1/2 h-8 mb-3 text-gray-500 dark:text-gray-400 break-words">
             {{ asset?.name?.toUpperCase() }}
           </span>
           <span class="mb-3 font-normal text-sm text-right text-gray-500 dark:text-gray-400">
@@ -125,6 +114,22 @@
             {{ asset?.platform?.toUpperCase() }}
           </span>
         </div>
+        <div class="flex">
+          <hr class="w-full my-4 border-gray-200 dark:border-gray-700">
+        </div>
+        <div class="flex gap-4">
+          <button type="button"
+                  class="w-full text-gray-400 hover:text-white bg-gray-100 hover:bg-primary-500 border-transparent focus:border-transparent focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:bg-gray-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  @click="selectedAsset = asset; modalAssetHistory?.show()">
+            <span>History</span>
+          </button>
+          <button type="button"
+                  class="w-full text-gray-400 hover:text-white bg-gray-100 hover:bg-primary-500 border-transparent focus:border-transparent focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:bg-gray-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  @click="onRefreshAsset(asset.id)">
+            <span>Refresh</span>
+          </button>
+        </div>
+
       </div>
     </div>
     <div v-else
