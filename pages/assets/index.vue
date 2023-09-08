@@ -62,10 +62,8 @@
               {{ currencyIDRFormatter($circleUsers.selected?.currency, asset?.amount) }}
               <div
                   v-if="asset?.estimatedReturnAmount"
-                  class="h-6 inline-flex text-green-500 text-sm align-top font-semibold tracking-tight">+{{
-                  (100 - ((asset?.amount /
-                      asset?.estimatedReturnAmount!) * 100)).toFixed(0)
-                }}%
+                  :class="percentageClass(asset)">
+                  {{ percentageDisplay(asset)}}%
               </div>
             </h5>
             <div v-if="asset?.estimatedReturnAmount" class="text-md text-green-500 font-semibold tracking-tight">
@@ -210,6 +208,11 @@ const {
   watch: [selectedCircle]
 })
 
+const percentageEstimated = (asset:Asset) => (100 - ((asset?.amount /
+                      asset?.estimatedReturnAmount!) * 100))
+
+const percentageClass = (asset:Asset) => `h-6 inline-flex text-sm align-top font-semibold tracking-tight ${percentageEstimated(asset) < 0 ? 'text-red-500': 'text-green-500'}`
+const percentageDisplay = (asset:Asset) => percentageEstimated(asset) < 0 ? percentageEstimated(asset).toFixed(1) : "+"+percentageEstimated(asset).toFixed(1)
 
 async function onDelete(assetId: String) {
   $loading.value = true
