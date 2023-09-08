@@ -36,7 +36,7 @@
       <div class="flex flex-col my-6">
         <span class="text-2xl text-gray-500">My Assets
             <span v-if="summaryAssets?._sum"
-                  class="inline-flex text-green-500 font-semibold tracking-tight">
+                  class="inline-flex text-gray-500 dark:text-white font-semibold tracking-tight">
               {{ currencyIDRFormatter($circleUsers.selected?.currency, summaryAssets?._sum.amount ?? 0) }}
             </span>
 
@@ -58,7 +58,7 @@
       <div v-for="(asset, index) of assets" class="w-full p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
         <div class="flex justify-between mb-2">
           <div class="flex flex-col mb-2">
-            <h5 class="text-2xl text-gray-500 dark:text-white">
+            <h5 class="text-2xl text-gray-500 font-semibold dark:text-white">
               {{ currencyIDRFormatter($circleUsers.selected?.currency, asset?.amount) }}
               <div
                   v-if="asset?.estimatedReturnAmount"
@@ -66,7 +66,7 @@
                   {{ percentageDisplay(asset)}}%
               </div>
             </h5>
-            <div v-if="asset?.estimatedReturnAmount" class="text-md text-green-500 font-semibold tracking-tight">
+            <div v-if="asset?.estimatedReturnAmount" class="text-md text-primary-500 font-semibold tracking-tight">
               {{ currencyIDRFormatter($circleUsers.selected?.currency, asset?.estimatedReturnAmount) }}
             </div>
             <div v-else class="h-6"></div>
