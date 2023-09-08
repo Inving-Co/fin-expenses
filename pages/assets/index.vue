@@ -3,7 +3,7 @@
     <template #body>
       <form-asset :asset="selectedAsset"
                   @on-mounted="refreshInputAmount = $event"
-                  @on-success="modalFormAsset?.hide(); selectedAsset = undefined; refreshAssets()"/>
+                  @on-success="modalFormAsset?.hide(); selectedAsset = undefined; refreshAssets(); $circleUsers?.refreshSelected($circleUsers.selected?.id)"/>
     </template>
   </general-modal>
 
@@ -25,13 +25,24 @@
     </template>
   </general-modal>
 
+  <general-modal id="modal-asset-history" class-modal="mx-20" title="Asset History" @on-mounted="modalAssetHistory = $event">
+    <template #body>
+      <asset-history :asset="selectedAsset" />
+    </template>
+  </general-modal>
+
   <div class="pb-8 h-full">
     <div class="flex flex-wrap justify-between items-center">
       <div class="flex flex-col my-6">
         <span class="text-2xl text-gray-500">My Assets
             <span v-if="summaryAssets?._sum"
-                  class="inline-flex text-green-500 font-semibold tracking-tight">
+                  class="inline-flex text-gray-500 dark:text-white font-semibold tracking-tight">
               {{ currencyIDRFormatter($circleUsers.selected?.currency, summaryAssets?._sum.amount ?? 0) }}
+            </span>
+
+            <span v-if="summaryAssets?._sum"
+                  class="text-sm ml-2 align-top inline-flex text-primary-500 font-semibold tracking-tight">
+              ( {{ currencyIDRFormatter($circleUsers.selected?.currency, summaryAssets?._sum.estimatedReturnAmount ?? 0) }} )
           </span>
         </span>
         <span class="text-md mt-2 text-gray-400">Track the value of your assets over time</span>
@@ -44,24 +55,21 @@
     </div>
 
     <div v-if="assets?.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div v-for="(asset, index) of assets" class="w-full p-6 bg-white border border-gray-200 rounded-lg drop-shadow-soft dark:bg-gray-800 dark:border-gray-700">
+      <div v-for="(asset, index) of assets" class="w-full p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
         <div class="flex justify-between mb-2">
           <div class="flex flex-col mb-2">
-            <h5 class="text-2xl text-gray-500 dark:text-white">
+            <h5 class="text-2xl text-gray-500 font-semibold dark:text-white">
               {{ currencyIDRFormatter($circleUsers.selected?.currency, asset?.amount) }}
-
               <div
                   v-if="asset?.estimatedReturnAmount"
-                  class="inline-flex text-green-500 text-sm align-top font-semibold tracking-tight">+{{
-                  (100 - ((asset?.amount /
-                      asset?.estimatedReturnAmount!) * 100)).toFixed(0)
-                }}%
+                  :class="percentageClass(asset)">
+                  {{ percentageDisplay(asset)}}%
               </div>
             </h5>
-            <div v-if="asset?.estimatedReturnAmount" class="text-md text-green-500 font-semibold tracking-tight">
+            <div v-if="asset?.estimatedReturnAmount" class="text-md text-primary-500 font-semibold tracking-tight">
               {{ currencyIDRFormatter($circleUsers.selected?.currency, asset?.estimatedReturnAmount) }}
-
             </div>
+            <div v-else class="h-6"></div>
           </div>
           <general-dropdown :id="`dropdownActionButton-${index}`">
             <template #trigger="{ activator }">
@@ -88,12 +96,18 @@
                           @click="selectedAsset = asset; modalConfDelete?.show()">Delete
                   </button>
                 </li>
+                <li>
+                  <button type="button"
+                          class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          @click="onRefreshAsset(asset.id)">Refresh
+                  </button>
+                </li>
               </ul>
             </template>
           </general-dropdown>
         </div>
         <div class="flex justify-between">
-          <span class="w-1/2 mb-3 text-gray-500 dark:text-gray-400 break-words">
+          <span class="w-1/2 h-8 mb-3 text-gray-500 dark:text-gray-400 break-words">
             {{ asset?.name?.toUpperCase() }}
           </span>
           <span class="mb-3 font-normal text-sm text-right text-gray-500 dark:text-gray-400">
@@ -105,9 +119,22 @@
             {{ format(parseISO(asset?.estimatedReturnDate!), 'dd/MM/yyyy') }}
           </span>
           <span v-else></span>
-          <span class="font-normal text-gray-500 dark:text-gray-400">
+          <span v-if="asset?.platform !== 'undefined'" class="font-normal text-gray-500 dark:text-gray-400">
             {{ asset?.platform?.toUpperCase() }}
           </span>
+        </div>
+        <div class="flex">
+          <hr class="w-full my-4 border-gray-200 dark:border-gray-700">
+        </div>
+        <div class="flex gap-4">
+          <button type="button"
+                  class="w-full text-gray-400 hover:text-white bg-gray-100 hover:bg-primary-500 border-transparent focus:border-transparent focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:bg-gray-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  @click="selectedAsset = asset; modalAssetHistory?.show()">
+            <span>History</span>
+          </button>
+        </div>
+        <div class="flex justify-end mt-4">
+          <div class="text-sm text-gray-400">Latest updated at : {{ format(parseISO(asset?.updatedAt!), 'dd/MM/yyyy') }}</div>
         </div>
       </div>
     </div>
@@ -125,21 +152,22 @@
 import {Vue3Lottie} from "vue3-lottie";
 import EmptyJSON from '~/assets/lottie/empty.json'
 
-import {ElementEvent, EditableAsset} from "~/utils/types";
+import {ElementEvent, Asset} from "~/utils/types";
 import {useLoading} from "~/composables/loading";
 import {parseISO, format} from 'date-fns';
-import {initTooltips} from 'flowbite';
 
 const $loading = useLoading();
 const $circleUsers = useCircleUsers()
-const selectedAsset = ref<EditableAsset | undefined>()
+const selectedAsset = ref<Asset | undefined>()
 const searchKey = ref<string>('')
 
 let modalFormAsset: ElementEvent | null = null
 let modalConfDelete: ElementEvent | null = null
-let refreshInputAmount: any = null
-const selectedCircle = computed(() => $circleUsers.value.selected)
+let modalAssetHistory: ElementEvent | null = null
 
+let refreshInputAmount: any = null
+
+const selectedCircle = computed(() => $circleUsers.value.selected)
 
 definePageMeta({
   title: "AssetsPlanner",
@@ -180,10 +208,31 @@ const {
   watch: [selectedCircle]
 })
 
+const percentageEstimated = (asset:Asset) => (100 - ((asset?.amount /
+                      asset?.estimatedReturnAmount!) * 100))
+
+const percentageClass = (asset:Asset) => `h-6 inline-flex text-sm align-top font-semibold tracking-tight ${percentageEstimated(asset) < 0 ? 'text-red-500': 'text-green-500'}`
+const percentageDisplay = (asset:Asset) => percentageEstimated(asset) < 0 ? percentageEstimated(asset).toFixed(1) : "+"+percentageEstimated(asset).toFixed(1)
 
 async function onDelete(assetId: String) {
   $loading.value = true
   const {status} = await useFetch('/api/assets/delete.asset', {
+    query: {
+      id: assetId,
+    },
+  })
+
+  if (status.value === 'success') {
+    await refreshAssets()
+  }
+
+  $loading.value = false
+}
+
+
+async function onRefreshAsset(assetId: String) {
+  $loading.value = true
+  const {status} = await useFetch('/api/assets/refresh.asset', {
     query: {
       id: assetId,
     },

@@ -49,33 +49,14 @@ const circleUser = ref<CircleUser | null>(null)
 const copiedLink = ref<string | null>(null)
 const elink = ref<string | null>(null)
 const isLoadingToggle = ref<boolean>(false)
+const $circleUsers = useCircleUsers()
+const $auth = useAuth()
 
-const auth = useAuth()
-
-const props = defineProps({
-  circleId: {
-    type: String,
-  }
-})
-
-watch(() => props.circleId, async (value) => {
-  if (value) {
-    await activatorLoad(value)
-    copiedLink.value = `${window.location.origin}/circles/${circle.value?.id}`
-  }
-})
-
-
-const activatorLoad = async (value: string) => {
-  const { data } = await useFetch(`/api/circles/${value}`, {
-    server: false,
-  })
-
-  circle.value = data.value as any
-  const myCircles = circle.value?.circleUsers.filter((e: CircleUser) => e.userId === auth.value?.userId) ?? []
-
+watch(() => $circleUsers.value.selected, ((val) => {
+  copiedLink.value = `${window.location.origin}/circles/${val?.id}`
+  const myCircles = $circleUsers.value?.selected?.circleUsers?.filter((e: CircleUser) => e.userId === $auth.value?.userId) ?? []
   circleUser.value = myCircles.length > 0 ? myCircles[0] : null
-}
+}))
 
 function copyText() {
   const element = elink.value as any;

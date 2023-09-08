@@ -8,14 +8,14 @@
       }}
     </div>
     <div class="mb-3 text-2xl text-gray-500 font-bold dark:text-gray-300">{{
-        currencyIDRFormatter($circleUsers.selected.currency, sumOfAmount)
+        currencyIDRFormatter($circleUsers.selected?.currency, sumOfAmount)
       }}
     </div>
     <Doughnut v-if="data.labels.length > 0" class="my-4" :data="data" :options="{
       responsive: true,
       elements: {
         center: {
-          text: currencyIDRFormatter($circleUsers.selected.currency, sumOfAmount),
+          text: currencyIDRFormatter($circleUsers.selected?.currency, sumOfAmount),
           color: '#9F9384', // Default is #000000
           fontStyle: 'Arial', // Default is Arial
           sidePadding: 50, // Default is 20 (as a percentage)

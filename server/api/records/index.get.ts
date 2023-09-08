@@ -17,5 +17,5 @@ export default defineEventHandler((event) => {
     return getRecords(key as string, {
         start: startDate as string,
         end: endDate as string
-    }, circle?.id, proceedCategoryIds)
+    }, circle?.id, proceedCategoryIds, undefined)
 })

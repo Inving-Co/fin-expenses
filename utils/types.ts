@@ -1,3 +1,5 @@
+import { CircleSettings } from "@prisma/client"
+
 export interface ElementEvent {
     show: () => void,
     hide: () => void,
@@ -9,7 +11,9 @@ export interface EditableRecord {
     amount: number | null,
     id: string | null,
     date: string,
-    categoryId: number | null
+    categoryId: string | null
+    assetId: string | null
+    asset: Asset | null
 }
 
 export interface EditableAsset {
@@ -34,6 +38,7 @@ export interface Record {
     category: Category
     isEditMode?: boolean
     circleId?: string
+    asset?: Asset
 }
 
 export interface Category {
@@ -56,15 +61,20 @@ export interface Circle {
     updatedAt: string
     currency: string
     userId?: string
-    circleUsers: CircleUser[]
+    circleSettingId: string
+    circleSettings: CircleSettings
+    circleUsers: CircleUser[] | undefined
+    assets: Asset[] | undefined
 }
 
 export interface CircleUser {
+circleId: string
     id: string
     userId: string
     createdAt: string
     updatedAt: string
     receiveReport: boolean
+    circle: Circle | undefined
 }
 
 export interface Asset {

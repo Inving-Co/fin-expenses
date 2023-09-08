@@ -2,14 +2,14 @@
   <div>
     <form ref="form" class="space-y-6">
       <div class="mb-1">
-        <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+        <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name <span class="text-red-500">*</span></label>
         <input v-model="formAsset.name" type="text" name="description" id="description"
                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                placeholder="Example: Asset Name / Project Name" required @keyup.enter="onSave">
       </div>
 
       <div class="mb-1">
-        <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
+        <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount <span class="text-red-500">*</span></label>
         <general-currency-field name="amount" v-model="formAsset.amount" @keyup.enter="onSave" />
       </div>
 
@@ -58,9 +58,8 @@
         </div>
       </div>
 
-
-      <button type="button" :disabled="isLoadingSubmit"
-              class="w-full text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+      <button type="button" :disabled="isLoadingSubmit || !isButtonEnabled"
+              :class="`${!isButtonEnabled? 'bg-gray-500':'bg-primary-700 hover:bg-primary-800 dark:bg-primary-600 dark:hover:bg-primary-700'} w-full text-white focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-primary-800`"
               @click="onSave">
         <span v-if="isLoadingSubmit">
           <icons-circular-indicator class="inline w-4 h-4 mr-3 text-white animate-spin"/>
@@ -78,10 +77,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import {watchDebounced} from "@vueuse/shared";
 import {EditableAsset} from "~/utils/types";
 import {initTooltips} from "flowbite";
-import {useCircleUsers} from "~/composables/circles";
 
-
-const $circleUsers = useCircleUsers()
 
 onMounted(() => {
   initTooltips()
@@ -137,6 +133,12 @@ watch(() => props.asset, (newVal, oldVal) => {
       type: newVal?.type,
     }
   }
+})
+const isButtonEnabled = computed(() => {
+  const name = formAsset.value.name
+  const amount = formAsset.value.amount
+
+  return (!!name && !!amount)
 })
 
 async function onSave() {
