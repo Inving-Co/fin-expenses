@@ -3,7 +3,7 @@
     <template #body>
       <form-asset :asset="selectedAsset"
                   @on-mounted="refreshInputAmount = $event"
-                  @on-success="modalFormAsset?.hide(); selectedAsset = undefined; refreshAssets()"/>
+                  @on-success="modalFormAsset?.hide(); selectedAsset = undefined; refreshAssets(); $circleUsers?.refreshSelected($circleUsers.selected?.id)"/>
     </template>
   </general-modal>
 

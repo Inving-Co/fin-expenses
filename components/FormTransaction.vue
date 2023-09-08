@@ -97,7 +97,7 @@
                       }}</label>
                   </div>
                   <icons-select-outline v-if="isSetDefaultAsset && asset.id !== $circleUsers.selected?.circleSettings?.defaultAssetId" class="ml-4 mr-2 cursor-pointer" @click="onSetDefaultAsset($circleUsers.selected?.circleSettingId, asset.id)" />
-                  <icons-check v-if="isSetDefaultAsset && asset.id === $circleUsers.selected?.circleSettings?.defaultAssetId" class="ml-4 mr-2" />
+                  <icons-check v-if="isSetDefaultAsset && asset.id === $circleUsers.selected?.circleSettings?.defaultAssetId" class="ml-4 mr-2 cursor-pointer" @click="onSetDefaultAsset($circleUsers.selected?.circleSettingId, undefined)" />
                 </div>
 
               </li>
@@ -301,7 +301,7 @@ async function onDeleteCategory(categoryId: string) {
   }
 }
 
-async function onSetDefaultAsset(circleSettingId: string, defaultAssetId: string) {
+async function onSetDefaultAsset(circleSettingId: string, defaultAssetId: string | undefined) {
   const { error, status } = await useFetch(`/api/circleSettings/${circleSettingId}`, {
     method: 'PUT',
     body: JSON.stringify({
