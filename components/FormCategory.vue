@@ -10,9 +10,9 @@
     <label for="type-category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select type</label>
     <div v-for="definedType in definedTypes" class="inline-flex h-10 items-center mb-4 mx-3">
       <div :data-tooltip-target="`tooltip-default-${definedType.name}`" class="w-full">
-        <input v-model="type" :id="`radio-${definedType}`" type="radio" :value="definedType"
+        <input v-model="type" :id="`radio-${definedType}`" type="radio" :value="definedType.name"
                class="w-4 h-4 hidden peer text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-               :name="`radio-${definedType}`" required @keyup.enter="onSave">
+               :name="`radio-${definedType}`" required>
         <label :for="`radio-${definedType}`"
                class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
           <div class="text-lg font-semibold">
