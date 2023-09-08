@@ -118,10 +118,6 @@ watch(() => selected.value, async (value) => {
 const activatorLoad = async (value: string) => {
   const { data } = await useFetch(`/api/circles/${value}`, {
     onResponse({ request, response, options }) {
-      if (response.ok) {
-        $circleUsers.value.selected = response._data  as Circle | undefined
-      }
-
       $circleUsers.value.isLoading = false
     },
     server: false,
@@ -137,6 +133,8 @@ const activatorLoad = async (value: string) => {
     secure: true,
     sameSite: 'lax',
   }).value = JSON.stringify(circle)
+
+  $circleUsers.value.selected = data.value
 
   $circleUsers.value.refreshSelected = activatorLoad
 
