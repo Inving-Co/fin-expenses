@@ -50,7 +50,8 @@ export function getAssets(key: string, circleId: string | undefined) {
         },
         include: {
             assetHistory: true,
-        }
+        },
+        cacheStrategy: { ttl: 60 },
     })
 }
 
@@ -62,6 +63,7 @@ export function getAssetDetail(assetId: string) {
         include: {
             assetHistory: true,
         },
+        cacheStrategy: { ttl: 60 },
     });
 }
 
@@ -72,7 +74,8 @@ export async function summaryOfAssets(circleId: string | undefined) {
         },
         _sum: {
             amount: true,
-        }
+        },
+        cacheStrategy: { ttl: 60 }
     })
 
     const results = await prisma.assets.findMany({
@@ -135,6 +138,7 @@ export function getAssetHistory(assetId: string, circleId: string | undefined) {
         orderBy: {
             createdAt: 'desc',
         },
+        cacheStrategy: { ttl: 60 }
     });
     
 }

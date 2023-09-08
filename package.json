@@ -24,7 +24,8 @@
   },
   "dependencies": {
     "@nuxt/image": "^1.0.0-rc.1",
-    "@prisma/client": "^5.0.0",
+    "@prisma/client": "^5.2.0",
+    "@prisma/extension-accelerate": "^0.6.2",
     "@supabase/supabase-js": "^2.29.0",
     "@vercel/analytics": "^1.0.2",
     "@vuepic/vue-datepicker": "^5.4.0",

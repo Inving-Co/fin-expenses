@@ -54,6 +54,7 @@ export async function getCategories(key: string, circleId: string | undefined) {
                 }
             ]
         },
+        cacheStrategy: { ttl: 60 },
     })
 
     for (let i = 0; i < result.length; i++) {
