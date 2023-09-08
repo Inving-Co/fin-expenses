@@ -2,7 +2,7 @@ import {Circle, CircleUser} from "~/utils/types";
 import {Ref} from "vue";
 
 interface CircleUserCompose {
-isLoading: boolean, data: CircleUser[], selected: Circle | undefined, refreshSelected: void | undefined; 
+isLoading: boolean, data: CircleUser[], selected: Circle | undefined, refreshSelected: Promise<void> | undefined; 
 }
 
 export const useCircleUsers = () => useState<CircleUserCompose>('useCircleUsers', () => {
