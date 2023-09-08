@@ -62,7 +62,7 @@ export interface Circle {
     currency: string
     userId?: string
     circleSettingId: string
-    circleSetting: CircleSettings
+    circleSettings: CircleSettings
     circleUsers: CircleUser[] | undefined
     assets: Asset[] | undefined
 }
