@@ -39,7 +39,8 @@ export async function getCircle(circleId: string | undefined) {
             },
             assets: true,
             circleSettings: true
-        }
+        },
+        cacheStrategy: { ttl: 60 }
     })
 }
 
@@ -57,7 +58,8 @@ export async function getCircles(key: string, userId: string | undefined) {
         },
         include: {
             circleUsers: true
-        }
+        },
+        cacheStrategy: { ttl: 60 }
     })
 }
 
@@ -77,7 +79,8 @@ export async function getCircleUsers(key: string, userId: string | undefined) {
         },
         include: {
             circle: true
-        }
+        },
+        cacheStrategy: { ttl: 60 }
     })
 }
 

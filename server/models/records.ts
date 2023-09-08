@@ -47,7 +47,8 @@ export async function getRecords(key: string, dateFilter: { start: string, end: 
         },
         include: {
             category: true
-        }
+        },
+        cacheStrategy: { ttl: 60 }
     })
 }
 

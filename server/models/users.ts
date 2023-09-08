@@ -21,6 +21,7 @@ export async function getDetailUser(id: string | undefined, email: string | unde
         },
         include: {
             circles: true
-        }
+        },
+        cacheStrategy: { ttl: 60 }
     });
 }
