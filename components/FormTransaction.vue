@@ -244,7 +244,7 @@
         </span>
         <span v-else>Save</span>
       </button>
-      <button v-else-if="typeTransaction == TypeFormTransaction.transfer"
+      <button v-else-if="typeTransaction == TypeFormTransaction.transfer" type="button"
         :class="`${!isButtonTransferEnabled ? 'bg-gray-500' : 'bg-primary-700 hover:bg-primary-800 dark:bg-primary-600 dark:hover:bg-primary-700'} w-full text-white focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-primary-800`"
         @click="onSaveTransfer">
         <span v-if="isLoadingSubmit">
