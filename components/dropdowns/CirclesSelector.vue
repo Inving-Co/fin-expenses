@@ -2,7 +2,7 @@
   <general-modal id="modal-form-circle" title="Create Circle" subtitle="Circle mean to be your group"
     :is-has-close="isHasClose" @on-mounted="modalFormCircle = $event">
     <template #body>
-      <form-circle @on-success="modalFormCircle?.hide(); refreshCircles().then(() => selected = $event.id); " />
+      <form-circle @on-success="modalFormCircle?.hide(); refreshCircles().then(() => selected = $event.id);" />
     </template>
   </general-modal>
 
@@ -16,7 +16,7 @@
   <general-modal id="modal-setting" title="Setting" subtitle="Change your circle settings here"
     @on-mounted="modalSetting = $event">
     <template #body>
-      <form-circle-setting :circle-id="selected ?? undefined" />
+      <form-circle-setting />
     </template>
   </general-modal>
 
@@ -35,7 +35,7 @@
     </template>
     <template #content="{ activator }">
       <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200">
-        <li v-for="circleUser in circleUsers">
+        <li v-for="circleUser in $circleUsers.data">
           <div class="flex justify-between">
             <div class="flex p-2 mr-4 w-full rounded hover:bg-gray-100 dark:hover:bg-gray-600">
               <div class="flex items-center h-5">
@@ -46,7 +46,7 @@
               </div>
               <div class="ml-2 text-sm flex justify-between w-full gap-2">
                 <label :for="circleUser?.circleId + `-radio`" class="font-medium text-gray-900 dark:text-gray-300">
-                  <span>{{ capitalizeFirstLetter(circleUser?.circle.name) }}</span>
+                  <span>{{ capitalizeFirstLetter(circleUser?.circle?.name) }}</span>
                 </label>
               </div>
             </div>
@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { capitalizeFirstLetter, checkAuth } from "~/utils/functions";
+import { capitalizeFirstLetter } from "~/utils/functions";
 import { Circle, ElementEvent } from "~/utils/types";
 import FormCircleSetting from "~/components/FormCircleSetting.vue";
 import { useCircleUsers } from "~/composables/circles";
@@ -102,7 +102,43 @@ const { data: circleUsers, refresh: refreshCircles } = await useFetch('/api/circ
 
     $circleUsers.value.isLoading = false
   },
+  server: false,
 })
+
+watch(() => selected.value, async (value) => {
+  if (value) {
+    $circleUsers.value.isLoading = true
+
+    await activatorLoad(value)
+
+    $circleUsers.value.isLoading = false
+  }
+})
+
+const activatorLoad = async (value: string) => {
+  const { data } = await useFetch(`/api/circles/${value}`, {
+    onResponse({ request, response, options }) {
+      $circleUsers.value.isLoading = false
+    },
+    server: false,
+  })
+
+  const circle = {
+    ...data.value,
+    assets: undefined,
+    circleSetting: undefined,
+  };
+
+  useCookie('selected-circle', {
+    secure: true,
+    sameSite: 'lax',
+  }).value = JSON.stringify(circle)
+
+  $circleUsers.value.selected = data.value
+
+  $circleUsers.value.refreshSelected = activatorLoad
+
+}
 
 onMounted(() => {
   emit('on-mounted')
@@ -112,14 +148,14 @@ onMounted(() => {
   if (value) {
     $circleUsers.value.selected = value
     selected.value = value?.id
+  } else {
+    refreshCircles()
   }
-
-  refreshCircles()
 })
 
 watch(() => circleUsers.value, (value) => {
   if (value && value.length > 0) {
-  const selectedCircle = useCookie('selected-circle').value as Circle | null | undefined
+    const selectedCircle = useCookie('selected-circle').value as Circle | null | undefined
 
     if (!selectedCircle) {
       onCircleChange(value[0].circle as Circle)
@@ -127,18 +163,10 @@ watch(() => circleUsers.value, (value) => {
   } else {
     modalFormCircle?.show();
   }
-}, {
-  immediate: true
 })
 
 function onCircleChange(value: Circle) {
-  useCookie('selected-circle', {
-    secure: true,
-    sameSite: 'lax',
-  }).value = JSON.stringify(value)
-
   selected.value = value.id
-  $circleUsers.value.selected = value
 
   /// I think the cookie itself was async, it means that when I put new value on circle
   /// It will still use the old value when I refresh the trx, so I need to delay some milliseconds

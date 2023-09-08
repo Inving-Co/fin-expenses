@@ -1,17 +1,16 @@
-import {createCircle} from "~/server/models/circles";
+import { refreshAsset } from "~/server/models/assets";
 
 export default defineEventHandler(async (event) => {
-    const {name, currency} = await readBody(event);
+    const { id } = getQuery(event)
 
     try {
-        const cookies = parseCookies(event)
-        const userId = cookies['user-id']
+        const assetId = id as string;
 
-        const result = await createCircle(name, currency, userId)
+        const result = await refreshAsset(assetId)
 
         return {
             status: 200,
-            message: 'Success to create circle',
+            message: 'Success to refresh asset',
             data: result
         }
     } catch (e) {

@@ -1,17 +1,16 @@
-import {createCircle} from "~/server/models/circles";
+import {transferAmountAsset} from "../../models/assets";
 
 export default defineEventHandler(async (event) => {
-    const {name, currency} = await readBody(event);
+    const { originAssetId, destinationAssetId, amount } = await readBody(event)
+
 
     try {
-        const cookies = parseCookies(event)
-        const userId = cookies['user-id']
 
-        const result = await createCircle(name, currency, userId)
+        const result = await transferAmountAsset(String(originAssetId), String(destinationAssetId), Number(amount))
 
         return {
             status: 200,
-            message: 'Success to create circle',
+            message: 'Success to transfer asset',
             data: result
         }
     } catch (e) {

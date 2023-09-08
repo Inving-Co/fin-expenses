@@ -23,15 +23,34 @@ export async function deleteCategory(categoryId: string, userId: string | undefi
 export async function getCategories(key: string, circleId: string | undefined) {
     const result = await prisma.categories.findMany({
         where: {
-            name: {
-                contains: key?.toLowerCase()
-            },
-            OR: [
+            AND: [
                 {
-                    circleId: circleId,
+                    name: {
+                        contains: key?.toLowerCase()
+                    },
                 },
                 {
-                    circleId: null,
+                    OR: [
+                        {
+                            type: null,
+                        },
+                        {
+                            NOT: [
+                                { type: 'transfer' },
+                                { type: 'receive' }
+                            ]
+                        }
+                    ],
+                },
+                {
+                    OR: [
+                        {
+                            circleId: circleId,
+                        },
+                        {
+                            circleId: null,
+                        }
+                    ]
                 }
             ]
         },
