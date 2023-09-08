@@ -38,6 +38,11 @@
             <span v-if="summaryAssets?._sum"
                   class="inline-flex text-green-500 font-semibold tracking-tight">
               {{ currencyIDRFormatter($circleUsers.selected?.currency, summaryAssets?._sum.amount ?? 0) }}
+            </span>
+
+            <span v-if="summaryAssets?._sum"
+                  class="text-sm ml-2 align-top inline-flex text-primary-500 font-semibold tracking-tight">
+              ( {{ currencyIDRFormatter($circleUsers.selected?.currency, summaryAssets?._sum.estimatedReturnAmount ?? 0) }} )
           </span>
         </span>
         <span class="text-md mt-2 text-gray-400">Track the value of your assets over time</span>
