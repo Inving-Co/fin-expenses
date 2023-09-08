@@ -1,11 +1,29 @@
 import {prisma} from "~/server/models/prisma";
 
 export async function createCircle(name: string, currency: string, userId: string | undefined) {
-    return prisma.circles.create({
-        data: {
-            name, currency, userId
-        }
-    });
+    return prisma.$transaction(
+        async (tx) => {
+            const resultCircleSettings = await tx.circleSettings.create({})
+
+            const resultCircle = await tx.circles.create({
+                data: {
+                    name, currency, userId, circleSettingId: resultCircleSettings.id
+                },
+            });
+
+            if (!resultCircle) throw new Error("Result circle not found");
+
+            await tx.circleUsers.create({
+                data: {
+                    userId, circleId: resultCircle.id, receiveReport: userId !== undefined
+                }
+            })
+        },
+        {
+            maxWait: 5000,
+            timeout: 10000,
+        },
+    )
 }
 
 export async function getCircle(circleId: string | undefined) {
@@ -18,7 +36,9 @@ export async function getCircle(circleId: string | undefined) {
                 include: {
                     user: true
                 }
-            }
+            },
+            assets: true,
+            circleSettings: true
         }
     })
 }
@@ -72,4 +92,9 @@ export async function createCircleUser(userId: string | undefined, circleId: str
 
 export async function updateCircleUser(circleUserId: string, receiveReport: boolean) {
     return prisma.circleUsers.update({where: {id: circleUserId}, data: { receiveReport }})
+}
+
+export async function updateCircleSettings(circleSettingId: string, defaultAssetId: string | undefined) {
+    
+    return prisma.circleSettings.update({where: {id: circleSettingId}, data: { defaultAssetId: defaultAssetId  ?? null }})
 }

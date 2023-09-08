@@ -54,16 +54,49 @@ export function getAssets(key: string, circleId: string | undefined) {
     })
 }
 
-export function summaryOfAssets(circleId: string | undefined) {
-    return prisma.assets.aggregate({
+export function getAssetDetail(assetId: string) {
+    return prisma.assets.findUnique({
+        where: {
+            id: assetId,
+        },
+        include: {
+            assetHistory: true,
+        },
+    });
+}
+
+export async function summaryOfAssets(circleId: string | undefined) {
+    const value = await prisma.assets.aggregate({
         where: {
             circleId: circleId,
         },
         _sum: {
             amount: true,
-            estimatedReturnAmount: true,
         }
     })
+
+    const results = await prisma.assets.findMany({
+        where: {
+            circleId: circleId,
+        },
+    })
+
+    let estimatedReturnAmount = 0
+
+    for (const result of results) {
+        if(!result.estimatedReturnAmount) {
+            estimatedReturnAmount += result.amount;
+        }else {
+            estimatedReturnAmount += result.estimatedReturnAmount;
+        }
+    }
+
+    return {
+        _sum: {
+            amount: value._sum.amount,
+            estimatedReturnAmount: estimatedReturnAmount
+        }
+    }
 }
 
 export function createAssetHistory(assetId: string, actionName: string, name: string, amount: number, estimatedReturnAmount: number | undefined, estimatedReturnDate: string | undefined, color: string | undefined, type: string | undefined, platform: string | undefined, userId: string | undefined, circleId: string | undefined) {
@@ -91,4 +124,208 @@ export function deleteAssetHistory(assetId: string, userId: string | undefined) 
             userId,
         }
     })
+}
+
+export function getAssetHistory(assetId: string, circleId: string | undefined) {
+    return prisma.assetHistory.findMany({
+        where: {
+            assetId,
+            circleId 
+        },
+        orderBy: {
+            createdAt: 'desc',
+        },
+    });
+    
+}
+
+export async function refreshAsset(assetId: string) {
+    return prisma.$transaction(
+        async (tx) => {
+            const resultAsset = await tx.assets.findUnique({
+                where: {
+                    id: assetId,
+                },
+                include: {
+                    assetHistory: true,
+                },
+            });
+
+            if (!resultAsset) throw new Error("Result asset not found");
+
+            const resultRecords = await tx.records.findMany({
+                where: {
+                    assetId,
+                    createdAt: {
+                        gte: resultAsset?.recordedAt
+                    }
+                },
+                orderBy: {
+                    date: 'desc'
+                },
+                include: {
+                    category: true
+                }
+            })
+
+            if (resultRecords.length === 0) throw new Error("Result record not found");
+        
+            const resultAssetHistory = await tx.assetHistory.create({
+                data: {
+                    assetId: assetId,
+                    actionName: 'REFRESH',
+                    name: resultAsset!.name,
+                    amount: resultAsset!.amount,
+                    estimatedReturnAmount: resultAsset?.estimatedReturnAmount,
+                    estimatedReturnDate: resultAsset?.estimatedReturnDate,
+                    type: resultAsset?.type,
+                    platform: resultAsset?.platform,
+                    color: resultAsset!.color,
+                    circleId: resultAsset!.circleId,
+                    userId: resultAsset!.userId,
+                }
+            })
+
+            let decreasedAmount = 0
+            let increasedAmount = 0
+        
+            for (const record of resultRecords) {
+                if (record.category.type === 'income') increasedAmount += record.amount
+                else decreasedAmount += record.amount
+
+                await tx.bulkRecords.create({
+                    data: {
+                        assetHistoryId: resultAssetHistory?.id,
+                        recordId: record.id
+                    }
+                })
+                
+            }
+
+            await prisma.assets.update({
+                where: { id: assetId },
+                data: {
+                    amount: resultAsset!.amount - decreasedAmount + increasedAmount,
+                    recordedAt: new Date(),                    
+                },
+            });
+            
+        },
+        {
+            maxWait: 5000,
+            timeout: 10000,
+        }
+    )
+}
+
+export async function transferAmountAsset(originAssetId: string, destinationAssetId: string, amount: number) {
+    return prisma.$transaction(
+        async (tx) => {
+            const originAsset = await tx.assets.findUnique({
+                where: {
+                    id: originAssetId,
+                },
+            });
+            
+            if (!originAsset) throw new Error("Origin asset not found");
+            
+            const destinationAsset = await tx.assets.findUnique({
+                where: {
+                    id: destinationAssetId,
+                },
+            });
+            
+            if (!destinationAsset) throw new Error("Destination asset not found");
+            
+            const transferAmount = amount;
+            
+            if (transferAmount > originAsset.amount) throw new Error("Insufficient funds in origin asset");
+
+            await tx.assets.update({
+                where: { id: originAssetId },
+                data: {
+                    amount: originAsset.amount - transferAmount,
+                },
+            });
+
+            await tx.assets.update({
+                where: { id: destinationAssetId },
+                data: {
+                    amount: destinationAsset.amount + transferAmount,
+                },
+            });
+
+            const transferCategory = await tx.categories.findFirst({
+                where: {
+                    name: 'transfer'
+                },
+                select: {
+                    id: true
+                }
+            });
+
+            const receiveCategory = await tx.categories.findFirst({
+                where: {
+                    name: 'receive'
+                },
+                select: {
+                    id: true
+                }
+            });
+            
+
+            await tx.records.create({
+                data: {
+                    assetId: originAssetId,
+                    description: 'TRANSFER',
+                    amount: transferAmount,
+                    categoryId: transferCategory!.id,
+                    date: new Date()                    
+                }
+            });
+
+
+            await tx.records.create({
+                data: {
+                    assetId: destinationAssetId,
+                    description: 'RECEIVE',
+                    amount: transferAmount,
+                    categoryId: receiveCategory!.id,
+                    date: new Date()
+                }
+            });
+
+            await tx.assetHistory.create({
+                data: {
+                    assetId: originAssetId,
+                    actionName: 'TRANSFER',
+                    name: originAsset.name,
+                    amount: transferAmount,
+                    estimatedReturnAmount: originAsset.estimatedReturnAmount,
+                    estimatedReturnDate: originAsset.estimatedReturnDate,
+                    type: originAsset.type,
+                    platform: originAsset.platform,
+                    color: originAsset.color,
+                    circleId: originAsset.circleId,
+                    userId: originAsset.userId,
+                }
+            });
+
+            await tx.assetHistory.create({
+                data: {
+                    assetId: destinationAssetId,
+                    actionName: 'RECEIVE',
+                    name: destinationAsset.name,
+                    amount: transferAmount,
+                    estimatedReturnAmount: destinationAsset.estimatedReturnAmount,
+                    estimatedReturnDate: destinationAsset.estimatedReturnDate,
+                    type: destinationAsset.type,
+                    platform: destinationAsset.platform,
+                    color: destinationAsset.color,
+                    circleId: destinationAsset.circleId,
+                    userId: destinationAsset.userId,
+                }
+            });
+        }
+    )
 }
