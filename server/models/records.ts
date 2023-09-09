@@ -51,6 +51,27 @@ export async function getRecords(key: string, dateFilter: { start: string, end: 
     })
 }
 
+export async function getRecordsForChat(key: string, dateFilter: { start: string, end: string } | undefined, circleId: string | undefined) {
+    return prisma.records.findMany({
+        select: {
+            description: true, amount: true, date: true, category: true, createdAt: true, currency: true
+        },
+        where: {
+            description: {
+                contains: key?.toLowerCase()
+            },
+            date: dateFilter ? {
+                gte: new Date(dateFilter.start),
+                lte: new Date(dateFilter.end),
+            } : undefined,
+            circleId: circleId ?? null,
+        },
+        orderBy: {
+            date: 'desc'
+        },
+    })
+}
+
 export async function createBulkRecord(assetHistoryId: string, recordId: string) {
     return prisma.bulkRecords.create({
         data: {
