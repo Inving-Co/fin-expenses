@@ -386,7 +386,6 @@ async function onSaveExpenses() {
   const currentForm = formTransaction.value
 
   if (currentForm.amount && currentForm.description && currentForm.categoryId && currentForm.date) {
-
     // Create new Transaction
     if (!props.transaction) {
       const { data: result, status } = await useFetch('/api/records/create.record', {
@@ -395,7 +394,7 @@ async function onSaveExpenses() {
           description: formTransaction.value.description,
           amount: formTransaction.value.amount,
           categoryId: formTransaction.value.categoryId,
-          date: formTransaction.value.date,
+          date:formTransaction.value.date,
           currency: $circleUsers.value.selected?.currency,
           assetId: formTransaction.value.asset?.id
         })
