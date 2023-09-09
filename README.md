@@ -12,10 +12,10 @@ This application are mean to be the tools for my family, the feature are based o
 - [x] Currency based on circle
 - [x] Weekly report by Email
 - [x] Assets Planner
+- [x] Integrate with ChatGPT
 
 ### Planned Features
 - [ ] Assets Prediction
-- [ ] Integrate with ChatGPT
 
 ### Tech Stack
 - [x] Nuxt3
