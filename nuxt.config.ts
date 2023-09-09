@@ -44,6 +44,7 @@ export default defineNuxtConfig({
             APP_ID: process.env.APP_ID,
             LOGSNAG_TOKEN: process.env.LOGSNAG_TOKEN,
             CLIENT_VERSION: pkg.version,
+            OPENAI_API_KEY: process.env.OPENAI_API_KEY,
         }
     },
     colorMode: {
