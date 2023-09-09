@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     ssr: true,
     // router: { middleware: [] },
     devtools: {enabled: true},
-    modules: ['@nuxt/image', '@nuxtjs/color-mode', '@nuxtjs/tailwindcss', ['@nuxtjs/google-fonts', {
+    modules: ['@vite-pwa/nuxt', '@nuxt/image', '@nuxtjs/color-mode', '@nuxtjs/tailwindcss', ['@nuxtjs/google-fonts', {
         families: {
             Roboto: true,
             Inter: [400, 700],
@@ -55,5 +55,34 @@ export default defineNuxtConfig({
         globalName: '__NUXT_COLOR_MODE__',
         componentName: 'ColorScheme',
         storageKey: 'nuxt-color-mode'
+    },
+    pwa: {
+        registerType: 'autoUpdate',
+        manifest: {
+            name: 'Transaction Tracker',
+            short_name: 'Tracker',
+            lang: 'en',
+            description: 'Transaction Tracker by Inving',
+            theme_color: '#ffffff',
+            icons: [
+                {
+                    src: 'icon-256.png',
+                    sizes: '192x192',
+                    type: 'image/png',
+                },
+                {
+                    src: 'icon-256.png',
+                    sizes: '512x512',
+                    type: 'image/png',
+                }
+            ],
+        },
+        workbox: {
+            navigateFallback: '/',
+            globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+        },
+        // client: {
+        //     installPrompt: true,
+        // },
     }
 })
