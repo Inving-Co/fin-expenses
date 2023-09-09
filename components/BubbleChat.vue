@@ -1,8 +1,8 @@
 <template>
-	<div v-if="!isExpanded" class="flex flex-col flex-grow max-w-xl h-[5vh] w-80 bg-white shadow-xl rounded-t-lg overflow-hidden z-50">
+	<div v-if="!isExpanded" class="flex flex-col flex-grow max-w-xl h-[5vh] w-80 bg-white shadow-xl rounded-t-lg overflow-hidden z-20">
 		<div class="flex justify-between items center mx-2 my-2">
 			<div class="text-gray-500 font-semibold">
-				Chat Inving
+				Chat with Inving AI
 			</div>
 			<button
 				class="h-[20px] w-[38px] text-gray-500 bg-gray-200 drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
