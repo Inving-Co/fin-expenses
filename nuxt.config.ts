@@ -66,12 +66,12 @@ export default defineNuxtConfig({
             theme_color: '#ffffff',
             icons: [
                 {
-                    src: 'app_icon.png',
+                    src: 'icon-256.png',
                     sizes: '192x192',
                     type: 'image/png',
                 },
                 {
-                    src: 'app_icon.png',
+                    src: 'icon-256.png',
                     sizes: '512x512',
                     type: 'image/png',
                 }
