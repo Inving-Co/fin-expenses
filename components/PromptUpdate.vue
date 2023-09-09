@@ -1,7 +1,7 @@
 <template>
     <div>
         <ClientOnly>
-            <div v-if="$pwa?.offlineReady || $pwa?.needRefresh" class="pwa-toast" role="alert">
+            <div v-if="$pwa?.offlineReady || $pwa?.needRefresh" class="pwa-toast bg-white dark:text-white dark:bg-gray-700" role="alert">
                 <div class="message">
                     <span v-if="$pwa.offlineReady">
                         App ready to work offline
@@ -54,8 +54,8 @@ onMounted(() => {
     margin: 16px;
     padding: 12px;
     border: 1px solid #8885;
-    border-radius: 4px;
-    z-index: 1;
+    border-radius: 8px;
+    z-index: 50;
     text-align: left;
     box-shadow: 3px 4px 5px 0 #8885;
 }

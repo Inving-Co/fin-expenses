@@ -90,6 +90,10 @@ export function capitalizeFirstLetter(str: string | null | undefined): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+export const getTimezone = () => {
+    const timezone = new Date().getTimezoneOffset() / 60;
+    return timezone;
+};
 
 export const currencyIDRFormatter = (currency: string | undefined | null, value:number) => Intl.NumberFormat('ID', {
     style: 'currency',
