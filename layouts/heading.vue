@@ -125,6 +125,8 @@
     <slot/>
   </div>
   <prompt-update />
+
+  <bubble-chat class="fixed bottom-0 right-0" />
 </template>
 
 <script setup lang="ts">
