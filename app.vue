@@ -1,4 +1,5 @@
 <template>
+  <VitePwaManifest />
   <div :class="$colorMode.preference !== 'system' ? '' : 'no-flash'">
     <div class="bg-gray-50 dark:bg-gray-900 h-full m-0">
       <NuxtLayout>

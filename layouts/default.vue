@@ -3,6 +3,7 @@
   <div class="sm:px-16">
     <slot />
   </div>
+  <prompt-update />
 </template>
 
 <script setup lang="ts">
