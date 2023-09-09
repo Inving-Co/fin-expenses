@@ -13,7 +13,7 @@
 	</div>
 
 	<div v-else class="flex flex-col flex-grow max-w-xl h-[50vh] w-80 bg-white shadow-xl rounded-t-lg overflow-hidden z-50">
-		<div class="flex justify-between items center mx-2 my-2">
+		<div class="flex justify-between items center px-2 py-2">
 			<div class="text-gray-500 font-semibold">
 				Chat with Inving AI
 			</div>
@@ -23,7 +23,7 @@
 				<svg class="w-full" xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 12 12"><path fill="currentColor" d="M2 6a.75.75 0 0 1 .75-.75h6.5a.75.75 0 0 1 0 1.5h-6.5A.75.75 0 0 1 2 6Z"/></svg>		
 			</button>
 		</div>
-		<div ref="chatContainer" class="flex flex-col flex-grow h-0 p-4 overflow-auto">
+		<div ref="chatContainer" class="flex flex-col flex-grow h-0 p-4 overflow-auto border-t">
 			<div v-for="message of messages.filter((val) => val.role !== 'system')" :class="classBubblePositionType[message.role]">
 				<div v-if="message.role === 'assistant'" class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 justify-center">
 					<NuxtImg class="h-10 w-10 p-3 py-[14px]" src="/app_icon.png" alt="app icon"/></div>
