@@ -126,13 +126,14 @@
   </div>
   <prompt-update />
 
-  <bubble-chat class="fixed bottom-0 right-0" />
+  <bubble-chat v-if="isLoggedIn" class="fixed bottom-0 right-0" />
 </template>
 
 <script setup lang="ts">
 import CirclesSelector from "~/components/dropdowns/CirclesSelector.vue";
 import {useRoute} from "vue-router";
 
+import { useAuth } from "~/composables/auth";
 import {useCategories} from "~/composables/categories";
 import {useCircleUsers} from "~/composables/circles";
 import {useTransactions} from "~/composables/transactions";
@@ -142,6 +143,8 @@ let modalAbout: ElementEvent | null = null
 
 
 const isDarkMode = ref<boolean>(false);
+
+const isLoggedIn = computed(() => useAuth().value?.userId !== undefined)
 
 const toggleDarkMode = () => {
     isDarkMode.value = !isDarkMode.value;
