@@ -1,5 +1,7 @@
 import { CircleSettings } from "@prisma/client"
 
+export interface OpenAIChatMessage { role: string, content: string | null, function_call: { name: string, arguments: string } | undefined }
+
 export interface ElementEvent {
     show: () => void,
     hide: () => void,
