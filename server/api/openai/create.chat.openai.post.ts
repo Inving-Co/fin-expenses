@@ -80,8 +80,9 @@ async function fetchChatCompletions(event: any, messages: any) {
                     const dataStr = line.substring(6);
 
                     // Stop if we reached the end of the stream
-                    if (dataStr === '[DONE]')
+                    if (dataStr === '[DONE]'){
                         break;
+                    }
 
                     // Parse and handle data
                     const dataObj = JSON.parse(dataStr);
@@ -95,7 +96,7 @@ async function fetchChatCompletions(event: any, messages: any) {
 
                         if(delta.content) {
                             message.content += delta.content
-                            event.req.send(content);
+                            event.res.write(delta.content);
                         }
 
                         if(delta.function_call) {
@@ -137,7 +138,6 @@ export default defineEventHandler(async (event) => {
 
     try {
         const result =  await fetchChatCompletions(event, messages)
-        console.log(result)
 
         let responseMessage = result?.message
 
@@ -168,11 +168,9 @@ export default defineEventHandler(async (event) => {
                 "content": functionResponse,
             }); 
 
-            const secondResult =  await fetchChatCompletions(event, messages)
-            console.log(secondResult)
-
-            // return secondResult.data
+            await fetchChatCompletions(event, messages)
         }
+        event.res.end();
 
         return { message: 'OK' };
     } catch (e) {
