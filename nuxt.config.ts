@@ -15,6 +15,9 @@ export default defineNuxtConfig({
         }
     },
     ssr: true,
+    // render: {
+    //     gzip: false,
+    // },
     // router: { middleware: [] },
     devtools: {enabled: true},
     modules: ['@vite-pwa/nuxt', '@nuxt/image', '@nuxtjs/color-mode', '@nuxtjs/tailwindcss', ['@nuxtjs/google-fonts', {

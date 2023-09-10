@@ -168,6 +168,8 @@ watch(() => circleUsers.value, (value) => {
 function onCircleChange(value: Circle) {
   selected.value = value.id
 
+  const messages = useMessages()
+  messages.value = []
   /// I think the cookie itself was async, it means that when I put new value on circle
   /// It will still use the old value when I refresh the trx, so I need to delay some milliseconds
   /// to make it refresh later
