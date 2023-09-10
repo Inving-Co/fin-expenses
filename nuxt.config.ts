@@ -64,7 +64,7 @@ export default defineNuxtConfig({
         registerType: 'autoUpdate',
         manifest: {
             name: 'Transaction Tracker',
-            short_name: 'Tracker',
+            short_name: 'Money Inving',
             lang: 'en',
             description: 'Transaction Tracker by Inving',
             theme_color: '#ffffff',
