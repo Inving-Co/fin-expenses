@@ -1,5 +1,5 @@
 <template>
-	<div v-if="!isExpanded" class="flex flex-col flex-grow max-w-xl h-[5vh] w-80 bg-white shadow-xl rounded-t-lg overflow-hidden z-20">
+	<div v-if="!isExpanded" class="flex flex-col flex-grow max-w-xl h-[45px] w-80 bg-white shadow-xl rounded-t-lg overflow-hidden z-20">
 		<div class="flex justify-between items center mx-2 my-2">
 			<div class="text-gray-500 font-semibold">
 				Chat with Inving AI
@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 const messageField = ref<string>('')
-const messages = ref<{ role: string, content: string }[]>([])
+const messages = useMessages()
 
 import { ref } from 'vue'
 import { toast } from 'vue3-toastify';
@@ -69,7 +69,7 @@ const classBubbleType: { assistant: string, user: string } = {
 onMounted(() => {
 	messages.value.push({
 		role: "system",
-		content: `Today is ${new Date().toDateString()} is 2023, and you're an expert on financials, you should help user on this areas\nYou are an AI for deliver finance reports about their data, here's user data\n\nHere's the user financial last month expenses and incomes`
+		content: `Today is ${new Date().toDateString()}, and you're an expert on financials, you should help user on this areas to analyze his data\nYou are an AI for deliver finance reports about their data, here's user data\n\nYou only help user with weekly report, ignore when user want monthly or annualy report`
 	});
 })
 
@@ -83,28 +83,36 @@ const onSave = async () => {
 
 	await new Promise(resolve => setTimeout(resolve, 50));
 
-	const lastMessage = chatContainer.value?.lastElementChild;
-	lastMessage.scrollIntoView({ behavior: 'smooth' });
+	const lastMessageContainer = chatContainer.value?.lastElementChild;
+	lastMessageContainer.scrollIntoView({ behavior: 'smooth' });
 
-	const { data: result, status, error } = await useFetch('/api/openai/create.chat.openai', {
+	const response = await fetch('/api/openai/create.chat.openai', {
 		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
 		body: JSON.stringify({
 			messages: messages.value
 		})
 	})
 
-	if (status.value === 'success') {
-		messages.value.push({ role: "assistant", content: result.value.choices[0].message.content, })
+	messages.value.push({ role: "assistant", content: '', })
+	
+	const reader = response?.body?.pipeThrough(new TextDecoderStream()).getReader()
+	while (true) {
+		const {value, done} = await reader.read();
+		if (done) {
+			isLoading.value = false
+			lastMessageContainer.scrollIntoView({ behavior: 'smooth' });
+			break
+		};
 
-		await new Promise(resolve => setTimeout(resolve, 150));
+		const lastMessage = messages.value[messages.value.length - 1];
+		lastMessage.content += value;
 
-		const lastMessage = chatContainer.value?.lastElementChild;
-		lastMessage.scrollIntoView({ behavior: 'smooth' });
-	} else {
-		toast.error(error.value?.statusMessage)
+		messages.value[messages.value.length - 1] = lastMessage
 	}
 
-	isLoading.value = false
 }
 
 </script>
