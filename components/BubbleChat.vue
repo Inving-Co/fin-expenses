@@ -76,15 +76,15 @@ onMounted(() => {
 const onSave = async () => {
 	if (!messageField.value) return
 
-	// isLoading.value = true
+	isLoading.value = true
 
 	messages.value.push({ role: "user", content: messageField.value })
 	messageField.value = ''
 
 	await new Promise(resolve => setTimeout(resolve, 50));
 
-	const lastMessage = chatContainer.value?.lastElementChild;
-	lastMessage.scrollIntoView({ behavior: 'smooth' });
+	const lastMessageContainer = chatContainer.value?.lastElementChild;
+	lastMessageContainer.scrollIntoView({ behavior: 'smooth' });
 
 	const response = await fetch('/api/openai/create.chat.openai', {
 		method: 'POST',
@@ -98,11 +98,14 @@ const onSave = async () => {
 
 	messages.value.push({ role: "assistant", content: '', })
 	
-
 	const reader = response?.body?.pipeThrough(new TextDecoderStream()).getReader()
 	while (true) {
 		const {value, done} = await reader.read();
-		if (done) break;
+		if (done) {
+			isLoading.value = false
+			lastMessageContainer.scrollIntoView({ behavior: 'smooth' });
+			break
+		};
 
 		const lastMessage = messages.value[messages.value.length - 1];
 		lastMessage.content += value;
@@ -110,14 +113,6 @@ const onSave = async () => {
 		messages.value[messages.value.length - 1] = lastMessage
 	}
 
-	// if (status.value === 'success') {
-	// 	messages.value.push({ role: "assistant", content: result.value.choices[0].message.content, })
-
-	// 	await new Promise(resolve => setTimeout(resolve, 150));
-
-
-	// // isLoading.value = false
-	// }
 }
 
 </script>
