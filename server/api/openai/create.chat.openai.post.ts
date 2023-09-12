@@ -124,6 +124,7 @@ async function fetchChatCompletions(event: any, messages: any) {
         return choices
     } catch (e) {
         console.log(e)
+        throw e
     }
 }
 
@@ -157,7 +158,6 @@ export default defineEventHandler(async (event) => {
                 functionArgs.endDate,
             ));
 
-            
             // const encoded = _.encode(functionResponse)
             // const encodedLength = encoded.length;
 
