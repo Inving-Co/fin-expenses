@@ -69,7 +69,7 @@ const classBubbleType: { assistant: string, user: string } = {
 onMounted(() => {
 	messages.value.push({
 		role: "system",
-		content: `Today is ${new Date().toDateString()}, and you're an expert on financials, you should help user on this areas to analyze his data\nYou are an AI for deliver finance reports about their data, here's user data\n\nYou only help user with weekly report, ignore when user want monthly or annualy report`
+		content: `Today is ${new Date().toDateString()}, You are a financial analyst who generates weekly financial reports.`
 	});
 })
 
