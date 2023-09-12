@@ -129,8 +129,10 @@ const activatorLoad = async (value: string) => {
     circleSetting: undefined,
   };
 
+  const maxAge = 100 * 365 * 24 * 60 * 60
   useCookie('selected-circle', {
     secure: true,
+    maxAge: maxAge,
     sameSite: 'lax',
   }).value = JSON.stringify(circle)
 
