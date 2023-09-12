@@ -1,29 +1,29 @@
 <template>
-	<div v-if="!isExpanded" class="flex flex-col flex-grow max-w-xl h-[45px] w-80 bg-white shadow-xl rounded-t-lg overflow-hidden z-20">
-		<div class="flex justify-between items center mx-2 my-2">
-			<div class="text-gray-500 font-semibold">
+	<div v-if="!isExpanded" class="flex flex-col flex-grow max-w-xl h-[45px] w-80 dark:bg-gray-50 bg-gray-900 shadow-xl rounded-t-md overflow-hidden z-20">
+		<div class="flex justify-between items-center px-2 py-2">
+			<div class="text-gray-200 dark:text-gray-500 font-semibold">
 				Chat with Inving AI
 			</div>
 			<button
-				class="h-[20px] w-[38px] text-gray-500 bg-gray-200 drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+				class="h-[30px] p-1 text-gray-200 focus:outline-none font-medium rounded-lg text-sm dark:text-gray-500"
 				type="button" @click="isExpanded = true" :disabled="isLoading">
-				<svg class="w-full" xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 12 12"><path fill="currentColor" d="M2 6a.75.75 0 0 1 .75-.75h6.5a.75.75 0 0 1 0 1.5h-6.5A.75.75 0 0 1 2 6Z"/></svg>		
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m17 14l-5-5m0 0l-5 5"/></svg>		
 			</button>
 		</div>
 	</div>
 
-	<div v-else class="flex flex-col flex-grow max-w-xl h-[50vh] w-80 bg-white shadow-xl rounded-t-lg overflow-hidden z-50">
-		<div class="flex justify-between items center px-2 py-2">
-			<div class="text-gray-500 font-semibold">
+	<div v-else class="flex flex-col flex-grow max-w-xl h-[50vh] w-80 dark:bg-gray-50 bg-gray-900 shadow-xl rounded-t-lg overflow-hidden z-50">
+		<div class="flex justify-between items-center px-2 py-2">
+			<div class="text-gray-200 dark:text-gray-500 font-semibold">
 				Chat with Inving AI
 			</div>
 			<button
-				class="h-[20px] w-[38px] text-gray-500 bg-gray-200 drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+				class="h-[30px] p-1 text-gray-200 focus:outline-none font-medium rounded-lg text-sm dark:text-gray-500"
 				type="button" @click="isExpanded = false" :disabled="isLoading">
-				<svg class="w-full" xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 12 12"><path fill="currentColor" d="M2 6a.75.75 0 0 1 .75-.75h6.5a.75.75 0 0 1 0 1.5h-6.5A.75.75 0 0 1 2 6Z"/></svg>		
+				<svg xmlns="http://www.w3.org/2000/svg" class="rotate-180" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m17 14l-5-5m0 0l-5 5"/></svg>		
 			</button>
 		</div>
-		<div ref="chatContainer" class="flex flex-col flex-grow h-0 p-4 overflow-auto border-t">
+		<div ref="chatContainer" class="flex flex-col flex-grow h-0 p-4 overflow-auto border-t bg-gray-200">
 			<div v-for="message of messages.filter((val) => val.role !== 'system')" :class="classBubblePositionType[message.role]">
 				<div v-if="message.role === 'assistant'" class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 justify-center">
 					<NuxtImg class="h-10 w-10 p-3 py-[14px]" src="/app_icon.png" alt="app icon"/></div>
@@ -38,9 +38,14 @@
 		</div>
 
 		<icons-circular-indicator v-if="isLoading" class="inline w-6 h-6 my-2 text-primary-500 self-center animate-spin"/>
-		<div class="bg-gray-300 p-4">
-			<input :readonly="isLoading" v-model="messageField" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" type="text"
+		<div class="flex items-center bg-gray-300 gap-4 p-4">
+			<input :readonly="isLoading" v-model="messageField" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-800 dark:focus:ring-primary-500 dark:focus:border-primary-500" type="text"
 				placeholder="Type your message…" @keydown.enter="onSave">
+			<button
+				class="h-[30px] p-1 text-gray-500 focus:outline-none font-medium rounded-lg text-sm"
+				type="button" @click="onSave" :disabled="isLoading">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m12.815 12.197l-7.532 1.255a.5.5 0 0 0-.386.318L2.3 20.728c-.248.64.421 1.25 1.035.942l18-9a.75.75 0 0 0 0-1.341l-18-9c-.614-.307-1.283.303-1.035.942l2.598 6.958a.5.5 0 0 0 .386.318l7.532 1.255a.2.2 0 0 1 0 .395Z"/></svg>	
+			</button>
 		</div>
 	</div>
 </template>
@@ -50,7 +55,6 @@ const messageField = ref<string>('')
 const messages = useMessages()
 
 import { ref } from 'vue'
-import { toast } from 'vue3-toastify';
 
 const chatContainer = ref<any>()
 const isLoading = ref<boolean>(false)
@@ -63,13 +67,13 @@ const classBubblePositionType: { assistant: string, user: string } = {
 
 const classBubbleType: { assistant: string, user: string } = {
 	assistant: "bg-gray-300 p-3 rounded-r-lg rounded-bl-lg",
-	user: "bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg"
+	user: "bg-primary-600 text-white p-3 rounded-l-lg rounded-br-lg"
 }
 
 onMounted(() => {
 	messages.value.push({
 		role: "system",
-		content: `Today is ${new Date().toDateString()}, You are a financial analyst who generates weekly financial reports.`
+		content: `Today is ${new Date().toDateString()}, I want you to act as an accountant and come up with creative ways to manage finances. You'll need to consider budgeting, investment strategies and risk management when creating a financial plan for your client. In some cases, you may also need to provide advice on taxation laws and regulations in order to help them maximize their profits. The first suggestion request is come with the user..`
 	});
 })
 
@@ -79,6 +83,7 @@ const onSave = async () => {
 	isLoading.value = true
 
 	messages.value.push({ role: "user", content: messageField.value })
+	
 	messageField.value = ''
 
 	await new Promise(resolve => setTimeout(resolve, 50));
