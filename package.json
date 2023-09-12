@@ -41,5 +41,8 @@
     "vue3-lottie": "^3.0.0",
     "vue3-toastify": "^0.1.11"
   },
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=18 <20"
+  }
 }
