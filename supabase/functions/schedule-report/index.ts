@@ -47,7 +47,7 @@ const handler = async (_request: Request): Promise<Response> => {
                 "CircleUsers" as cu
                 LEFT JOIN "Circles" as c ON c."id" = cu."circleId"
                 LEFT JOIN "Users" as u ON u."id" = cu."userId"
-                LEFT JOIN "Transactions" as t on c."id" = t."circleId"
+                LEFT JOIN "Records" as t on c."id" = t."circleId"
             WHERE
                 "receiveReport" = TRUE
                 AND (
