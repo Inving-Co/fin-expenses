@@ -51,7 +51,7 @@ watch(() => props.modelValue, (val) => {
 
 watchDebounced(() => amount.value, (value) => {
     emit('update:modelValue', value);
-}, { debounce: 1000 })
+}, { debounce: 100 })
 
 watch(() => inputValue.value, (val) => {
     if (val[val.length - 1] === ',' || val === '') {
