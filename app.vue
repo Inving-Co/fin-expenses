@@ -24,7 +24,13 @@ onMounted(() => {
     document.documentElement.style.backgroundColor = '#f9fafb';
   }
 
-  useAmountVisibility().value = localStorage.getItem('is-amount-visible') === 'true'
+  if(localStorage.getItem('is-amount-visible')) {
+    useAmountVisibility().value = localStorage.getItem('is-amount-visible') === 'true'
+  } else {
+    localStorage.setItem('is-amount-visible', 'true')
+    useAmountVisibility().value = true
+  }
+
 
   supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
     if (event === 'SIGNED_OUT') {
