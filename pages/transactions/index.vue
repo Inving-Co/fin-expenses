@@ -137,7 +137,7 @@
                         {{ currencyIDRFormatter($circleUsers.selected.currency, trx.amount) }}
             </span>
             <span v-else>
-                  <general-currency-field v-model="selectedTransaction!.amount" @keydown.enter="onUpdate" />
+                  <general-currency-field v-model="selectedTransaction!.amount" name="amount" @keydown.enter="onUpdate" />
               </span>
           </td>
           <td class="px-6 py-4">
