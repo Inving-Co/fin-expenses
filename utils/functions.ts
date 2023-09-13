@@ -95,11 +95,21 @@ export const getTimezone = () => {
     return timezone;
 };
 
-export const currencyIDRFormatter = (currency: string | undefined | null, value:number) => Intl.NumberFormat('ID', {
-    style: 'currency',
-    currency: currency ?? 'IDR',
-    maximumFractionDigits: currency == 'IDR' ? 0 : undefined
-}).format(value)
+export const currencyIDRFormatter = (currency: string | undefined | null, value:number) => {
+    const formatted = Intl.NumberFormat('ID', {
+        style: 'currency',
+        currency: currency ?? 'IDR',
+        maximumFractionDigits: currency == 'IDR' ? 0 : undefined
+    }).format(value);
+
+    const isAmountVisible = useAmountVisibility().value
+    if(isAmountVisible) {
+        return formatted
+    } else {
+        const replaced = formatted.replace(/\d/g, '*');
+        return replaced;        
+    }
+}
 
 export const supabase = createClient('https://xoixclvjgysqxybilnfk.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvaXhjbHZqZ3lzcXh5YmlsbmZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTAyOTc1ODUsImV4cCI6MjAwNTg3MzU4NX0.7gRNtgPyHUmPY16Ds0OxWLYsG3owwplJEXb3nlLc48Y')
 
