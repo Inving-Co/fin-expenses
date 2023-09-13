@@ -118,14 +118,7 @@ export async function onSignOut() {
 
     await supabase.auth.signOut()
 
-    useCookie('user-id').value = undefined
-    useCookie('selected-circle').value = undefined
-    useCookie('my-access-token').value = undefined
-    useCookie('my-refresh-token').value = undefined
-
-    useAuth().value = null
-
-    return navigateTo('/')
+    window.location.href = '/'
 }
 
 export async function checkAuth() {
