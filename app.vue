@@ -24,6 +24,8 @@ onMounted(() => {
     document.documentElement.style.backgroundColor = '#f9fafb';
   }
 
+  useAmountVisibility().value = localStorage.getItem('is-amount-visible') === 'true'
+
   supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
     if (event === 'SIGNED_OUT') {
       // delete cookies on sign out
