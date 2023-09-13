@@ -155,7 +155,9 @@ onMounted(() => {
   }
 })
 
-watch(() => circleUsers.value, (value) => {
+watchEffect(() => {
+  const value = $circleUsers.value.data;
+
   if (value && value.length > 0) {
     const selectedCircle = useCookie('selected-circle').value as Circle | null | undefined
 
