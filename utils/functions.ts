@@ -95,11 +95,21 @@ export const getTimezone = () => {
     return timezone;
 };
 
-export const currencyIDRFormatter = (currency: string | undefined | null, value:number) => Intl.NumberFormat('ID', {
-    style: 'currency',
-    currency: currency ?? 'IDR',
-    maximumFractionDigits: currency == 'IDR' ? 0 : undefined
-}).format(value)
+export const currencyIDRFormatter = (currency: string | undefined | null, value:number) => {
+    const formatted = Intl.NumberFormat('ID', {
+        style: 'currency',
+        currency: currency ?? 'IDR',
+        maximumFractionDigits: currency == 'IDR' ? 0 : undefined
+    }).format(value);
+
+    const isAmountVisible = useAmountVisibility().value
+    if(isAmountVisible) {
+        return formatted
+    } else {
+        const replaced = formatted.replace(/\d/g, '*');
+        return replaced;        
+    }
+}
 
 export const supabase = createClient('***REMOVED***', '***REMOVED***')
 
