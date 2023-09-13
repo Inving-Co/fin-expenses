@@ -108,7 +108,7 @@
     </div>
 
     <div
-        class="text-sm font-medium text-center text-gray-500 border-gray-200 dark:text-gray-400 dark:border-gray-700">
+        class="flex justify-between text-sm font-medium text-center text-gray-500 border-gray-200 dark:text-gray-400 dark:border-gray-700">
       <ul class="flex flex-wrap gap-2">
         <li>
           <span class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg py-3"><nuxt-link to="/transactions"
@@ -117,6 +117,13 @@
         <li>
           <span class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg py-3"><nuxt-link to="/assets"
                                                                      :class="isCurrentPathActive('/assets')">Assets</nuxt-link></span>
+        </li>
+      </ul>
+      <ul>
+        <li>
+          <span class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg py-3 relative">
+            <a href="https://invingco.canny.io/" target="_blank" :class="isCurrentPathActive('/feedback')" class="text-primary-500 font-bold">Give Us Your Feedback!</a>
+          </span>
         </li>
       </ul>
     </div>
@@ -206,3 +213,4 @@ function isCurrentPathActive(path: string): string {
 }
 
 </script>
+
