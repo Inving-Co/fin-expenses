@@ -37,6 +37,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             await checkAuth()
 
             if (params.type === 'recovery') {
+                loading.value = false
                 return navigateTo('/change-password')
             }
 
@@ -48,13 +49,14 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             return navigateTo('/transactions')
         }
     } else {
-        const refreshToken = useCookie('my-refresh-token')
-        const accessToken = useCookie('my-access-token')
+        const result = await supabase.auth.getSession()
 
-        if (refreshToken.value && accessToken.value) {
+        if (result.data.session) {
+            await checkAuth()
+
             return navigateTo('/transactions')
         }
     }
-
+    
     loading.value = false
 })
