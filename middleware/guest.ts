@@ -9,6 +9,13 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     const parsed = hash.split('&')
     const loading = useLoading()
 
+    if (parsed.find((e) => e.includes('401'))) {
+        const errorDescription = parsed.find(param => param.startsWith('error_description='))
+        toast.error(errorDescription?.replace('error_description=', '')?.replaceAll('+', ' ')?? '')
+
+        return
+    }
+
     if(loading.value) return
 
     if (hash) {
