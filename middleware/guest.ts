@@ -34,11 +34,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             document.cookie = `my-access-token=${params.access_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
             document.cookie = `my-refresh-token=${params.refresh_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
 
-            // Check if the password reset is required
+            await checkAuth()
+
             if (params.type === 'recovery') {
-                return navigateTo('/transactions')
-            } else {
-                await checkAuth()
+                return navigateTo('/change-password')
             }
 
             await registerWhenNotExist(auth.value?.userId, auth.value?.email)
