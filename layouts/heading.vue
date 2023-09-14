@@ -68,7 +68,7 @@
                 <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m15.844 3.344l-1.428.781l1.428.781l.781 1.428l.781-1.428l1.428-.781l-1.428-.781l-.781-1.428l-.781 1.428Zm-5.432.814A8 8 0 1 0 18.93 16A9 9 0 0 1 10 7c0-.98.131-1.937.412-2.842ZM2 12C2 6.477 6.477 2 12 2h1.734l-.868 1.5C12.287 4.5 12 5.69 12 7a7 7 0 0 0 8.348 6.87l1.682-.327l-.543 1.626C20.162 19.137 16.417 22 12 22C6.477 22 2 17.523 2 12Zm18.5-5.584l.914 1.67l1.67.914l-1.67.914l-.914 1.67l-.914-1.67L17.916 9l1.67-.914l.914-1.67Z"/></svg>
 
       </button>
-      <general-dropdown id="dropdownActionMenuButton" class="w-full sm:mt-0 md:w-[80px]">
+      <general-dropdown id="dropdownActionMenuButton" class="w-full sm:mt-0 md:w-[100px]">
         <template #trigger="{ activator }">
           <button
               class="h-[45px] w-full inline-flex items-center justify-between text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg dark:ring-2 dark:ring-gray-700 text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
@@ -95,6 +95,15 @@
                   class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                   type="button" @click="modalAbout?.show()">
                   About
+                </button>
+              </div>
+            </li>
+            <li>
+              <div class="block dark:hover:bg-gray-600">
+                <button
+                  class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  type="button" @click="navigateTo('/change-password')">
+                  Change Password
                 </button>
               </div>
             </li>

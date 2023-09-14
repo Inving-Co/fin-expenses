@@ -20,23 +20,21 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             const kv = parsed[i].split('=')
             params[kv[0]] = kv[1]
         }
-        if (params) {
+        
+        if (params && params.access_token && params.refresh_token) {
             const auth = useAuth()
             const maxAge = 100 * 365 * 24 * 60 * 60
             document.cookie = `my-access-token=${params.access_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
             document.cookie = `my-refresh-token=${params.refresh_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
 
-            await checkAuth()
+            // Check if the password reset is required
+            if (params.type === 'recovery') {
+                return navigateTo('/transactions')
+            } else {
+                await checkAuth()
+            }
 
             await registerWhenNotExist(auth.value?.userId, auth.value?.email)
-            // if (!result.status) {
-            //
-            //     toast.error(result.message)
-            //     from.hash = ''
-            //     loading.value = false
-            //
-            //     return await onSignOut()
-            // }
 
             document.cookie = `user-id=${auth.value?.userId}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
 
