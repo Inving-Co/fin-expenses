@@ -78,6 +78,7 @@ async function onSubmitNewPassword() {
         toast.error(error.message);
     } else {
         toast.success('Password Updated');
+        
         return navigateTo('/transactions')
     }
 

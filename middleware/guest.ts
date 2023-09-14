@@ -38,11 +38,14 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
             if (params.type === 'recovery') {
                 loading.value = false
+
+                document.cookie = `user-id=${auth.value?.userId}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
+        
                 return navigateTo('/change-password')
             }
 
             await registerWhenNotExist(auth.value?.userId, auth.value?.email)
-
+            
             document.cookie = `user-id=${auth.value?.userId}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
 
             loading.value = false
