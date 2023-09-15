@@ -20,7 +20,9 @@
             <span class="sr-only">Close modal</span>
           </button>
         </div>
-        <slot name="body"/>
+        <div class="w-full overflow-x-auto">
+          <slot name="body"/>
+        </div>
       </div>
     </div>
   </div>
