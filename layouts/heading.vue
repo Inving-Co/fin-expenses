@@ -50,8 +50,8 @@
     </template>
   </general-modal>
 
-  <div v-if="!isRoot" class="pt-5 bg-white dark:bg-gray-800 px-16 border-b h-[25vh] sm:h-[15vh] flex flex-col justify-between">
-    <div class="flex justify-between flex-col sm:flex-row">
+  <div v-if="!isRoot" class="pt-5 bg-white dark:bg-gray-800 border-b h-[25vh] sm:h-[15vh] flex flex-col justify-between">
+    <div class="flex justify-between flex-col sm:flex-row px-16 ">
       <div class="flex items-center">
         <NuxtImg class="h-8" src="/app_icon.png" alt="app icon"/>
         <span class="mx-2 text-gray-300">
@@ -117,8 +117,8 @@
     </div>
 
     <div
-        class="flex justify-between text-sm font-medium text-center text-gray-500 border-gray-200 dark:text-gray-400 dark:border-gray-700">
-      <ul class="flex flex-wrap gap-2">
+        class="flex justify-between sm:px-16 px-0 text-sm font-medium text-center text-gray-500 border-gray-200 dark:text-gray-400 dark:border-gray-700 overflow-x-auto ">
+      <ul class="flex flex-nowrap gap-2">
         <li>
           <span class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg py-3"><nuxt-link to="/transactions"
                                                                      :class="isCurrentPathActive('/transactions')">Transactions</nuxt-link></span>
@@ -127,11 +127,15 @@
           <span class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg py-3"><nuxt-link to="/assets"
                                                                      :class="isCurrentPathActive('/assets')">Assets</nuxt-link></span>
         </li>
+       
       </ul>
       <ul>
         <li>
           <span class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg py-3 relative">
-            <a href="https://invingco.canny.io/" target="_blank" :class="isCurrentPathActive('/feedback')" class="text-primary-500 font-bold">Give Us Your Feedback!</a>
+            <a href="https://invingco.canny.io/" target="_blank" :class="isCurrentPathActive('/feedback')" class="flex text-primary-500 font-bold">
+              <span class="hidden sm:block">Give Us Your</span>
+              Feedback!
+            </a>
           </span>
         </li>
       </ul>
