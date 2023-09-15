@@ -10,7 +10,7 @@
               name="typeTransaction" required
               class="focus:ring-primary-500 dark:focus:ring-primary-600 text-primary-600 bg-gray-100 border-gray-300" />
             <label for="expenses" class="ml-2">
-              <span class="text-lg font-semibold text-gray-800 dark:text-gray-300">Expenses</span>
+              <span class="text-lg font-semibold text-gray-800 dark:text-gray-300">Records</span>
             </label>
           </div>
           <div class="ml-6 flex items-center justify-center">
