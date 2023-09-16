@@ -39,10 +39,10 @@
     </div>
     <div v-if="transactions" class="max-h-1/4 w-full gap-4 sm:flex justify-center mb-8 mt-2">
       <expenses-structure-chart class="sm:w-1/2 md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
-                                :transactions="transactions"/>
+                                :transactions="chartTransactions"/>
       <div class="sm:w-1/2 md:w-1/ h-full w-full flex-grow justify-between mt-4 sm:mt-0">
-        <cash-flow-chart class="mb-4" :label-time="filterDate" :transactions="transactions"/>
-        <debt-percentage-by-income :label-time="filterDate" :transactions="transactions"/>
+        <cash-flow-chart class="mb-4" :label-time="filterDate" :transactions="chartTransactions"/>
+        <debt-percentage-by-income :label-time="filterDate" :transactions="chartTransactions"/>
       </div>
     </div>
     <div class="sm:flex p-4 justify-center sm:rounded-t-lg sm:justify-between bg-white dark:bg-gray-700"
@@ -68,20 +68,32 @@
         </button>
 
       </div>
-      <div class="mt-2 sm:mt-0">
-        <label for="table-search-transactions" class="sr-only">Search</label>
-        <div class="relative">
-          <div class="z-10 absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                 fill="none" viewBox="0 0 20 20">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-            </svg>
+      <div class="flex gap-3 mt-3 sm:mt-0 flex-col lg:flex-row">
+        <div class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700">
+          <label class="my-2 relative inline-flex items-center cursor-pointer"
+          @click.prevent="toggleCheckReceiveTransferCategories()">
+          <input type="checkbox" :checked="isIncludeTransferReceive" class="sr-only peer">
+          <div
+            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-400 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600">
           </div>
-          <input :value="searchKey" :readonly="isLoading" type="text" id="table-search-transactions"
-                 class="w-full p-2 pl-10 pr-10 text-sm text-gray-900 dark:text-gray-400 dark:bg-gray-800 drop-shadow hover:drop-shadow-md focus:drop-shadow-md rounded-lg border-none focus:ring-0"
-                 placeholder="Search for transactions"
-                 v-on:keydown.enter="onSearchTransactions(($event.target as HTMLInputElement)?.value)">
+          <span class="ml-3 text-sm whitespace-nowrap text-gray-900 dark:text-gray-300">Include Transfer</span>
+        </label>
+        </div>
+        <div class="mt-2 sm:mt-0">
+          <label for="table-search-transactions" class="sr-only">Search</label>
+          <div class="relative">
+            <div class="z-10 absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                  fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+              </svg>
+            </div>
+            <input :value="searchKey" :readonly="isLoading" type="text" id="table-search-transactions"
+                  class="w-full p-2 pl-10 pr-10 text-sm text-gray-900 dark:text-gray-400 dark:bg-gray-800 drop-shadow hover:drop-shadow-md focus:drop-shadow-md rounded-lg border-none focus:ring-0"
+                  placeholder="Search for transactions"
+                  v-on:keydown.enter="onSearchTransactions(($event.target as HTMLInputElement)?.value)">
+          </div>
         </div>
       </div>
     </div>
@@ -92,7 +104,7 @@
         <p class="text-gray-500 dark:text-gray-400">No transactions found.</p>
       </div>
     </div>
-    <div v-else-if="!$circleUsers.isLoading && !categories.isLoading"
+    <div v-else-if="!$circleUsers.isLoading && !$categories.isLoading"
          class="relative overflow-x-auto drop-shadow-soft" style="height: 500px !important">
       <table v-if="!$isMobile()" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 sticky top-0 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -146,7 +158,7 @@
                 <select v-model="selectedTransaction!.categoryId" id="categories"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         @change="onUpdate">
-                  <option v-for="category in categories.data" :value="category.id" selected>
+                  <option v-for="category in $categories.data" :value="category.id" selected>
                     {{ capitalizeFirstLetter(category.name) }}
                   </option>
                 </select>
@@ -229,7 +241,7 @@ const filterDate = ref<string>('this month')
 const startFilterDate = ref<string>(format(startOfMonth(new Date()), 'yyyy-MM-dd HH:mm'))
 const endFilterDate = ref<string>(format(endOfToday(), 'yyyy-MM-dd HH:mm'))
 const selectedTransaction = ref<EditableRecord | undefined>()
-const categories = useCategories()
+const $categories = useCategories()
 const $circleUsers = useCircleUsers()
 const $transactions = useTransactions()
 
@@ -239,7 +251,7 @@ let modalConfDelete: ElementEvent | null = null
 let refreshInputAmount: any = null
 
 const selectedCircle = computed(() => $circleUsers.value.selected)
-const selectedCategories = computed(() => categories.value.data.filter((cat: Category) => cat.checked).map((e) => e.id))
+const selectedCategories = computed(() => $categories.value.data.filter((cat: Category) => cat.checked).map((e) => e.id))
 
 definePageMeta({
   title: "Transactions",
@@ -250,6 +262,9 @@ onMounted(() => {
   initDropdowns()
   checkAuth()
 })
+
+const chartTransactions = computed(() => transactions.value?.filter((trx: any) => trx.category.type !== 'receive' && trx.category.type !== 'transfer'))
+const isIncludeTransferReceive = computed(() => $categories.value.data?.filter((e) => (e.type === 'receive' || e.type === 'transfer') && e.checked).length > 0)
 
 const {
   data: transactions,
@@ -280,6 +295,18 @@ const {
   watch: [selectedCategories, selectedCircle]
 })
 
+
+function toggleCheckReceiveTransferCategories() {
+  for (let i = 0; i < $categories.value.data.length; i++) {
+    const category = $categories.value.data[i];
+    if (category.type === 'receive' || category.type === 'transfer') {
+      category.checked = !category.checked;
+    }
+  }
+
+  const values = $categories.value.data.filter((cat: Category) => cat.checked).map((cat: Category) => cat.id)
+  document.cookie = `${selectedCircle.value?.id}-current-filtered-categories-selected=${values.join(',')}`
+}
 
 function onSearchTransactions(value: string) {
   searchKey.value = value;
