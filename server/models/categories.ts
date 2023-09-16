@@ -29,19 +29,19 @@ export async function getCategories(key: string, circleId: string | undefined) {
                         contains: key?.toLowerCase()
                     },
                 },
-                {
-                    OR: [
-                        {
-                            type: null,
-                        },
-                        {
-                            NOT: [
-                                { type: 'transfer' },
-                                { type: 'receive' }
-                            ]
-                        }
-                    ],
-                },
+                // {
+                //     OR: [
+                //         {
+                //             type: null,
+                //         },
+                //         {
+                //             NOT: [
+                //                 { type: 'transfer' },
+                //                 { type: 'receive' }
+                //             ]
+                //         }
+                //     ],
+                // },
                 {
                     OR: [
                         {
