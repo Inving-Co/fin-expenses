@@ -233,6 +233,11 @@
               class="text-red-500">*</span></label>
           <general-currency-field v-model="formTransfer.amount" name="amount-transfer" @keyup.enter="onSaveTransfer" />
         </div>
+        <div v-if="typeTransaction == TypeFormTransaction.transfer">
+          <label for="amount-transfer" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Charge <span
+              class="text-red-500"></span></label>
+          <general-currency-field v-model="formTransfer.charge" name="charge-amount-transfer" @keyup.enter="onSaveTransfer" />
+        </div>
       </div>
       <button v-if="typeTransaction == TypeFormTransaction.expenses" type="button"
         :disabled="isLoadingSubmit || !isButtonExpensesEnabled"
@@ -306,7 +311,8 @@ const formTransaction = ref<{
 const formTransfer = ref({
   originAsset: undefined,
   destinationAsset: undefined,
-  amount: 0
+  amount: 0,
+  charge: undefined
 })
 
 const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'add-category', 'edit-category', 'on-mounted'])
@@ -363,7 +369,8 @@ async function onSaveTransfer() {
     body: JSON.stringify({
       originAssetId: formTransfer.value?.originAsset?.id, 
       destinationAssetId: formTransfer.value?.destinationAsset?.id, 
-      amount: formTransfer.value?.amount
+      amount: formTransfer.value?.amount,
+      charge: formTransfer.value?.charge
     })
   })
 
@@ -372,6 +379,7 @@ async function onSaveTransfer() {
       originAsset: undefined,
       destinationAsset: undefined,
       amount: 0,
+      charge: undefined
     }
 
     emit('on-success')
