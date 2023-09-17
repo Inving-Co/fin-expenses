@@ -218,7 +218,7 @@ export async function refreshAsset(assetId: string) {
     )
 }
 
-export async function transferAmountAsset(userId: string, originAssetId: string, destinationAssetId: string, amount: number) {
+export async function transferAmountAsset(userId: string, originAssetId: string, destinationAssetId: string, amount: number, charge: number | undefined) {
     return prisma.$transaction(
         async (tx) => {
             const originAsset = await tx.assets.findUnique({
@@ -298,6 +298,19 @@ export async function transferAmountAsset(userId: string, originAssetId: string,
                     circleId: destinationAsset.circleId,
                 }
             });
+
+            if(charge)
+                await tx.records.create({
+                    data: {
+                        assetId: originAssetId,
+                        description: `Charge transfer from ${originAsset.name} to ${destinationAsset.name}`,
+                        amount: charge,
+                        categoryId: '5b4075ec-7af5-4bb1-9bd4-fc3f899c180a',
+                        date: new Date(),
+                        userId: userId,
+                        circleId: originAsset.circleId,
+                    }
+                });
 
             await tx.assetHistory.create({
                 data: {
