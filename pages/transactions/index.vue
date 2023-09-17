@@ -298,7 +298,7 @@ const {
 
 function isRowTransferReceive(row: any): string {
   if(row.category?.type === 'receive' || row.category?.type === 'transfer') {
-    return 'bg-gray-50';
+    return 'bg-gray-50 dark:bg-gray-900';
   }
 
   return 'bg-white'
