@@ -96,7 +96,7 @@
                           @click="selectedAsset = asset; modalConfDelete?.show()">Delete
                   </button>
                 </li>
-                <li>
+                <li v-if="!asset.isAutoRefresh">
                   <button type="button"
                           class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                           @click="onRefreshAsset(asset.id)">Refresh
