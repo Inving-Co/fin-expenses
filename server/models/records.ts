@@ -26,6 +26,14 @@ export async function deleteRecord(trxId: string, userId: string | undefined) {
     return prisma.records.delete({where: {id: trxId, userId}})
 }
 
+export async function getCountRecords(circleId: string | undefined) {
+    return prisma.records.count({
+        where: {
+            circleId: circleId ?? null
+        }
+    })
+}
+
 export async function getRecords(key: string, dateFilter: { start: string, end: string } | undefined, circleId: string | undefined, categoryIds: string[] | undefined, assetId: string | undefined) {
     return prisma.records.findMany({
         where: {

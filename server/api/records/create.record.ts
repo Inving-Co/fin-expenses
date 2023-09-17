@@ -1,4 +1,5 @@
-import {createRecord, getRecords} from "../../models/records";
+import { getAssetDetail, refreshAsset } from "~/server/models/assets";
+import {createRecord, getCountRecords} from "../../models/records";
 import {eventFirstTrxCreated} from "~/utils/logsnag";
 
 export default defineEventHandler(async (event) => {
@@ -9,9 +10,17 @@ export default defineEventHandler(async (event) => {
     const circle = cookies['selected-circle'] ? JSON.parse(cookies['selected-circle']) : undefined
 
     let result = await createRecord(date, description, Number(amount), currency, categoryId, userId, circle?.id, assetId)
-    let transactions = await getRecords('', undefined, circle?.id, undefined, undefined)
+    let countRecords = await getCountRecords(circle?.id)
 
-    if (transactions.length === 1 && result.user) {
+    if (assetId) {
+        let asset = await getAssetDetail(assetId)
+
+        if (asset?.isAutoRefresh) {
+            refreshAsset(assetId)
+        }
+    }
+
+    if (countRecords === 1 && result.user) {
         await eventFirstTrxCreated(result.user!.id, result.user!.email, result.id, result.description)
     }
 
