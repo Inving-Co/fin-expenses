@@ -25,7 +25,8 @@ export interface EditableAsset {
     estimatedReturnDate: string | undefined,
     id: string | undefined,
     platform: string | undefined
-    type: string | undefined
+    type: string | undefined,
+    isAutoRefresh: boolean
 }
 
 export interface Record {
@@ -92,6 +93,7 @@ export interface Asset {
     updatedAt: string
     userId?: string
     circleId?: string
+    isAutoRefresh: boolean
     assetHistory: AssetHistory[]
 }
 
