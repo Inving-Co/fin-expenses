@@ -133,7 +133,7 @@
         <li>
           <span class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg py-3 relative">
             <a href="https://invingco.canny.io/" target="_blank" :class="isCurrentPathActive('/feedback')" class="flex text-primary-500 font-bold">
-              <span class="hidden sm:block">Give Us Your </span>
+              <span class="hidden sm:block mr-1">Give Us Your</span>
               Feedback!
             </a>
           </span>
