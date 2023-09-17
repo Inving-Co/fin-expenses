@@ -1,14 +1,14 @@
 import {transferAmountAsset} from "../../models/assets";
 
 export default defineEventHandler(async (event) => {
-    const { originAssetId, destinationAssetId, amount } = await readBody(event)
+    const { originAssetId, destinationAssetId, amount, charge } = await readBody(event)
 
     const cookies = parseCookies(event)
     const userId = cookies['user-id']
 
     try {
 
-        const result = await transferAmountAsset(userId, String(originAssetId), String(destinationAssetId), Number(amount))
+        const result = await transferAmountAsset(userId, String(originAssetId), String(destinationAssetId), Number(amount), charge ? Number(charge) : undefined)
 
         return {
             status: 200,

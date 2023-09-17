@@ -125,7 +125,7 @@
         </thead>
         <tbody class="overflow-y-scroll">
         <tr v-for="trx in transactions"
-            class="bg-white hover:bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700"
+            :class="`${isRowTransferReceive(trx)} hover:bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700`"
             v-on:dblclick="onDoubleClickRow(trx)"
             v-on:keydown.esc="trx.isEditMode = false; selectedTransaction = undefined">
           <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -169,7 +169,7 @@
       </table>
       <div v-else>
         <div v-for="(trx, index) of transactions ?? []"
-             class="w-full my-3 p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
+             :class="`${isRowTransferReceive(trx)} w-full my-3 p-6 border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700`">
           <span class="flex justify-between">
             <span class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
             {{ currencyIDRFormatter($circleUsers.selected.currency, trx.amount) }}
@@ -224,7 +224,7 @@ import EmptyJSON from '~/assets/lottie/empty.json'
 import {initDropdowns} from "flowbite";
 import {endOfToday, format, parseISO, startOfMonth,} from 'date-fns'
 import {capitalizeFirstLetter, checkAuth, currencyIDRFormatter, onSignOut} from "~/utils/functions";
-import {Category, EditableRecord, ElementEvent} from "~/utils/types";
+import {Category, EditableRecord, ElementEvent, Record} from "~/utils/types";
 import FormTransaction from "~/components/FormTransaction.vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -295,6 +295,14 @@ const {
   watch: [selectedCategories, selectedCircle]
 })
 
+
+function isRowTransferReceive(row: any): string {
+  if(row.category?.type === 'receive' || row.category?.type === 'transfer') {
+    return 'bg-gray-50';
+  }
+
+  return 'bg-white'
+}
 
 function toggleCheckReceiveTransferCategories() {
   for (let i = 0; i < $categories.value.data.length; i++) {
