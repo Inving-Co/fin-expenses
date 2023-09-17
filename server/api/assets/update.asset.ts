@@ -1,10 +1,10 @@
 import {createAssetHistory, updateAsset, } from "~/server/models/assets";
 
 export default defineEventHandler(async (event) => {
-    const {id, name, amount, estimatedReturnAmount, estimatedReturnDate, color, type, platform} = await readBody(event);
+    const {id, name, amount, estimatedReturnAmount, estimatedReturnDate, color, type, platform, isAutoRefresh} = await readBody(event);
 
     try {
-        const resultAsset = await updateAsset(id, String(name).toLowerCase(), Number(amount), Number(estimatedReturnAmount), estimatedReturnDate, color, type, String(platform).toLowerCase());
+        const resultAsset = await updateAsset(id, String(name).toLowerCase(), Number(amount), Number(estimatedReturnAmount), estimatedReturnDate, color, type, String(platform).toLowerCase(), isAutoRefresh);
 
         await createAssetHistory(resultAsset.id, 'UPDATE', String(name).toLowerCase(), Number(amount), Number(estimatedReturnAmount), estimatedReturnDate, color, type, String(platform).toLowerCase(), resultAsset.userId!, resultAsset.circleId!)
 

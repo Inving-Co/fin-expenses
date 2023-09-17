@@ -1,6 +1,6 @@
 import { prisma } from "~/server/models/prisma";
 
-export function createAsset(name: string, amount: number, estimatedReturnAmount: number | undefined, estimatedReturnDate: string | undefined, color: string | undefined, type: string | undefined, platform: string | undefined, userId: string | undefined, circleId: string | undefined) {
+export function createAsset(name: string, amount: number, estimatedReturnAmount: number | undefined, estimatedReturnDate: string | undefined, color: string | undefined, type: string | undefined, platform: string | undefined, userId: string | undefined, circleId: string | undefined, isAutoRefresh: boolean | undefined) {
     return prisma.assets.create({
         data: {
             name,
@@ -12,6 +12,7 @@ export function createAsset(name: string, amount: number, estimatedReturnAmount:
             color,
             circleId,
             userId,
+            isAutoRefresh
         },
         include: {
             assetHistory: true,
@@ -19,7 +20,7 @@ export function createAsset(name: string, amount: number, estimatedReturnAmount:
     });
 }
 
-export function updateAsset(assetId: string, name: string, amount: number, estimatedReturnAmount: number | undefined, estimatedReturnDate: string | undefined, color: string | undefined, type: string | undefined, platform: string | undefined) {
+export function updateAsset(assetId: string, name: string, amount: number, estimatedReturnAmount: number | undefined, estimatedReturnDate: string | undefined, color: string | undefined, type: string | undefined, platform: string | undefined, isAutoRefresh: boolean | undefined) {
     return prisma.assets.update({
         where: { id: assetId }, data: {
             name,
@@ -29,6 +30,7 @@ export function updateAsset(assetId: string, name: string, amount: number, estim
             type,
             platform,
             color,
+            isAutoRefresh
         }
     })
 }
@@ -190,7 +192,7 @@ export async function refreshAsset(assetId: string) {
             let increasedAmount = 0
         
             for (const record of resultRecords) {
-                if (record.category.type === 'income') increasedAmount += record.amount
+                if (record.category.type === 'income' || record.category.type === 'receive') increasedAmount += record.amount
                 else decreasedAmount += record.amount
 
                 await tx.bulkRecords.create({
@@ -240,20 +242,6 @@ export async function transferAmountAsset(userId: string, originAssetId: string,
             const transferAmount = amount;
             
             if (transferAmount > originAsset.amount) throw new Error("Insufficient funds in origin asset");
-
-            await tx.assets.update({
-                where: { id: originAssetId },
-                data: {
-                    amount: originAsset.amount - transferAmount,
-                },
-            });
-
-            await tx.assets.update({
-                where: { id: destinationAssetId },
-                data: {
-                    amount: destinationAsset.amount + transferAmount,
-                },
-            });
 
             const transferCategory = await tx.categories.findFirst({
                 where: {

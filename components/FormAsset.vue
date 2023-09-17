@@ -14,28 +14,6 @@
       </div>
 
       <div class="mb-1">
-        <label for="estimatedReturnAmount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estimated
-          Return Amount</label>
-          <general-currency-field name="estimatedReturnAmount" v-model="formAsset.estimatedReturnAmount" @keyup.enter="onSave" />
-
-      </div>
-
-      <div class="mb-1">
-        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estimated Return Date</label>
-        <VueDatePicker v-model="formAsset.estimatedReturnDate" name="datepicker" id="datepicker" locale="id-ID"
-                       format="dd/MM/yyyy" input-class-name="dp-custom-input" hide-input-icon
-                       :enable-time-picker="false"
-                       placeholder="Select Date" auto-apply/>
-      </div>
-
-      <div class="mb-1">
-        <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Platform</label>
-        <input v-model="formAsset.platform" type="text" name="description" id="description"
-               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-               placeholder="Example: Pintu / Alami / Bibit" required @keyup.enter="onSave">
-      </div>
-
-      <div class="mb-1">
         <label class="block text-sm font-medium text-gray-900 dark:text-white">Asset Type</label>
         <div v-for="assetType of assetTypes"
              class="my-2 inline-flex items-center mx-1">
@@ -56,6 +34,67 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div v-if="!isExpanded" class="flex flex-col flex-grow max-w-xl h-[45px] overflow-hidden z-20">
+        <div class="flex justify-between items-center py-2">
+          <label for="expand" class="dark:text-white font-semibold">
+            Additional
+          </label>
+          <button
+            name="expand"
+            class="h-[30px] p-1 focus:outline-none font-medium rounded-lg text-sm dark:text-white"
+            type="button" @click="isExpanded = true">
+            <svg xmlns="http://www.w3.org/2000/svg" class="rotate-180" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m17 14l-5-5m0 0l-5 5"/></svg>		
+          </button>
+        </div>
+      </div>
+
+      <div v-else class="flex flex-col flex-grow max-w-xl overflow-hidden z-50">
+        <div class="flex justify-between items-center py-2 mb-2">
+          <label for="collapse" class="dark:text-white font-semibold">
+            Additional
+          </label>
+          <button
+            name="collapse"
+            class="h-[30px] p-1 focus:outline-none font-medium rounded-lg text-sm dark:text-white"
+            type="button" @click="isExpanded = false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m17 14l-5-5m0 0l-5 5"/></svg>		
+          </button>
+        </div>
+        <div class="space-y-6">
+          <div class="mb-1">
+            <label for="estimatedReturnAmount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estimated
+              Return Amount</label>
+              <general-currency-field name="estimatedReturnAmount" v-model="formAsset.estimatedReturnAmount" @keyup.enter="onSave" />
+
+          </div>
+
+          <div class="mb-1">
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estimated Return Date</label>
+            <VueDatePicker v-model="formAsset.estimatedReturnDate" name="datepicker" id="datepicker" locale="id-ID"
+                          format="dd/MM/yyyy" input-class-name="dp-custom-input" hide-input-icon
+                          :enable-time-picker="false"
+                          placeholder="Select Date" auto-apply/>
+          </div>
+
+          <div class="mb-1">
+            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Platform</label>
+            <input v-model="formAsset.platform" type="text" name="description" id="description"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                  placeholder="Example: Pintu / Alami / Bibit" required @keyup.enter="onSave">
+          </div>
+
+          <label class="my-2 mt-4 relative inline-flex items-center cursor-pointer"
+            @click.prevent="formAsset.isAutoRefresh = !formAsset.isAutoRefresh">
+            <input type="checkbox" :checked="formAsset.isAutoRefresh" class="sr-only peer">
+            <div
+              class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-400 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600">
+            </div>
+            <span class="ml-3 text-sm font-semibold text-gray-900 dark:text-gray-300">Auto Refresh</span>
+          </label>
+        </div>
+
       </div>
 
       <button type="button" :disabled="isLoadingSubmit || !isButtonEnabled"
@@ -101,6 +140,7 @@ const assetTypes = [{
   description: 'This includes money in checking or savings accounts, as well as other forms of easily accessible funds.'
 }]
 
+const isExpanded = ref<boolean>(false)
 const isLoadingSubmit = ref<boolean>(false)
 const formAsset = ref<{
   name: string,
@@ -109,13 +149,15 @@ const formAsset = ref<{
   estimatedReturnDate: string | undefined,
   platform: string | undefined
   type: string | undefined
+  isAutoRefresh: boolean | undefined
 }>({
   name: '',
   amount: undefined,
   estimatedReturnAmount: undefined,
   estimatedReturnDate: undefined,
   platform: undefined,
-  type: undefined
+  type: undefined,
+  isAutoRefresh: undefined
 })
 
 const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'change', 'on-mounted'])
@@ -131,6 +173,8 @@ watch(() => props.asset, (newVal, oldVal) => {
       estimatedReturnDate: newVal?.estimatedReturnDate,
       platform: newVal?.platform,
       type: newVal?.type,
+      isAutoRefresh: newVal?.isAutoRefresh
+
     }
   }
 })
@@ -155,6 +199,7 @@ async function onSave() {
       estimatedReturnDate: formAsset.value.estimatedReturnDate,
       platform: formAsset.value.platform,
       type: formAsset.value.type,
+      isAutoRefresh: formAsset.value.isAutoRefresh
     })
   })
 
@@ -166,6 +211,7 @@ async function onSave() {
       estimatedReturnDate: undefined,
       platform: undefined,
       type: undefined,
+      isAutoRefresh: undefined
     }
 
     emit('on-success')
