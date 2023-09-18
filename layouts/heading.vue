@@ -7,8 +7,8 @@
         <span class="mr-1">
           Please read
         </span>
-        <a 
-          class="underline-offset-1 font-semibold underline" 
+        <a
+          class="underline-offset-1 font-semibold underline"
           target="_blank"
           href="https://money.inving.co/privacy-policy">
           Our Privacy Policy
@@ -27,7 +27,7 @@
       </div>
       <div class="flex flex-col justify-start	w-full text-slate-500 text-[14px] mt-3">
         Loading Paper Plane
-        <span class="w-full text-slate-600 text-[14px]">Animation by <a 
+        <span class="w-full text-slate-600 text-[14px]">Animation by <a
             class="font-semibold"
             href="https://lottiefiles.com/zeffchris"
             target="_blank">Jeffrey Christopher</a> on <a
@@ -38,7 +38,7 @@
       </div>
       <div class="flex flex-col justify-start	w-full text-slate-500 text-[14px] mt-3">
         Empty Animation
-        <span class="w-full text-slate-600 text-[14px]">Animation by <a 
+        <span class="w-full text-slate-600 text-[14px]">Animation by <a
             class="font-semibold"
             href="https://lottiefiles.com/netebjj3gh"
             target="_blank">CorelleDesign</a> on <a
@@ -127,7 +127,11 @@
           <span class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg py-3"><nuxt-link to="/assets"
                                                                      :class="isCurrentPathActive('/assets')">Assets</nuxt-link></span>
         </li>
-       
+        <li v-if="isLoggedIn">
+          <span class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg py-3"><nuxt-link to="/notes"
+                                                                     :class="isCurrentPathActive('/notes')">Notes</nuxt-link></span>
+        </li>
+
       </ul>
       <ul>
         <li>
