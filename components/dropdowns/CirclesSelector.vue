@@ -138,9 +138,10 @@ const activatorLoad = async (value: string) => {
     maxAge: maxAge,
     sameSite: 'lax',
   }).value = JSON.stringify(circle)
-  const myCircles = $circleUsers.value?.selected?.circleUsers?.filter((e: CircleUser) => e.userId === $auth.value?.userId) ?? []
 
   $circleUsers.value.selected = data.value
+
+  const myCircles = $circleUsers.value?.selected?.circleUsers?.filter((e: CircleUser) => e.userId === $auth.value?.userId) ?? []
   $circleUsers.value.selectedCircleUser = myCircles[0]
 
   $circleUsers.value.refreshSelected = activatorLoad
