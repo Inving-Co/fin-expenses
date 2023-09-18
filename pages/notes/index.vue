@@ -22,12 +22,16 @@ import QuillEditor from '@vueup/vue-quill';
 import {QuillEditor} from '@vueup/vue-quill'
 import {watchDebounced} from '@vueuse/shared';
 import {CircleUser} from "~/utils/types";
+import {useAuth} from "~/composables/auth";
 
 const content = ref<string>('')
 const $circleUsers = useCircleUsers()
 const isLoading = ref<boolean>(false)
+const isLoggedIn = computed(() => useAuth().value?.userId !== undefined)
 
 onMounted(() => {
+  if(!isLoggedIn) navigateTo('/transactions')
+
   if ($circleUsers.value.selectedCircleUser?.notes) {
     content.value = JSON.parse($circleUsers.value.selectedCircleUser?.notes)
   }
