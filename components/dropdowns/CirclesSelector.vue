@@ -109,7 +109,6 @@ const { data: circleUsers, refresh: refreshCircles } = await useFetch('/api/circ
 watch(() => selected.value, async (value) => {
   if (value) {
     $circleUsers.value.isLoading = true
-    await refreshNuxtData('circleDetail')
 
     await activatorLoad(value)
 
