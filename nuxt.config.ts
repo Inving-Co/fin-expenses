@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     // @ts-ignore
     app: {
         head: {
-            title: 'Transaction Tracker',
+            title: 'Inving - Review Expenses',
             meta: [
                 {name: 'description', content: 'Transaction Tracker by Inving'}
             ],
@@ -20,6 +20,7 @@ export default defineNuxtConfig({
     // },
     // router: { middleware: [] },
     devtools: {enabled: true},
+    extends: ['nuxt-umami'],
     modules: ['@vite-pwa/nuxt', '@nuxt/image', '@nuxtjs/color-mode', '@nuxtjs/tailwindcss', ['@nuxtjs/google-fonts', {
         families: {
             Roboto: true,
@@ -63,7 +64,7 @@ export default defineNuxtConfig({
     pwa: {
         registerType: 'autoUpdate',
         manifest: {
-            name: 'Transaction Tracker',
+            name: 'Inving - Review Expenses',
             short_name: 'Money Inving',
             lang: 'en',
             description: 'Transaction Tracker by Inving',
@@ -88,5 +89,12 @@ export default defineNuxtConfig({
         // client: {
         //     installPrompt: true,
         // },
+    },
+    appConfig: {
+        umami: {
+            version: pkg.version,
+            ignoreLocalhost: true,
+            debug: true,
+        },
     }
 })

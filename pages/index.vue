@@ -62,7 +62,7 @@
           </div>
           <button type="button"
                   class="w-full mt-4 text-gray-400 bg-transparent hover:bg-gray-100 border-transparent focus:border-transparent focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:bg-gray-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                  @click="() => navigateTo('/transactions')">
+                  @click="() => { umTrackEvent('cta-access-as-guest-btn'); navigateTo('/transactions') }">
             <span>Access as Guest</span>
           </button>
         </div>

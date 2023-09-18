@@ -39,6 +39,7 @@
     "lodash": "^4.17.21",
     "logsnag": "^0.1.8",
     "mobile-detect": "^1.4.5",
+    "nuxt-umami": "^2.5.4",
     "vue-chartjs": "^5.2.0",
     "vue3-lottie": "^3.0.0",
     "vue3-toastify": "^0.1.11"
