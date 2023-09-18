@@ -131,8 +131,8 @@
       </ul>
       <ul>
         <li>
-          <span class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg py-3 relative">
-            <a href="https://invingco.canny.io/" target="_blank" :class="isCurrentPathActive('/feedback')" class="flex text-primary-500 font-bold">
+          <span class="hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-700 rounded-lg py-3 relative">
+            <a @click="openPage" :class="isCurrentPathActive('/feedback')" class="flex text-primary-500 font-bold">
               <span class="hidden sm:block mr-1">Give Us Your</span>
               Feedback!
             </a>
@@ -218,6 +218,11 @@ const classNavigation = {
   inactive:
       "inline-block p-4 border-transparent hover:text-gray-600 dark:hover:text-gray-300",
 };
+
+function openPage(){
+  umTrackEvent('cta-feedback-btn');
+  window.open('https://invingco.canny.io/', '_blank');
+}
 
 function isCurrentPathActive(path: string): string {
   const route = useRoute();
