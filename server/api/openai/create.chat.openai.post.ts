@@ -2,25 +2,42 @@ import axios from "axios";
 import { getRecordsForChat } from "~/server/models/records";
 import _ from "gpt-3-encoder"
 import { OpenAIChatMessage } from "~/utils/types";
+import {format, startOfMonth} from 'date-fns'
+import {getAssets} from "~/server/models/assets";
 
 async function fetchRecords(key: string, circleId: string, startDate: string, endDate: string) {
+    let now = new Date()
     return getRecordsForChat(key, {
-        start: startDate as string,
-        end: endDate as string
+        start: startDate ?? format(startOfMonth(now), 'yyyy-MM-dd HH:mm'),
+        end: endDate ?? format(now, 'yyyy-MM-dd HH:mm')
     }, circleId)
 }
 
+async function fetchAssets(key: string, circleId: string) {
+    return getAssets(key, circleId)
+}
+
 async function fetchChatCompletions(event: any, messages: any) {
-    var functions = [
+    let functions = [
         {
             "name": "get_transaction_records",
             "description": "Get the user transactions records such as expenses and income, to get the total sum amount and category has type for debt or income, default is expenses",
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "key": {"type": "string", "description": "the key for search the description"},
-                    "startDate": {"type": "string", "description": "start date of the records with format yyyy-mm-dd HH:mm"},
-                    "endDate": {"type": "string", "description": "end date of the records with format yyyy-mm-dd HH:mm"},
+                    "key": {"type": "string", "description": "the key for search the description, should referenced for searching specific description"},
+                    "startDate": {"type": "string", "description": "start date of the records with format yyyy-MM-dd HH:mm"},
+                    "endDate": {"type": "string", "description": "end date of the records with format yyyy-MM-dd HH:mm"},
+                },
+            },
+        },
+        {
+            "name": "get_assets_portfolio",
+            "description": "Get the user assets or portfolio such as balances and investment",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "key": {"type": "string", "description": "the key for search the assets name, should referenced for searching specific assets name"},
                 },
             },
         }
@@ -41,7 +58,7 @@ async function fetchChatCompletions(event: any, messages: any) {
                 "stream": true
             }),
         });
-        
+
         const reader = response.body!.getReader();
         const decoder = new TextDecoder();
 
@@ -53,7 +70,7 @@ async function fetchChatCompletions(event: any, messages: any) {
         const dataObjs = []
         let buffer = new Uint8Array(512);
         let bufferIdx = 0;
-        
+
         while (true) {
             const { done, value } = await reader.read();
             if (done)
@@ -107,7 +124,7 @@ async function fetchChatCompletions(event: any, messages: any) {
                             if(delta.function_call.name) {
                                 message.function_call.name += delta.function_call.name
                             }
-                            
+
                             if(delta.function_call.arguments) {
                                 message.function_call.arguments += delta.function_call.arguments
                             }
@@ -146,8 +163,9 @@ export default defineEventHandler(async (event) => {
 
             const availableFunctions: any = {
                 get_transaction_records: fetchRecords,
-            }; 
-            
+                get_assets_portfolio: fetchAssets,
+            };
+
             const functionName = responseMessage.function_call.name;
             const functionToCall = availableFunctions[functionName];
             const functionArgs = JSON.parse(responseMessage.function_call.arguments);
@@ -166,7 +184,7 @@ export default defineEventHandler(async (event) => {
                 "role": "function",
                 "name": functionName,
                 "content": functionResponse,
-            }); 
+            });
 
             await fetchChatCompletions(event, messages)
         }
