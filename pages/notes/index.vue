@@ -30,7 +30,7 @@ const isLoading = ref<boolean>(false)
 const isLoggedIn = computed(() => useAuth().value?.userId !== undefined)
 
 onMounted(() => {
-  if(!isLoggedIn) navigateTo('/transactions')
+  if (!isLoggedIn) navigateTo('/transactions')
 
   if ($circleUsers.value.selectedCircleUser?.notes) {
     content.value = JSON.parse($circleUsers.value.selectedCircleUser?.notes)
@@ -38,13 +38,12 @@ onMounted(() => {
 })
 
 watch(() => $circleUsers.value.selectedCircleUser?.notes, (val) => {
-  if (val) {
-    content.value = JSON.parse(val)
-  }
+  const parsed = JSON.parse(val!)
+  content.value = parsed ? parsed : ''
 })
 
 watchDebounced(content, async (value, oldValue) => {
-  if(!oldValue) return
+  if (!oldValue) return
 
   isLoading.value = true
 
@@ -61,7 +60,7 @@ watchDebounced(content, async (value, oldValue) => {
   }
 
   isLoading.value = false
-}, {debounce: 800, immediate: false, deep: true})
+}, {debounce: 800, immediate: false})
 
 definePageMeta({
   title: "Notes",
