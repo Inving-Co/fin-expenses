@@ -31,6 +31,7 @@
     "@supabase/supabase-js": "^2.29.0",
     "@vercel/analytics": "^1.0.2",
     "@vuepic/vue-datepicker": "^5.4.0",
+    "@vueup/vue-quill": "^1.2.0",
     "chart.js": "^4.3.0",
     "date-fns": "^2.30.0",
     "express": "^4.18.2",

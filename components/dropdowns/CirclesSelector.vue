@@ -76,10 +76,11 @@
 
 <script setup lang="ts">
 import { capitalizeFirstLetter } from "~/utils/functions";
-import { Circle, ElementEvent } from "~/utils/types";
+import {Circle, CircleUser, ElementEvent} from "~/utils/types";
 import FormCircleSetting from "~/components/FormCircleSetting.vue";
 import { useCircleUsers } from "~/composables/circles";
 import { useAuth } from "~/composables/auth";
+import {useAsyncData} from "#app";
 
 const emit = defineEmits(['on-mounted', 'circle-changed'])
 let modalFormCircle: ElementEvent | null = null
@@ -108,20 +109,22 @@ const { data: circleUsers, refresh: refreshCircles } = await useFetch('/api/circ
 watch(() => selected.value, async (value) => {
   if (value) {
     $circleUsers.value.isLoading = true
+    await refreshNuxtData('circleDetail')
 
     await activatorLoad(value)
 
     $circleUsers.value.isLoading = false
+
   }
 })
 
 const activatorLoad = async (value: string) => {
-  const { data } = await useFetch(`/api/circles/${value}`, {
+  const { data } = await useAsyncData('circleDetail', () => $fetch(`/api/circles/${value}`, {
     onResponse({ request, response, options }) {
       $circleUsers.value.isLoading = false
     },
     server: false,
-  })
+  }))
 
   const circle = {
     ...data.value,
@@ -135,8 +138,10 @@ const activatorLoad = async (value: string) => {
     maxAge: maxAge,
     sameSite: 'lax',
   }).value = JSON.stringify(circle)
+  const myCircles = $circleUsers.value?.selected?.circleUsers?.filter((e: CircleUser) => e.userId === $auth.value?.userId) ?? []
 
   $circleUsers.value.selected = data.value
+  $circleUsers.value.selectedCircleUser = myCircles[0]
 
   $circleUsers.value.refreshSelected = activatorLoad
 
