@@ -23,10 +23,11 @@ import {QuillEditor} from '@vueup/vue-quill'
 import {watchDebounced} from '@vueuse/shared';
 import {CircleUser} from "~/utils/types";
 import {useAuth} from "~/composables/auth";
+import {useLoading} from "~/composables/loading";
 
 const content = ref<string>('')
 const $circleUsers = useCircleUsers()
-const isLoading = ref<boolean>(false)
+const isLoading = ref<boolean>(true)
 const isLoggedIn = computed(() => useAuth().value?.userId !== undefined)
 
 onMounted(() => {
@@ -37,13 +38,19 @@ onMounted(() => {
   }
 })
 
-watch(() => $circleUsers.value.selectedCircleUser?.notes, (val) => {
+watch(() => $circleUsers.value.selectedCircleUser?.notes, (val, oldValue) => {
+  if (val != oldValue) {
+    isLoading.value = true
+  }
+
   const parsed = JSON.parse(val!)
   content.value = parsed ? parsed : ''
+
+  setTimeout(() => isLoading.value = false, 810)
 })
 
 watchDebounced(content, async (value, oldValue) => {
-  if (!oldValue) return
+  if (!oldValue || isLoading.value) return
 
   isLoading.value = true
 
