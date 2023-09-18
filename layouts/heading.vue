@@ -127,6 +127,10 @@
           <span class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg py-3"><nuxt-link to="/assets"
                                                                      :class="isCurrentPathActive('/assets')">Assets</nuxt-link></span>
         </li>
+        <li>
+          <span class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg py-3"><nuxt-link to="/notes"
+                                                                     :class="isCurrentPathActive('/notes')">Notes</nuxt-link></span>
+        </li>
        
       </ul>
       <ul>
