@@ -94,6 +94,10 @@ export async function updateCircleUser(circleUserId: string, receiveReport: bool
     return prisma.circleUsers.update({where: {id: circleUserId}, data: { receiveReport }})
 }
 
+export async function updateNotesCircleUser(circleUserId: string, notes: string) {
+    return prisma.circleUsers.update({where: {id: circleUserId}, data: { notes }})
+}
+
 export async function updateCircleSettings(circleSettingId: string, defaultAssetId: string | undefined) {
     
     return prisma.circleSettings.update({where: {id: circleSettingId}, data: { defaultAssetId: defaultAssetId  ?? null }})
