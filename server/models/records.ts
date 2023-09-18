@@ -60,7 +60,7 @@ export async function getRecords(key: string, dateFilter: { start: string, end: 
 }
 
 export async function getRecordsForChat(key: string, dateFilter: { start: string, end: string } | undefined, circleId: string | undefined) {
-    return prisma.records.findMany({
+    let result = await prisma.records.findMany({
         select: {
             description: true, amount: true, date: true, category: true, createdAt: true, currency: true
         },
@@ -78,6 +78,8 @@ export async function getRecordsForChat(key: string, dateFilter: { start: string
             date: 'desc'
         },
     })
+
+    return result
 }
 
 export async function createBulkRecord(assetHistoryId: string, recordId: string) {
