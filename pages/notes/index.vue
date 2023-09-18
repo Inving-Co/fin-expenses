@@ -36,6 +36,8 @@ onMounted(() => {
   if ($circleUsers.value.selectedCircleUser?.notes) {
     content.value = JSON.parse($circleUsers.value.selectedCircleUser?.notes)
   }
+
+  setTimeout(() => isLoading.value = false, 1210)
 })
 
 watch(() => $circleUsers.value.selectedCircleUser?.notes, (val, oldValue) => {
@@ -46,7 +48,7 @@ watch(() => $circleUsers.value.selectedCircleUser?.notes, (val, oldValue) => {
   const parsed = JSON.parse(val!)
   content.value = parsed ? parsed : ''
 
-  setTimeout(() => isLoading.value = false, 810)
+  setTimeout(() => isLoading.value = false, 1210)
 })
 
 watchDebounced(content, async (value, oldValue) => {
@@ -67,7 +69,7 @@ watchDebounced(content, async (value, oldValue) => {
   }
 
   isLoading.value = false
-}, {debounce: 800, immediate: false})
+}, {debounce: 1200, immediate: false})
 
 definePageMeta({
   title: "Notes",
