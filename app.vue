@@ -19,9 +19,11 @@ onMounted(() => {
   if (localStorage.getItem('dark-mode') === 'true') {
     document.documentElement.classList.add('dark');
     document.documentElement.style.backgroundColor = '#101827';
+    useDarkMode().value = true
   } else {
     document.documentElement.classList.remove('dark')
     document.documentElement.style.backgroundColor = '#f9fafb';
+    useDarkMode().value = false
   }
 
   if(localStorage.getItem('is-amount-visible')) {
@@ -41,7 +43,7 @@ onMounted(() => {
 
       useCookie('user-id').value = undefined
       useCookie('selected-circle').value = undefined
-      
+
       useAuth().value = null
     } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
       const maxAge = 100 * 365 * 24 * 60 * 60 // 100 years, never expires
