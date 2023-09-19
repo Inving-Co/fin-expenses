@@ -61,7 +61,7 @@
           <icons-plus />
         </div>
         <div v-else class="h-10 w-10 inline-flex mx-2 p-2" style="margin-top: 0" />
-        <div v-for="(category, index) of $categories.data" class="relative h-10 inline-flex items-center mb-4 mx-3">
+        <div v-for="(category, index) of $categories.data.filter((cat: any) => cat.type !== 'receive' && cat.type !== 'transfer')" class="relative h-10 inline-flex items-center mb-4 mx-3">
           <div v-if="!category.edited">
             <div v-if="isEditModeCategory && category.circleId">
               <icons-trash class="absolute -top-3 -left-2 w-5 h-5 rounded-md p-1 bg-red-500 text-white cursor-pointer"
@@ -367,8 +367,8 @@ async function onSaveTransfer() {
   const { data: result, status } = await useFetch('/api/assets/transfer.asset', {
     method: 'POST',
     body: JSON.stringify({
-      originAssetId: formTransfer.value?.originAsset?.id, 
-      destinationAssetId: formTransfer.value?.destinationAsset?.id, 
+      originAssetId: formTransfer.value?.originAsset?.id,
+      destinationAssetId: formTransfer.value?.destinationAsset?.id,
       amount: formTransfer.value?.amount,
       charge: formTransfer.value?.charge
     })
