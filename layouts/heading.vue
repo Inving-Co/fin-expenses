@@ -150,17 +150,18 @@ import { useAuth } from "~/composables/auth";
 import {useCategories} from "~/composables/categories";
 import {useCircleUsers} from "~/composables/circles";
 import {useTransactions} from "~/composables/transactions";
-import {useLoading} from "~/composables/loading";
+import {useDarkMode, useLoading} from "~/composables/loading";
 
 let modalAbout: ElementEvent | null = null
 
 
-const isDarkMode = ref<boolean>(false);
+const isDarkMode = useDarkMode()
 
 const isLoggedIn = computed(() => useAuth().value?.userId !== undefined)
 
 const toggleDarkMode = () => {
     isDarkMode.value = !isDarkMode.value;
+
     document.documentElement.classList.toggle('dark', isDarkMode.value);
     localStorage.setItem('dark-mode', JSON.stringify(isDarkMode.value));
     localStorage.setItem('nuxt-color-mode', isDarkMode.value ? 'dark':'light')
@@ -175,8 +176,9 @@ const toggleDarkMode = () => {
 onMounted(() => {
     const savedDarkMode = JSON.parse(localStorage.getItem('dark-mode') as any);
     if (savedDarkMode !== null) {
-        isDarkMode.value = savedDarkMode;
-        document.documentElement.classList.toggle('dark', isDarkMode.value);
+      isDarkMode.value = savedDarkMode;
+
+      document.documentElement.classList.toggle('dark', isDarkMode.value);
     }
 });
 

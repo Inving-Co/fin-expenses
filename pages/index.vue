@@ -76,15 +76,15 @@
       </div>
 
       <div class="md:block hidden">
-      <div class="flex h-screen justify-center bg-white drop-shadow-soft">
-        <NuxtImg
-            class="object-cover object-left"
-            loading="lazy"
-            format="png"
-            src="/images/dashboard-screenshot-6.png"
-            alt="login illustration"
-        />
-      </div>
+        <div class="flex h-screen justify-center bg-white drop-shadow-soft">
+          <NuxtImg
+              class="object-cover object-left"
+              loading="lazy"
+              format="png"
+              :src="`${isDarkMode ? '/images/dark-dashboard-screenshot-6.png' :'/images/dashboard-screenshot-6.png'}`"
+              alt="login illustration"
+          />
+        </div>
       </div>
     </div>
   </section>
@@ -94,11 +94,13 @@
 import {generateToken, supabase} from "~/utils/functions";
 import {toast} from 'vue3-toastify';
 import {navigateTo} from "#app";
+import {useDarkMode} from "~/composables/loading";
 
 const email = ref<string>('')
 const password = ref<string>('')
 
 const isLoadingSubmit = ref<boolean>(false)
+const isDarkMode = useDarkMode()
 
 definePageMeta({
   name: 'Login',
