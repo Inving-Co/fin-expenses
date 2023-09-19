@@ -1,11 +1,11 @@
 <template>
   <section class="dark:bg-gray-900">
-    <div class="flex md:flex-row flex-col-reverse items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+    <div class="flex md:flex-row flex-col items-center justify-center mx-auto md:h-screen lg:py-0">
       <!--      <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">-->
       <!--        <img class="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo">-->
       <!--        Inving-->
       <!--      </a>-->
-      <div>
+      <div class="px-6 py-8 w-full flex items-center flex-col">
         <div
             class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -31,7 +31,8 @@
                        :required="true" @keyup.enter="onSubmitLogin">
               </div>
               <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-                <nuxt-link to="/forgot-password" class="font-medium text-primary-600 hover:underline dark:text-primary-500">
+                <nuxt-link to="/forgot-password"
+                           class="font-medium text-primary-600 hover:underline dark:text-primary-500">
                   Forgot password?
                 </nuxt-link>
               </p>
@@ -74,22 +75,16 @@
         </p>
       </div>
 
-      <div class="m-8 w-1/2 md:block hidden">
-        <NuxtImg 
-          class="rounded-lg"
-          sizes="md:800px"
-          loading="lazy" 
-          format="webp" 
-          src="/images/login-unsplash.jpg" 
-          alt="login illustration"
+      <div class="md:block hidden">
+      <div class="flex h-screen justify-center bg-white drop-shadow-soft">
+        <NuxtImg
+            class="object-cover object-left"
+            loading="lazy"
+            format="png"
+            src="/images/dashboard-screenshot-6.png"
+            alt="login illustration"
         />
-
-        <span class="w-full text-center text-slate-400 text-[12px]">Photo by <a
-            href="https://unsplash.com/@kellysikkema?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
-            target="_blank">Kelly Sikkema</a> on <a
-            href="https://unsplash.com/photos/3-Tc_5LROrM?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
-            target="_blank">Unsplash</a>
-        </span>
+      </div>
       </div>
     </div>
   </section>
