@@ -13,18 +13,18 @@
       <form-category @category-created="modalFormCategory?.hide(); refreshInputAmount?.setInputAmount(); modalFormTransaction?.show();"/>
     </template>
   </general-modal>
-  
+
   <general-modal id="modal-confirmation-delete" title="Confirmation" @on-mounted="modalConfDelete = $event">
     <template #body>
       <p class="text-gray-500">Are you sure you want to delete this data?</p>
 
       <div class="flex mt-4">
-        <button 
-          type="button" 
+        <button
+          type="button"
           class="text-white bg-primary-600 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
           @click="modalConfDelete?.hide()">No</button>
-        <button 
-          type="button" 
+        <button
+          type="button"
           class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
           @click="onDelete(selectedTransaction.id); modalConfDelete?.hide()">Yes</button>
       </div>
@@ -57,7 +57,7 @@
 
         <dropdowns-filter-dates
             @on-filter-changed="startFilterDate = $event.start; endFilterDate = $event.end; filterDate = $event.label"/>
-        <dropdowns-filter-categories/>
+        <dropdowns-filter-categories />
 
         <button
             class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
@@ -386,7 +386,7 @@ function resetAllIsEditMode() {
 
 <style lang="scss">
 .dp-custom-calendar {
-    
+
   overflow: visible;
   .dp__calendar_item {
     border: 1px solid var(--dp-border-color-hover);
