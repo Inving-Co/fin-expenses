@@ -3,31 +3,20 @@
 
   <general-modal id="modal-about" title="About Inving" @on-mounted="modalAbout = $event">
     <template #body>
-      <div class="flex w-full text-slate-500 text-[14px] mt-3">
+      <div class="flex w-full text-slate-500 text-[14px] mt-3 dark:text-gray-300">
         <span class="mr-1">
           Please read
         </span>
         <a
-          class="underline-offset-1 font-semibold underline"
+          class="underline-offset-1 font-semibold underline dark:text-gray-300"
           target="_blank"
           href="https://money.inving.co/privacy-policy">
           Our Privacy Policy
         </a>
       </div>
-      <div class="flex flex-col justify-start	w-full text-slate-500 text-[14px] mt-3">
-        Sign In Page Banner
-        <span class="w-full text-slate-600 text-[14px]">Photo by <a
-            class="font-semibold"
-            href="https://unsplash.com/@kellysikkema?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
-            target="_blank">Kelly Sikkema</a> on <a
-            class="font-semibold"
-            href="https://unsplash.com/photos/3-Tc_5LROrM?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
-            target="_blank">Unsplash</a>
-        </span>
-      </div>
-      <div class="flex flex-col justify-start	w-full text-slate-500 text-[14px] mt-3">
+      <div class="flex flex-col justify-start	w-full text-slate-500 text-[14px] mt-3 dark:text-gray-300">
         Loading Paper Plane
-        <span class="w-full text-slate-600 text-[14px]">Animation by <a
+        <span class="w-full text-slate-600 text-[14px] dark:text-gray-300">Animation by <a
             class="font-semibold"
             href="https://lottiefiles.com/zeffchris"
             target="_blank">Jeffrey Christopher</a> on <a
@@ -36,9 +25,9 @@
             target="_blank">LottieFiles</a>
         </span>
       </div>
-      <div class="flex flex-col justify-start	w-full text-slate-500 text-[14px] mt-3">
+      <div class="flex flex-col justify-start	w-full text-slate-500 text-[14px] mt-3 dark:text-gray-300">
         Empty Animation
-        <span class="w-full text-slate-600 text-[14px]">Animation by <a
+        <span class="w-full text-slate-600 text-[14px] dark:text-gray-300">Animation by <a
             class="font-semibold"
             href="https://lottiefiles.com/netebjj3gh"
             target="_blank">CorelleDesign</a> on <a

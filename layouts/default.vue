@@ -1,6 +1,6 @@
 <template>
   <general-loading :is-loading="isLoading || isLoadingRequest" />
-  <div class="sm:px-16">
+  <div :class="`${route.path === '/' ? '':'sm:px-16'}`">
     <slot />
   </div>
   <prompt-update />
@@ -23,4 +23,6 @@ const isLoadingRequest = computed(
     $circleUsers.value.isLoading ||
     $transactions.value.isLoading
 );
+
+const route = computed(() => useRouter().currentRoute.value)
 </script>
