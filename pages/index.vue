@@ -6,9 +6,15 @@
       <!--        Inving-->
       <!--      </a>-->
       <div class="px-6 py-8 w-full flex items-center flex-col">
+        <div class="flex w-full sm:max-w-md mb-6 items-center">
+          <NuxtImg class="h-8 mr-2" src="/app_icon.png" alt="app icon"/>
+          <h3 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+            Inving
+          </h3>
+        </div>
         <div
-            class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+            class="w-full md:mt-0 sm:max-w-md xl:p-0">
+          <div class="space-y-4 md:space-y-6">
             <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Sign in to your account
             </h1>
@@ -62,7 +68,7 @@
             </form>
           </div>
           <button type="button"
-                  class="w-full mt-4 text-gray-400 bg-transparent hover:bg-gray-100 border-transparent focus:border-transparent focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:bg-gray-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  class="w-full mt-4 text-gray-400 bg-transparent hover:bg-gray-100 border-transparent focus:border-transparent focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
                   @click="() => { umTrackEvent('cta-access-as-guest-btn'); navigateTo('/transactions') }">
             <span>Access as Guest</span>
           </button>
