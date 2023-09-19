@@ -11,8 +11,8 @@ import QuillEditor from '@vueup/vue-quill';
       <span class="text-md mt-2 text-gray-400">Write down your future financial strategies here</span>
     </div>
     <client-only>
-      <quill-editor :content="content" @update:content="(val) => content = val" content-type="html" theme="snow"
-                    placeholder="Put your note here..." style="height: 60vh;"/>
+      <quill-editor v-model:content="content" content-type="html" theme="snow"
+                    placeholder="Put your note here..." style="height: 60vh;" class="dark:text-gray-300"/>
     </client-only>
   </div>
 
