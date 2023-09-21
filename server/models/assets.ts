@@ -1,4 +1,4 @@
-import { prisma } from "~/server/models/prisma";
+import {prisma} from "~/server/models/prisma";
 
 export function createAsset(name: string, amount: number, estimatedReturnAmount: number | undefined, estimatedReturnDate: string | undefined, color: string | undefined, type: string | undefined, platform: string | undefined, userId: string | undefined, circleId: string | undefined, isAutoRefresh: boolean | undefined) {
     return prisma.assets.create({
@@ -22,7 +22,7 @@ export function createAsset(name: string, amount: number, estimatedReturnAmount:
 
 export function updateAsset(assetId: string, name: string, amount: number, estimatedReturnAmount: number | undefined, estimatedReturnDate: string | undefined, color: string | undefined, type: string | undefined, platform: string | undefined, isAutoRefresh: boolean | undefined) {
     return prisma.assets.update({
-        where: { id: assetId }, data: {
+        where: {id: assetId}, data: {
             name,
             amount,
             estimatedReturnAmount,
@@ -36,7 +36,15 @@ export function updateAsset(assetId: string, name: string, amount: number, estim
 }
 
 export function deleteAsset(assetId: string, userId: string | undefined) {
-    return prisma.assets.delete({ where: { id: assetId, userId } })
+    return prisma.assets.delete({where: {id: assetId, userId}})
+}
+
+export function archiveAsset(assetId: string) {
+    return prisma.assets.update({
+        where: {id: assetId}, data: {
+            archivedAt: new Date()
+        }
+    })
 }
 
 export function getAssets(key: string, circleId: string | undefined) {
@@ -46,6 +54,7 @@ export function getAssets(key: string, circleId: string | undefined) {
                 contains: key?.toLowerCase(),
             },
             circleId: circleId,
+            archivedAt: null
         },
         orderBy: {
             createdAt: 'desc'
@@ -86,9 +95,9 @@ export async function summaryOfAssets(circleId: string | undefined) {
     let estimatedReturnAmount = 0
 
     for (const result of results) {
-        if(!result.estimatedReturnAmount) {
+        if (!result.estimatedReturnAmount) {
             estimatedReturnAmount += result.amount;
-        }else {
+        } else {
             estimatedReturnAmount += result.estimatedReturnAmount;
         }
     }
@@ -132,13 +141,13 @@ export function getAssetHistory(assetId: string, circleId: string | undefined) {
     return prisma.assetHistory.findMany({
         where: {
             assetId,
-            circleId 
+            circleId
         },
         orderBy: {
             createdAt: 'desc',
         },
     });
-    
+
 }
 
 export async function refreshAsset(assetId: string) {
@@ -171,7 +180,7 @@ export async function refreshAsset(assetId: string) {
             })
 
             if (resultRecords.length === 0) throw new Error("Result record not found");
-        
+
             const resultAssetHistory = await tx.assetHistory.create({
                 data: {
                     assetId: assetId,
@@ -190,7 +199,7 @@ export async function refreshAsset(assetId: string) {
 
             let decreasedAmount = 0
             let increasedAmount = 0
-        
+
             for (const record of resultRecords) {
                 if (record.category.type === 'income' || record.category.type === 'receive') increasedAmount += record.amount
                 else decreasedAmount += record.amount
@@ -201,17 +210,17 @@ export async function refreshAsset(assetId: string) {
                         recordId: record.id
                     }
                 })
-                
+
             }
 
             await prisma.assets.update({
-                where: { id: assetId },
+                where: {id: assetId},
                 data: {
                     amount: resultAsset!.amount - decreasedAmount + increasedAmount,
-                    recordedAt: new Date(),                    
+                    recordedAt: new Date(),
                 },
             });
-            
+
         },
         {
             maxWait: 5000,
@@ -228,19 +237,19 @@ export async function transferAmountAsset(userId: string, originAssetId: string,
                     id: originAssetId,
                 },
             });
-            
+
             if (!originAsset) throw new Error("Origin asset not found");
-            
+
             const destinationAsset = await tx.assets.findUnique({
                 where: {
                     id: destinationAssetId,
                 },
             });
-            
+
             if (!destinationAsset) throw new Error("Destination asset not found");
-            
+
             const transferAmount = amount;
-            
+
             if (transferAmount > originAsset.amount) throw new Error("Insufficient funds in origin asset");
 
             const transferCategory = await tx.categories.findFirst({
@@ -260,7 +269,7 @@ export async function transferAmountAsset(userId: string, originAssetId: string,
                     id: true
                 }
             });
-            
+
 
             await tx.records.create({
                 data: {
@@ -287,7 +296,7 @@ export async function transferAmountAsset(userId: string, originAssetId: string,
                 }
             });
 
-            if(charge)
+            if (charge)
                 await tx.records.create({
                     data: {
                         assetId: originAssetId,
