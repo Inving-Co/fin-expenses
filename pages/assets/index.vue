@@ -230,6 +230,7 @@ async function onDelete(assetId: String) {
 
   if (status.value === 'success') {
     await refreshAssets()
+    await refreshSummary()
   }
 
   $loading.value = false
@@ -246,6 +247,7 @@ async function onRefreshAsset(assetId: String) {
 
   if (status.value === 'success') {
     await refreshAssets()
+    await refreshSummary()
   }
 
   $loading.value = false
@@ -262,6 +264,7 @@ async function onArchiveAsset(assetId: String) {
 
   if (status.value === 'success') {
     await refreshAssets()
+    await refreshSummary()
   }
 
   $loading.value = false
