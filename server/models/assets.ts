@@ -80,6 +80,7 @@ export async function summaryOfAssets(circleId: string | undefined) {
     const value = await prisma.assets.aggregate({
         where: {
             circleId: circleId,
+            archivedAt: null
         },
         _sum: {
             amount: true,
@@ -89,6 +90,7 @@ export async function summaryOfAssets(circleId: string | undefined) {
     const results = await prisma.assets.findMany({
         where: {
             circleId: circleId,
+            archivedAt: null
         },
     })
 
