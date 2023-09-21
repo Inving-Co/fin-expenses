@@ -13,12 +13,12 @@
 
       <div class="flex mt-4">
 
-        <button 
-          type="button" 
+        <button
+          type="button"
           class="text-white bg-primary-600 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
           @click="modalConfDelete?.hide()">No</button>
-        <button 
-          type="button" 
+        <button
+          type="button"
           class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
           @click="onDelete(selectedAsset.id); modalConfDelete?.hide()">Yes</button>
       </div>
@@ -90,16 +90,22 @@
                           @click="selectedAsset = asset; modalFormAsset?.show();">Update
                   </button>
                 </li>
-                <li>
-                  <button type="button"
-                          class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                          @click="selectedAsset = asset; modalConfDelete?.show()">Delete
-                  </button>
-                </li>
                 <li v-if="!asset.isAutoRefresh">
                   <button type="button"
                           class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                           @click="onRefreshAsset(asset.id)">Refresh
+                  </button>
+                </li>
+                <li>
+                  <button type="button"
+                          class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          @click="onArchiveAsset(asset.id)">Archive
+                  </button>
+                </li>
+                <li>
+                  <button type="button"
+                          class="w-full text-left block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          @click="selectedAsset = asset; modalConfDelete?.show()">Delete
                   </button>
                 </li>
               </ul>
@@ -244,6 +250,23 @@ async function onRefreshAsset(assetId: String) {
 
   $loading.value = false
 }
+
+
+async function onArchiveAsset(assetId: String) {
+  $loading.value = true
+  const {status} = await useFetch('/api/assets/archive.asset', {
+    query: {
+      id: assetId,
+    },
+  })
+
+  if (status.value === 'success') {
+    await refreshAssets()
+  }
+
+  $loading.value = false
+}
+
 
 
 </script>

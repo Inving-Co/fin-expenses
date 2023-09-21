@@ -118,6 +118,7 @@ model Assets {
   estimatedReturnDate   DateTime?
   recordedAt            DateTime         @default(now())
   isAutoRefresh         Boolean          @default(true)
+  archivedAt            DateTime?
   assetHistory          AssetHistory[]
   circle                Circles?         @relation(fields: [circleId], references: [id])
   user                  Users?           @relation(fields: [userId], references: [id])
