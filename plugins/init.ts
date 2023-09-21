@@ -4,7 +4,7 @@ declare global {
         toJSON(): string;
     }
 }
-export default defineNuxtPlugin((nuxtA) => {
+export default defineNuxtPlugin(() => {
     // @ts-ignore
     BigInt.prototype.toJSON = function () {
         const int = Number.parseInt(this.toString());

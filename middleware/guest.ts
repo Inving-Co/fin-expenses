@@ -27,7 +27,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             const kv = parsed[i].split('=')
             params[kv[0]] = kv[1]
         }
-        
+
         if (params && params.access_token && params.refresh_token) {
             const auth = useAuth()
             const maxAge = 100 * 365 * 24 * 60 * 60
@@ -40,26 +40,26 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                 loading.value = false
 
                 document.cookie = `user-id=${auth.value?.userId}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
-        
+
                 return navigateTo('/change-password')
             }
 
             await registerWhenNotExist(auth.value?.userId, auth.value?.email)
-            
+
             document.cookie = `user-id=${auth.value?.userId}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
 
             loading.value = false
             return navigateTo('/transactions')
         }
     } else {
-        const result = await supabase.auth.getSession()
+        const accessToken = useCookie('my-access-token').value
+        const refreshToken = useCookie('my-refresh-token').value
 
-        if (result.data.session) {
-            await checkAuth()
+        if (accessToken && refreshToken) {
 
             return navigateTo('/transactions')
         }
     }
-    
+
     loading.value = false
 })
