@@ -129,6 +129,7 @@ const activatorLoad = async (value: string) => {
     ...data.value,
     assets: undefined,
     circleSetting: undefined,
+    circleUsers: undefined,
   };
 
   const maxAge = 100 * 365 * 24 * 60 * 60

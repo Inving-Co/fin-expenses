@@ -334,7 +334,9 @@ function toggleCheckReceiveTransferCategories() {
   }
 
   const values = $categories.value.data.filter((cat: Category) => cat.checked).map((cat: Category) => cat.id)
-  document.cookie = `${selectedCircle.value?.id}-current-filtered-categories-selected=${values.join(',')}`
+  const maxAge = 100 * 365 * 24 * 60 * 60 // 100 years, never expires
+
+  document.cookie = `${selectedCircle.value?.id}-current-filtered-categories-selected=${values.join(',')}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
 }
 
 function onSearchTransactions(value: string) {

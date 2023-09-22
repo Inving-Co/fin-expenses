@@ -32,7 +32,7 @@
 
             <input v-model="formTransaction.description" type="text" name="description" id="description"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-              placeholder="Example: Makan Siang" required @keyup.enter="onSave">
+              placeholder="Example: Makan Siang" required @keyup.enter="onSaveExpenses">
           </div>
           <div>
             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date <span
@@ -46,7 +46,7 @@
         <div>
           <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount <span
               class="text-red-500">*</span></label>
-          <general-currency-field v-model="formTransaction.amount" name="amount" @keyup.enter="onSave" />
+          <general-currency-field v-model="formTransaction.amount" name="amount" @keyup.enter="onSaveExpenses" />
         </div>
         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category <span
             class="text-red-500">*</span> <span v-if="auth?.userId" class="inline-flex cursor-pointer"
@@ -71,7 +71,7 @@
             </div>
             <input v-model="formTransaction.categoryId" :id="`radio-${category.id}`" type="radio" :value="category.id"
               class="w-4 h-4 hidden peer text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              :name="`radio-${category.id}`" required @keyup.enter="onSave">
+              :name="`radio-${category.id}`" required @keyup.enter="onSaveExpenses">
             <label :for="`radio-${category.id}`"
               class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
               <div class="text-lg font-semibold">
@@ -123,11 +123,11 @@
                     <icons-select-outline
                       v-if="isSetDefaultAsset && asset.id !== $circleUsers.selected?.circleSettings?.defaultAssetId"
                       class="ml-4 mr-2 cursor-pointer"
-                      @click="onSetDefaultAsset($circleUsers.selected?.circleSettingId, asset.id)" />
+                      @click="onSetDefaultAsset($circleUsers.selected?.circleSettingId!, asset.id)" />
                     <icons-check
                       v-if="isSetDefaultAsset && asset.id === $circleUsers.selected?.circleSettings?.defaultAssetId"
                       class="ml-4 mr-2 cursor-pointer"
-                      @click="onSetDefaultAsset($circleUsers.selected?.circleSettingId, undefined)" />
+                      @click="onSetDefaultAsset($circleUsers.selected?.circleSettingId!, undefined)" />
                   </div>
                 </li>
                 <li v-if="$circleUsers.selected?.assets.length > 0" class="mx-3 my-2">
