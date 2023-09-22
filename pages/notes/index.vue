@@ -1,6 +1,6 @@
 import QuillEditor from '@vueup/vue-quill';
 <template>
-  <div>
+  <div class="mb-24">
     <div class="flex flex-col my-6">
       <span class="text-2xl text-gray-500">My Notes
         <icons-circular-indicator v-if="isLoading"
