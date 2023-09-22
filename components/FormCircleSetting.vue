@@ -24,17 +24,6 @@
             fill="currentFill" />
         </svg>
       </label>
-
-      <client-only>
-        <label class="my-2 mt-4 relative inline-flex items-center cursor-pointer"
-          @click.prevent="toggleIsAmountVisible()">
-          <input type="checkbox" :checked="!isAmountVisible" class="sr-only peer">
-          <div
-            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-400 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600">
-          </div>
-          <span class="ml-3 text-sm font-semibold text-gray-900 dark:text-gray-300">Hide Amount</span>
-        </label>
-      </client-only>
     </div>
 
 
@@ -64,7 +53,6 @@ const elink = ref<string | null>(null)
 const isLoadingToggle = ref<boolean>(false)
 const $circleUsers = useCircleUsers()
 const $auth = useAuth()
-const isAmountVisible = useAmountVisibility()
 
 watch(() => $circleUsers.value.selected, ((val) => {
   copiedLink.value = `${window.location.origin}/circles/${val?.id}`
@@ -72,12 +60,6 @@ watch(() => $circleUsers.value.selected, ((val) => {
   circleUser.value = myCircles.length > 0 ? myCircles[0] : null
 }))
 
-function toggleIsAmountVisible() {
-  const val = !isAmountVisible.value
-  localStorage.setItem('is-amount-visible', `${val}`)
-
-  isAmountVisible.value = val
-}
 
 function copyText() {
   const element = elink.value as any;

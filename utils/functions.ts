@@ -106,8 +106,7 @@ export const currencyIDRFormatter = (currency: string | undefined | null, value:
     if(isAmountVisible) {
         return formatted
     } else {
-        const replaced = formatted.replace(/\d/g, '*');
-        return replaced;        
+        return "********";
     }
 }
 
@@ -124,7 +123,7 @@ export async function onSignOut() {
         const name = eqPos > -1 ? cookie.substring(0, eqPos) : cookie;
         document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
-    
+
 
     await supabase.auth.signOut()
 
