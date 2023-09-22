@@ -10,7 +10,8 @@
   <general-modal id="modal-form-category" title="Form Category" @on-mounted="modalFormCategory = $event"
                  @on-modal-closed="refreshInputAmount?.setInputAmount(); modalFormTransaction?.show();">
     <template #body>
-      <form-category @category-created="modalFormCategory?.hide(); refreshInputAmount?.setInputAmount(); modalFormTransaction?.show();"/>
+      <form-category
+          @category-created="modalFormCategory?.hide(); refreshInputAmount?.setInputAmount(); modalFormTransaction?.show();"/>
     </template>
   </general-modal>
 
@@ -20,13 +21,15 @@
 
       <div class="flex mt-4">
         <button
-          type="button"
-          class="text-white bg-primary-600 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
-          @click="modalConfDelete?.hide()">No</button>
+            type="button"
+            class="text-white bg-primary-600 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+            @click="modalConfDelete?.hide()">No
+        </button>
         <button
-          type="button"
-          class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-          @click="onDelete(selectedTransaction.id); modalConfDelete?.hide()">Yes</button>
+            type="button"
+            class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+            @click="onDelete(selectedTransaction.id); modalConfDelete?.hide()">Yes
+        </button>
       </div>
     </template>
   </general-modal>
@@ -34,8 +37,14 @@
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
     <div class="flex flex-col my-6">
-      <span class="text-2xl text-gray-500">My Financial Records</span>
-      <span class="text-md mt-2 text-gray-400">Records and Plan your next move for a better week</span>
+      <div class="flex">
+        <div class="text-2xl text-gray-500">My Financial Records</div>
+        <div class="ml-2 mr-1" @click.prevent="toggleIsAmountVisible()">
+          <span v-if="isAmountVisible"><icons-eye-visible class="w-6 h-6 cursor-pointer text-gray-500"/></span>
+          <span v-else><icons-eye-invisible class="w-6 h-6 cursor-pointer text-gray-500"/></span>
+        </div>
+      </div>
+      <div class="text-md mt-2 text-gray-400">Records and Plan your next move for a better week</div>
     </div>
     <div v-if="transactions" class="max-h-1/4 w-full gap-4 sm:flex justify-center mb-8 mt-2">
       <expenses-structure-chart class="sm:w-1/2 md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
@@ -49,15 +58,15 @@
          style="box-shadow: 0 10px 12px rgba(0, 0, 0, 0.1)">
       <div class="flex flex-wrap gap-2 justify-center">
         <button type="button"
-                        class="h-[38px] inline-flex items-center text-white bg-primary-500 dark:bg-primary-700 dark:text-white drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:hover:bg-gray-700"
-                        @click="resetAllIsEditMode(); selectedTransaction = undefined; refreshInputAmount?.setInputAmount(); modalFormTransaction?.show()">
+                class="h-[38px] inline-flex items-center text-white bg-primary-500 dark:bg-primary-700 dark:text-white drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:hover:bg-gray-700"
+                @click="resetAllIsEditMode(); selectedTransaction = undefined; refreshInputAmount?.setInputAmount(); modalFormTransaction?.show()">
           <icons-plus class="mr-1"/>
           Create
         </button>
 
         <dropdowns-filter-dates
             @on-filter-changed="startFilterDate = $event.start; endFilterDate = $event.end; filterDate = $event.label"/>
-        <dropdowns-filter-categories />
+        <dropdowns-filter-categories/>
 
         <button
             class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
@@ -69,30 +78,32 @@
 
       </div>
       <div class="flex gap-3 mt-3 sm:mt-0 flex-col lg:flex-row">
-        <div class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700">
+        <div
+            class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700">
           <label class="my-2 relative inline-flex items-center cursor-pointer"
-          @click.prevent="toggleCheckReceiveTransferCategories()">
-          <input type="checkbox" :checked="isIncludeTransferReceive" class="sr-only peer">
-          <div
-            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-400 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600">
-          </div>
-          <span class="ml-3 text-sm whitespace-nowrap text-gray-900 dark:text-gray-300">Include Transfer</span>
-        </label>
+                 @click.prevent="toggleCheckReceiveTransferCategories()">
+            <input type="checkbox" :checked="isIncludeTransferReceive" class="sr-only peer">
+            <div
+                class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-400 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600">
+            </div>
+            <span class="ml-3 text-sm whitespace-nowrap text-gray-900 dark:text-gray-300">Include Transfer</span>
+          </label>
         </div>
         <div class="mt-2 sm:mt-0">
           <label for="table-search-transactions" class="sr-only">Search</label>
           <div class="relative">
             <div class="z-10 absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                  fill="none" viewBox="0 0 20 20">
+              <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                   xmlns="http://www.w3.org/2000/svg"
+                   fill="none" viewBox="0 0 20 20">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
               </svg>
             </div>
             <input :value="searchKey" :readonly="isLoading" type="text" id="table-search-transactions"
-                  class="w-full p-2 pl-10 pr-10 text-sm text-gray-900 dark:text-gray-400 dark:bg-gray-800 drop-shadow hover:drop-shadow-md focus:drop-shadow-md rounded-lg border-none focus:ring-0"
-                  placeholder="Search for transactions"
-                  v-on:keydown.enter="onSearchTransactions(($event.target as HTMLInputElement)?.value)">
+                   class="w-full p-2 pl-10 pr-10 text-sm text-gray-900 dark:text-gray-400 dark:bg-gray-800 drop-shadow hover:drop-shadow-md focus:drop-shadow-md rounded-lg border-none focus:ring-0"
+                   placeholder="Search for transactions"
+                   v-on:keydown.enter="onSearchTransactions(($event.target as HTMLInputElement)?.value)">
           </div>
         </div>
       </div>
@@ -131,8 +142,9 @@
           <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
             <span v-if="!trx.isEditMode">{{ format(parseISO(trx.date), 'dd/MM/yyyy') }}</span>
             <span v-else><vue-date-picker v-model="selectedTransaction!.date" format="dd/MM/yyyy"
-                                           :enable-time-picker="false" name="datepicker" locale="id-ID" auto-apply :teleport="true"
-                                           @update:model-value="onUpdate(trx)"/></span>
+                                          :enable-time-picker="false" name="datepicker" locale="id-ID" auto-apply
+                                          :teleport="true"
+                                          @update:model-value="onUpdate(trx)"/></span>
           </th>
           <td class="px-6 py-4">
             <span v-if="!trx.isEditMode">{{ capitalizeFirstLetter(trx.description) }}</span>
@@ -149,7 +161,8 @@
                         {{ currencyIDRFormatter($circleUsers.selected.currency, trx.amount) }}
             </span>
             <span v-else>
-                  <general-currency-field v-model="selectedTransaction!.amount" name="amount" @keydown.enter="onUpdate" />
+                  <general-currency-field v-model="selectedTransaction!.amount" name="amount"
+                                          @keydown.enter="onUpdate"/>
               </span>
           </td>
           <td class="px-6 py-4">
@@ -244,6 +257,7 @@ const selectedTransaction = ref<EditableRecord | undefined>()
 const $categories = useCategories()
 const $circleUsers = useCircleUsers()
 const $transactions = useTransactions()
+const isAmountVisible = useAmountVisibility()
 
 let modalFormTransaction: ElementEvent | null = null
 let modalFormCategory: ElementEvent | null = null
@@ -296,8 +310,15 @@ const {
 })
 
 
+function toggleIsAmountVisible() {
+  const val = !isAmountVisible.value
+  localStorage.setItem('is-amount-visible', `${val}`)
+
+  isAmountVisible.value = val
+}
+
 function isRowTransferReceive(row: any): string {
-  if(row.category?.type === 'receive' || row.category?.type === 'transfer') {
+  if (row.category?.type === 'receive' || row.category?.type === 'transfer') {
     return 'bg-gray-50 dark:bg-gray-900';
   }
 
@@ -388,6 +409,7 @@ function resetAllIsEditMode() {
 .dp-custom-calendar {
 
   overflow: visible;
+
   .dp__calendar_item {
     border: 1px solid var(--dp-border-color-hover);
   }
