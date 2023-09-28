@@ -23,7 +23,19 @@ export async function updateRecord(trxId: string, description: string, amount: n
 }
 
 export async function deleteRecord(trxId: string, userId: string | undefined) {
-    return prisma.records.delete({where: {id: trxId, userId}})
+
+    let trx = await prisma.records.findFirst({where: {id: trxId}})
+
+    if (trx && trx.circleId && userId) {
+
+        let circleUser = await prisma.circleUsers.findFirst({where: {circleId: trx.circleId!, userId}})
+
+        if(!circleUser) {
+            return null
+        }
+    }
+
+    return prisma.records.delete({where: {id: trxId}})
 }
 
 export async function getCountRecords(circleId: string | undefined) {
