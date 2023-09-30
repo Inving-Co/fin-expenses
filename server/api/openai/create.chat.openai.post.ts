@@ -2,15 +2,34 @@ import axios from "axios";
 import { getRecordsForChat } from "~/server/models/records";
 import _ from "gpt-3-encoder"
 import { OpenAIChatMessage } from "~/utils/types";
-import {format, startOfMonth} from 'date-fns'
+import {format, startOfMonth, subDays} from 'date-fns'
 import {getAssets} from "~/server/models/assets";
 
 async function fetchRecords(key: string, circleId: string, startDate: string, endDate: string) {
     let now = new Date()
-    return getRecordsForChat(key, {
-        start: startDate ?? format(startOfMonth(now), 'yyyy-MM-dd HH:mm'),
-        end: endDate ?? format(now, 'yyyy-MM-dd HH:mm')
-    }, circleId)
+
+    let curStartDate = startDate
+    let curEndDate = endDate
+
+    if(curStartDate && curEndDate) {
+        let dtStart = new Date(curStartDate)
+        let dtEnd = new Date(curEndDate)
+
+        let diffInTime: number = dtEnd.getTime() - dtStart.getTime()
+        let diffInDays: number = diffInTime / (1000 * 3600 * 24);
+
+        if (diffInDays > 90) {
+            curStartDate = format(subDays(dtEnd, 90), 'yyyy-MM-dd HH:mm')
+            curEndDate = format(dtEnd, 'yyyy-MM-dd HH:mm')
+        }
+    }
+    let params = {
+        start: curStartDate ?? format(startOfMonth(now), 'yyyy-MM-dd HH:mm'),
+        end: curEndDate ?? format(now, 'yyyy-MM-dd HH:mm')
+    }
+
+    let records = await getRecordsForChat(key, params, circleId)
+    return records
 }
 
 async function fetchAssets(key: string, circleId: string) {
@@ -178,13 +197,21 @@ export default defineEventHandler(async (event) => {
 
             // const encoded = _.encode(functionResponse)
             // const encodedLength = encoded.length;
-
             messages.push(responseMessage);
-            messages.push({
-                "role": "function",
-                "name": functionName,
-                "content": functionResponse,
-            });
+
+            if(JSON.parse(functionResponse).length > 80) {
+                messages.push({
+                    "role": "function",
+                    "name": functionName,
+                    "content": "Response to user that the data is too big to be process, ask them to use a small date range like 1 month.",
+                });
+            } else {
+                messages.push({
+                    "role": "function",
+                    "name": functionName,
+                    "content": functionResponse,
+                });
+            }
 
             await fetchChatCompletions(event, messages)
         }
