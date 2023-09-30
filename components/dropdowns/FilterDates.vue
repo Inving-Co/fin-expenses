@@ -13,7 +13,7 @@
       </button>
     </template>
     <template #content="{activator}">
-      <div class="flex gap-4 items-center p-3">
+      <div class="flex flex-col sm:flex-row gap-4 items-center p-3">
         <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
             aria-labelledby="dropdownFilterDateButton">
           <li v-for="valueFilterDate in valuesFilterDate">
@@ -31,8 +31,23 @@
               </div>
             </div>
           </li>
+          <li v-if="!$isMobile()">
+            <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+              <div class="flex items-center h-5">
+                <input v-model="filterDate" :id="`custom-radio`" :name="`custom-radio`"
+                       type="radio" value="custom"
+                       class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                       @change="onFilterDateChanges($event.target.value);">
+              </div>
+              <div class="ml-2 text-sm">
+                <label :for="`custom-radio`" class="font-medium text-gray-900 dark:text-gray-300">
+                  <span>Custom</span>
+                </label>
+              </div>
+            </div>
+          </li>
         </ul>
-        <div class="h-full">
+        <div v-if="!$isMobile()" class="h-full">
           <VueDatePicker v-model="date" name="datepicker" id="datepicker" locale="id-ID"
                          format="dd/MM/yyyy"  hide-input-icon :enable-time-picker="false"
                          placeholder="Select Date" auto-apply autorange range inline :readonly="filterDate !== 'custom'" />
@@ -58,7 +73,7 @@ import {
 import VueDatePicker from "@vuepic/vue-datepicker";
 
 const filterDate = ref<string>('this month')
-const valuesFilterDate = ['today', 'this week', 'this month', 'this year', 'yesterday', 'last month', 'custom']
+const valuesFilterDate = ['today', 'this week', 'this month', 'this year', 'yesterday', 'last month']
 const date = ref<any>([undefined, undefined])
 
 const emit = defineEmits(['on-filter-changed'])
