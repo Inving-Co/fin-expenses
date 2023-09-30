@@ -53,3 +53,15 @@ onMounted(() => {
   })
 })
 </script>
+
+
+<style>
+.dp__theme_light {
+  --dp-primary-color: #E1914D;
+}
+
+.dp__theme_dark {
+  --dp-background-color: #394150;
+  --dp-primary-color: #E1914D;
+}
+</style>
