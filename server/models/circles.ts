@@ -61,6 +61,15 @@ export async function getCircles(key: string, userId: string | undefined) {
     })
 }
 
+export async function getCircleUser(userId: string | undefined, circleUserId: string | undefined) {
+    return prisma.circleUsers.findUnique({
+        where: {
+            id: circleUserId,
+            userId: userId,
+        }
+    })
+}
+
 export async function getCircleUsers(key: string, userId: string | undefined) {
     return prisma.circleUsers.findMany({
         where: {
@@ -99,6 +108,6 @@ export async function updateNotesCircleUser(circleUserId: string, notes: string)
 }
 
 export async function updateCircleSettings(circleSettingId: string, defaultAssetId: string | undefined) {
-    
+
     return prisma.circleSettings.update({where: {id: circleSettingId}, data: { defaultAssetId: defaultAssetId  ?? null }})
 }
