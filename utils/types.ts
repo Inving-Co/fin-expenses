@@ -77,7 +77,8 @@ circleId: string
     createdAt: string
     updatedAt: string
     receiveReport: boolean
-    notes: string | undefined
+    activeNote: string | undefined
+    activeNoteId: string | undefined
     circle: Circle | undefined
 }
 

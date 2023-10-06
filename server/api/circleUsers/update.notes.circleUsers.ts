@@ -1,7 +1,7 @@
 import {updateNotesCircleUser} from "~/server/models/circles";
 
 export default defineEventHandler(async (event) => {
-    const {id, notes } = await readBody(event);
+    const {id, activeNote, activeNoteId} = await readBody(event);
 
-    return updateNotesCircleUser(id, notes)
+    return updateNotesCircleUser(id, activeNote, activeNoteId)
 })
