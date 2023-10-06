@@ -1,5 +1,5 @@
 import {getCircleUser} from "~/server/models/circles";
-import {createCircleNotes} from "~/server/models/notes";
+import {createCircleNotes, updateCircleNotes} from "~/server/models/notes";
 
 export default defineEventHandler(async (event) => {
     const {title, circleUserId} = await readBody(event);
@@ -10,7 +10,11 @@ export default defineEventHandler(async (event) => {
         const circle = cookies['selected-circle'] ? JSON.parse(cookies['selected-circle']) : undefined
 
         const circleUser = await getCircleUser(userId, circleUserId)
-        const result = await createCircleNotes(title, circleUser?.notes, userId, circle?.id)
+
+
+        const result = circleUser?.activeNoteId ?
+            await updateCircleNotes(circleUser?.activeNoteId, circle?.id, circleUser?.activeNote ?? '') :
+            await createCircleNotes(title, circleUser?.activeNote, userId, circle?.id)
 
         return {
             status: 200,

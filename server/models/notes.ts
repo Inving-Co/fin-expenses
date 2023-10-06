@@ -8,6 +8,13 @@ export async function createCircleNotes(title: string, notes: string | null | un
     })
 }
 
+export async function updateCircleNotes(circleNoteId: string, circleId: string, notes: string) {
+    return prisma.circleNotes.update({
+        where: { id: circleNoteId, circleId: circleId },
+        data: { notes: notes }
+    })
+}
+
 export async function getNotes(key: string, circleId: string | undefined) {
     return prisma.circleNotes.findMany({
         where: {
@@ -20,6 +27,9 @@ export async function getNotes(key: string, circleId: string | undefined) {
                 },
                 archivedAt: null
             }
+        },
+        orderBy: {
+            updatedAt: 'desc'
         },
     })
 }

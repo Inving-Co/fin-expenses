@@ -73,14 +73,14 @@ const isHasContent = computed(() => extractContent(content.value).length > 0 && 
 onMounted(() => {
   if (!isLoggedIn) navigateTo('/transactions')
 
-  if ($circleUsers.value.selectedCircleUser?.notes) {
-    content.value = JSON.parse($circleUsers.value.selectedCircleUser?.notes)
+  if ($circleUsers.value.selectedCircleUser?.activeNote) {
+    content.value = JSON.parse($circleUsers.value.selectedCircleUser?.activeNote)
   }
 
   setTimeout(() => isLoading.value = false, 1210)
 })
 
-watch(() => $circleUsers.value.selectedCircleUser?.notes, (val, oldValue) => {
+watch(() => $circleUsers.value.selectedCircleUser?.activeNote, (val, oldValue) => {
   if (val != oldValue) {
     isLoading.value = true
   }
@@ -124,18 +124,23 @@ const {
 
 function onSelectNote(note: any) {
   if (!note) return
-  $circleUsers.value!.selectedCircleUser!.notes = note.notes
+  $circleUsers.value!.selectedCircleUser!.activeNoteId = note.id
+  $circleUsers.value!.selectedCircleUser!.activeNote = note.notes
   content.value = preProcessHtml(note.notes, false)
+
+  onUpdateCircleNotes(content.value)
 }
 
 async function onUpdateCircleNotes(value: string) {
   isLoading.value = true
 
+  const curContent = extractContent(value)
   const {data: result, status} = await useFetch('/api/circleUsers/update.notes.circleUsers', {
     method: 'POST',
     body: JSON.stringify({
       id: $circleUsers.value.selectedCircleUser?.id,
-      notes: JSON.stringify(value)
+      activeNote: curContent.length > 0 ? JSON.stringify(value) : undefined,
+      activeNoteId: curContent.length > 0 ? $circleUsers.value!.selectedCircleUser!.activeNoteId : undefined
     })
   })
 
@@ -150,7 +155,7 @@ async function onSave() {
   isLoadingSaveToCircle.value = true
   const contentResult = extractContent(content.value)
 
-  const {data, status, error} = await useFetch('/api/circleNotes/create.circleNotes', {
+  const {data, status, error} = await useFetch('/api/circleNotes/save.circleNotes', {
     method: 'POST',
     body: JSON.stringify({
       title: contentResult.slice(0, 55),
@@ -159,7 +164,8 @@ async function onSave() {
   })
 
   if (status.value === 'success') {
-    $circleUsers.value!.selectedCircleUser!.notes = '<p></p>'
+    $circleUsers.value!.selectedCircleUser!.activeNote = '<p></p>'
+    $circleUsers.value!.selectedCircleUser!.activeNoteId = undefined
     content.value = '<p></p>'
 
     toast.success(data.value.message)
