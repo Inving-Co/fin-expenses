@@ -1,7 +1,7 @@
 import QuillEditor from '@vueup/vue-quill';
 <template>
   <div class="mb-24">
-    <div class="flex justify-between items-end my-6">
+    <div class="flex flex-col sm:flex-row justify-between sm:items-end my-6">
       <div class="flex flex-col">
         <span class="text-2xl text-gray-500">My Notes
           <icons-circular-indicator v-if="isLoading"
@@ -12,7 +12,7 @@ import QuillEditor from '@vueup/vue-quill';
         <span class="text-md mt-2 text-gray-400">Write down your future financial strategies here</span>
       </div>
       <button type="button"
-              :class="`${!isHasContent? 'bg-gray-500':'bg-primary-500 dark:bg-primary-700'} h-[38px] m-1 inline-flex items-center text-white dark:text-white drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:hover:bg-gray-700`"
+              :class="`mt-4 sm:mt-0 ${!isHasContent? 'bg-gray-500':'bg-primary-500 dark:bg-primary-700'} h-[38px] m-1 inline-flex items-center text-white dark:text-white drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:hover:bg-gray-700`"
               :disabled="!isHasContent"
               @click="onSave">
         <span v-if="isLoadingSaveToCircle">
@@ -29,13 +29,15 @@ import QuillEditor from '@vueup/vue-quill';
                         placeholder="Put your note here..." style="height: 60vh;" class="dark:text-gray-300"/>
         </client-only>
       </div>
-      <div class="w-1/2 h-100 grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div class="w-full lg:w-4/5 h-100 grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div v-for="(note, index) of notes ?? []"
-             :class="`w-full p-6 border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700`">
-            <span class="w-full text-center mb-2 text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+             class="w-full p-6 border border-gray-200 rounded-lg hover:bg-gray-100 hover:cursor-pointer dark:bg-gray-800 dark:border-gray-700"
+             @click="onSelectNote(note)"
+        >
+            <div class="w-full mb-2 text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
             {{ note.title }}
-            </span>
-          <span class="mb-3 font-normal text-gray-500 dark:text-gray-400" v-html="note.notes.slice(1, note.notes.length-1).slice(0, 300).replace(/\\t/g, '      ')"></span>
+            </div>
+            <div class="mb-3 font-normal text-gray-500 dark:text-gray-400" v-html="preProcessHtml(note.notes)"></div>
         </div>
       </div>
     </div>
@@ -54,7 +56,7 @@ const $circleUsers = useCircleUsers()
 const isLoading = ref<boolean>(true)
 const isLoadingSaveToCircle = ref<boolean>(false)
 const isLoggedIn = computed(() => useAuth().value?.userId !== undefined)
-const isHasContent = computed(() => content.value.length > 0 && !isLoading.value)
+const isHasContent = computed(() => extractContent(content.value).length > 0 && !isLoading.value)
 
 onMounted(() => {
   if (!isLoggedIn) navigateTo('/transactions')
@@ -108,6 +110,11 @@ const {
   },
 })
 
+function onSelectNote(note: any) {
+  $circleUsers.value!.selectedCircleUser!.notes = note.notes
+  content.value = preProcessHtml(note.notes, false)
+}
+
 async function onUpdateCircleNotes(value: string) {
   isLoading.value = true
 
@@ -154,9 +161,14 @@ async function onSave() {
 }
 
 function extractContent(s: any) {
-  var span = document.createElement('span');
+  let span = document.createElement('span');
   span.innerHTML = s;
   return span.textContent || span.innerText;
-};
+}
+
+function preProcessHtml(note: string | undefined, isSliced = true) {
+  if(!note) return ''
+  return note.slice(1, note.length-1).slice(0, isSliced ? 300:note.length-1).replace(/\\t/g, '      ')
+}
 
 </script>
