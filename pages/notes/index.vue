@@ -11,16 +11,18 @@ import QuillEditor from '@vueup/vue-quill';
 
         <span class="text-md mt-2 text-gray-400">Write down your future financial strategies here</span>
       </div>
-      <button type="button"
-              :class="`mt-4 sm:mt-0 ${!isHasContent? 'bg-gray-500':'bg-primary-500 dark:bg-primary-700'} h-[38px] m-1 inline-flex items-center text-white dark:text-white drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:hover:bg-gray-700`"
-              :disabled="!isHasContent"
-              @click="onSave">
-        <span v-if="isLoadingSaveToCircle">
-          <icons-circular-indicator class="inline w-4 h-4 mr-3 text-white animate-spin"/>
-          Loading...
-        </span>
-        <span class="flex items-center" v-else><icons-save class="mr-1"/>Save to Circle</span>
-      </button>
+      <client-only>
+        <button type="button"
+                :class="`mt-4 sm:mt-0 ${!isHasContent? 'bg-gray-500':'bg-primary-500 dark:bg-primary-700'} h-[38px] m-1 inline-flex items-center text-white dark:text-white drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:hover:bg-gray-700`"
+                :disabled="!isHasContent"
+                @click="onSave">
+              <span v-if="isLoadingSaveToCircle">
+                <icons-circular-indicator class="inline w-4 h-4 mr-3 text-white animate-spin"/>
+                Loading...
+              </span>
+          <span class="flex items-center" v-else><icons-save class="mr-1"/>Save to Circle</span>
+        </button>
+      </client-only>
     </div>
     <div class="flex flex-col-reverse md:flex-row gap-4">
       <div class="w-full">
@@ -30,14 +32,24 @@ import QuillEditor from '@vueup/vue-quill';
         </client-only>
       </div>
       <div class="w-full lg:w-4/5 h-100 grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div v-for="(note, index) of notes ?? []"
-             class="w-full p-6 border border-gray-200 rounded-lg hover:bg-gray-100 hover:cursor-pointer dark:bg-gray-800 dark:border-gray-700"
-             @click="onSelectNote(note)"
-        >
+        <div v-for="(note, _) of notes ?? []">
+          <div class="flex justify-end">
+            <button type="button"
+                    class="absolute z-30 h-[45px] w-[45px] text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5"
+                    @click="onArchiveNote(note.id)"
+            >
+              <icons-archive/>
+            </button>
+          </div>
+          <div
+              class="w-full p-6 border border-gray-200 rounded-lg hover:bg-gray-100 hover:cursor-pointer dark:bg-gray-800 dark:border-gray-700"
+              @click="onSelectNote(note)"
+          >
             <div class="w-full mb-2 text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-            {{ note.title }}
+              {{ note.title }}
             </div>
             <div class="mb-3 font-normal text-gray-500 dark:text-gray-400" v-html="preProcessHtml(note.notes)"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -111,6 +123,7 @@ const {
 })
 
 function onSelectNote(note: any) {
+  if (!note) return
   $circleUsers.value!.selectedCircleUser!.notes = note.notes
   content.value = preProcessHtml(note.notes, false)
 }
@@ -160,6 +173,25 @@ async function onSave() {
   isLoadingSaveToCircle.value = false
 }
 
+async function onArchiveNote(circleNoteId: string) {
+  isLoadingSaveToCircle.value = true
+
+  const {status, error} = await useFetch('/api/circleNotes/archive.circleNotes', {
+    method: 'PATCH',
+    query: {
+      circleNoteId: circleNoteId
+    }
+  })
+
+  if (status.value === 'success') {
+    await refreshNotes()
+  } else {
+    toast.error(error.value?.statusMessage ?? '')
+  }
+
+  isLoadingSaveToCircle.value = false
+}
+
 function extractContent(s: any) {
   let span = document.createElement('span');
   span.innerHTML = s;
@@ -167,8 +199,8 @@ function extractContent(s: any) {
 }
 
 function preProcessHtml(note: string | undefined, isSliced = true) {
-  if(!note) return ''
-  return note.slice(1, note.length-1).slice(0, isSliced ? 300:note.length-1).replace(/\\t/g, '      ')
+  if (!note) return ''
+  return note.slice(1, note.length - 1).slice(0, isSliced ? 300 : note.length - 1).replace(/\\t/g, '      ')
 }
 
 </script>
