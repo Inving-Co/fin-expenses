@@ -61,7 +61,8 @@ model CircleUsers {
   id                     String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId                 String?   @db.Uuid
   circleId               String?   @db.Uuid
-  notes                  String?
+  activeNoteId           String?   @db.Uuid
+  activeNote             String?
   createdAt              DateTime  @default(now())
   updatedAt              DateTime  @default(now()) @updatedAt
   latestReportReceivedAt DateTime?
@@ -71,14 +72,14 @@ model CircleUsers {
 }
 
 model CircleNotes {
-  id                     String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId                 String?   @db.Uuid
-  circleId               String?   @db.Uuid
-  title                  String
-  notes                  String?
-  archivedAt             DateTime?
-  createdAt              DateTime  @default(now())
-  updatedAt              DateTime  @default(now()) @updatedAt
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String?   @db.Uuid
+  circleId   String?   @db.Uuid
+  title      String
+  notes      String?
+  archivedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
 }
 
 model Records {
