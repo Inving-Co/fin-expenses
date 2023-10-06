@@ -23,3 +23,10 @@ export async function getNotes(key: string, circleId: string | undefined) {
         },
     })
 }
+
+export async function archiveNotes(circleNoteId: string, circleId: string) {
+    return prisma.circleNotes.update({
+        where: { id: circleNoteId, circleId: circleId },
+        data: { archivedAt: new Date() }
+    })
+}
