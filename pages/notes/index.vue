@@ -69,6 +69,7 @@ const isLoading = ref<boolean>(true)
 const isLoadingSaveToCircle = ref<boolean>(false)
 const isLoggedIn = computed(() => useAuth().value?.userId !== undefined)
 const isHasContent = computed(() => extractContent(content.value).length > 0 && !isLoading.value)
+const selectedCircle = computed(() => $circleUsers.value.selected)
 
 onMounted(() => {
   if (!isLoggedIn) navigateTo('/transactions')
@@ -120,6 +121,7 @@ const {
   query: {
     key: ''
   },
+  watch: [selectedCircle]
 })
 
 function onSelectNote(note: any) {
