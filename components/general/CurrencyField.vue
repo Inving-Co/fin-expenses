@@ -1,7 +1,7 @@
 <template>
     <input v-model="inputValue"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-        type="text" placeholder="Example: 20000" required />
+        type="text" placeholder="Example: 20000" required :readonly="props.readOnly" />
 </template>
 
 <script setup lang="ts">
@@ -14,6 +14,10 @@ const props = defineProps({
     modelValue: {
         type: Number,
     },
+    readOnly: {
+        type: Boolean,
+        default: false
+    }
 })
 
 const $circleUsers = useCircleUsers()

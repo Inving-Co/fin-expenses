@@ -8,18 +8,21 @@ datasource db {
 }
 
 model Users {
-  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email         String         @unique
-  name          String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @default(now()) @updatedAt
-  historyAssets AssetHistory[]
-  assets        Assets[]
-  categories    Categories[]
-  circleUsers   CircleUsers[]
-  circles       Circles[]
-  records       Records[]
-  UserSettings  UserSettings[]
+  id                    String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                 String                  @unique
+  name                  String?
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @default(now()) @updatedAt
+  historyAssets         AssetHistory[]
+  assets                Assets[]
+  categories            Categories[]
+  circleUsers           CircleUsers[]
+  circleNotes           CircleNotes[]
+  circleBudgets         CircleBudgets[]
+  circleBudgetPlannings CircleBudgetPlannings[]
+  circles               Circles[]
+  records               Records[]
+  UserSettings          UserSettings[]
 }
 
 model UserSettings {
@@ -45,6 +48,8 @@ model Circles {
   circleUsers     CircleUsers[]
   user            Users?          @relation(fields: [userId], references: [id])
   records         Records[]
+  circleNotes     CircleNotes[]
+  circleBudgets   CircleBudgets[]
   circleSettings  CircleSettings? @relation(fields: [circleSettingId], references: [id])
 }
 
@@ -80,6 +85,33 @@ model CircleNotes {
   archivedAt DateTime?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now()) @updatedAt
+  circle     Circles?  @relation(fields: [circleId], references: [id])
+  user       Users?    @relation(fields: [userId], references: [id])
+}
+
+model CircleBudgets {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String?   @db.Uuid
+  circleId   String?   @db.Uuid
+  amount     Float
+  archivedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
+  circle     Circles?  @relation(fields: [circleId], references: [id])
+  user       Users?    @relation(fields: [userId], references: [id])
+}
+
+model CircleBudgetPlannings {
+  id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String?     @db.Uuid
+  circleBudgetId String?     @db.Uuid
+  amount         Float
+  categoryId     String?     @db.Uuid
+  archivedAt     DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @default(now()) @updatedAt
+  user           Users?      @relation(fields: [userId], references: [id])
+  category       Categories? @relation(fields: [categoryId], references: [id])
 }
 
 model Records {
@@ -102,17 +134,18 @@ model Records {
 }
 
 model Categories {
-  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name      String
-  color     String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now()) @updatedAt
-  circleId  String?   @db.Uuid
-  userId    String?   @db.Uuid
-  type      String?
-  circle    Circles?  @relation(fields: [circleId], references: [id])
-  user      Users?    @relation(fields: [userId], references: [id])
-  records   Records[]
+  id                    String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                  String
+  color                 String?
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @default(now()) @updatedAt
+  circleId              String?                 @db.Uuid
+  userId                String?                 @db.Uuid
+  type                  String?
+  circle                Circles?                @relation(fields: [circleId], references: [id])
+  user                  Users?                  @relation(fields: [userId], references: [id])
+  records               Records[]
+  circleBudgetPlannings CircleBudgetPlannings[]
 }
 
 model Assets {

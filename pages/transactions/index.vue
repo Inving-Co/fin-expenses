@@ -34,17 +34,31 @@
     </template>
   </general-modal>
 
+  <general-modal id="modal-budget-plan" classModal="max-w-lg" title="Budgeting" @on-mounted="modalBudgeting = $event">
+    <template #body>
+       <form-budgeting />
+    </template>
+  </general-modal>
+
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
-    <div class="flex flex-col my-6">
-      <div class="flex">
-        <div class="text-2xl text-gray-500">My Financial Records</div>
-        <div class="ml-2 mr-1" @click.prevent="toggleIsAmountVisible()">
-          <span v-if="isAmountVisible"><icons-eye-visible class="w-6 h-6 cursor-pointer text-gray-500"/></span>
-          <span v-else><icons-eye-invisible class="w-6 h-6 cursor-pointer text-gray-500"/></span>
+    <div class="flex justify-between items-center">
+      <div class="flex flex-col my-6">
+        <div class="flex">
+          <div class="text-2xl text-gray-500">My Financial Records</div>
+          <div class="ml-2 mr-1" @click.prevent="toggleIsAmountVisible()">
+            <span v-if="isAmountVisible"><icons-eye-visible class="w-6 h-6 cursor-pointer text-gray-500"/></span>
+            <span v-else><icons-eye-invisible class="w-6 h-6 cursor-pointer text-gray-500"/></span>
+          </div>
         </div>
+        <div class="text-md mt-2 text-gray-400">Records and Plan your next move for a better week</div>
       </div>
-      <div class="text-md mt-2 text-gray-400">Records and Plan your next move for a better week</div>
+        <button type="button"
+                class="h-[38px] inline-flex items-center text-white bg-primary-500 dark:bg-primary-700 dark:text-white drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:hover:bg-gray-700"
+                @click="modalBudgeting?.show()">
+          <icons-plan class="mr-2"/>
+          Plan
+        </button>
     </div>
     <div v-if="transactions" class="max-h-1/4 w-full gap-4 sm:flex justify-center mb-8 mt-2">
       <expenses-structure-chart class="sm:w-1/2 md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
@@ -262,6 +276,7 @@ const isAmountVisible = useAmountVisibility()
 let modalFormTransaction: ElementEvent | null = null
 let modalFormCategory: ElementEvent | null = null
 let modalConfDelete: ElementEvent | null = null
+let modalBudgeting: ElementEvent | null = null
 let refreshInputAmount: any = null
 
 const selectedCircle = computed(() => $circleUsers.value.selected)
