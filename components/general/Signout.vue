@@ -15,7 +15,7 @@ import { useAuth } from "~/composables/auth";
 
 const emit = defineEmits(['on-signout'])
 
-const isLoggedIn = computed(() => useAuth().value?.userId !== undefined)
+const isLoggedIn = computed(() => useCookie('user-id').value)
 
 
 </script>

@@ -170,13 +170,17 @@ import {useCategories} from "~/composables/categories";
 import {useCircleUsers} from "~/composables/circles";
 import {useTransactions} from "~/composables/transactions";
 import {useDarkMode, useLoading} from "~/composables/loading";
+import {checkAuth} from "~/utils/functions";
 
 let modalAbout: ElementEvent | null = null
 
+onMounted(() => {
+  checkAuth()
+})
 
 const isDarkMode = useDarkMode()
 
-const isLoggedIn = computed(() => useAuth().value?.userId !== undefined)
+const isLoggedIn = computed(() => useCookie('user-id').value)
 
 const toggleDarkMode = () => {
   isDarkMode.value = !isDarkMode.value;
