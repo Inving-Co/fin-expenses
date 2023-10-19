@@ -274,7 +274,6 @@ definePageMeta({
 
 onMounted(() => {
   initDropdowns()
-  checkAuth()
 })
 
 const chartTransactions = computed(() => transactions.value?.filter((trx: any) => trx.category.type !== 'receive' && trx.category.type !== 'transfer'))

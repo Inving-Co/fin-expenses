@@ -140,10 +140,10 @@ async function onSubmitLogin() {
     })
 
     const accessToken = await generateToken({userId: result.value?.id})
-    const maxAge = 60 * 60 * 24 * 7
+    // const maxAge = 100 * 365 * 24 * 60 * 60
 
-    document.cookie = `my-access-token=${accessToken}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
-    document.cookie = `user-id=${result.value?.id}; path=/; max-age=${maxAge}; SameSite=Lax; secure`
+    document.cookie = `my-access-token=${accessToken}; path=/; max-age=${10}; SameSite=Lax; secure`
+    document.cookie = `user-id=${result.value?.id}; path=/; max-age=${10}; SameSite=Lax; secure`
 
     return navigateTo('/transactions')
   }

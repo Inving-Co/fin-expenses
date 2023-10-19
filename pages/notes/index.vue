@@ -67,7 +67,7 @@ const content = ref<string>('')
 const $circleUsers = useCircleUsers()
 const isLoading = ref<boolean>(true)
 const isLoadingSaveToCircle = ref<boolean>(false)
-const isLoggedIn = computed(() => useAuth().value?.userId !== undefined)
+const isLoggedIn = computed(() => useCookie('user-id').value)
 const isHasContent = computed(() => extractContent(content.value).length > 0 && !isLoading.value)
 const selectedCircle = computed(() => $circleUsers.value.selected)
 
