@@ -106,6 +106,21 @@ const { data: circleUsers, refresh: refreshCircles } = await useFetch('/api/circ
   server: false,
 })
 
+
+const checkCircleUser = async () => {
+  const value = $circleUsers.value.data;
+
+  if (value && value.length > 0) {
+    const selectedCircle = useCookie('selected-circle').value as Circle | null | undefined
+
+    if (!selectedCircle?.id) {
+      onCircleChange(value[0].circle as Circle)
+    }
+  } else {
+    modalFormCircle?.show();
+  }
+}
+
 watch(() => selected.value, async (value) => {
   if (value) {
     $circleUsers.value.isLoading = true
@@ -113,9 +128,13 @@ watch(() => selected.value, async (value) => {
     await activatorLoad(value)
 
     $circleUsers.value.isLoading = false
-
   }
 })
+
+watchEffect(() => {
+  checkCircleUser()
+})
+
 
 const activatorLoad = async (value: string) => {
   const { data } = await useAsyncData('circleDetail', () => $fetch(`/api/circles/${value}`, {
@@ -150,30 +169,23 @@ const activatorLoad = async (value: string) => {
 
 onMounted(() => {
   emit('on-mounted')
+  const userId = useCookie('user-id').value
+
+  if(!userId) {
+    useCookie('selected-circle').value = undefined
+    $auth.value = undefined
+  }
 
   const value = useCookie('selected-circle').value as Circle | null | undefined
 
-  if (value) {
+  if (value?.id) {
     $circleUsers.value.selected = value
     selected.value = value?.id
   } else {
-    refreshCircles()
+    refreshCircles().then(() => checkCircleUser())
   }
 })
 
-watchEffect(() => {
-  const value = $circleUsers.value.data;
-
-  if (value && value.length > 0) {
-    const selectedCircle = useCookie('selected-circle').value as Circle | null | undefined
-
-    if (!selectedCircle) {
-      onCircleChange(value[0].circle as Circle)
-    }
-  } else {
-    modalFormCircle?.show();
-  }
-})
 
 function onCircleChange(value: Circle) {
   selected.value = value.id

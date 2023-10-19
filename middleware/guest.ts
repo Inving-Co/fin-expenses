@@ -3,7 +3,6 @@ import {useAuth} from "~/composables/auth";
 import {useLoading} from "~/composables/loading";
 import {onSignOut, registerWhenNotExist} from "~/utils/functions";
 import {toast} from "vue3-toastify";
-
 export default defineNuxtRouteMiddleware(async (to, from) => {
     const hash = from.hash.substring(1)
     const parsed = hash.split('&')
@@ -56,7 +55,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         const refreshToken = useCookie('my-refresh-token').value
 
         if (accessToken && refreshToken) {
-
             return navigateTo('/transactions')
         }
     }

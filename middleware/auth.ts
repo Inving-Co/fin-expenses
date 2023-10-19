@@ -1,4 +1,4 @@
-import {supabase} from "~/utils/functions";
+import {onSignOut, supabase} from "~/utils/functions";
 import {useCookie, navigateTo} from "#app";
 import {useAuth} from "~/composables/auth.ts";
 
