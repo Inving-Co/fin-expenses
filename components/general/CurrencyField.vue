@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center gap-4">
-    <span class="text-xl text-gray-500 font-bold dark:text-gray-300">{{currencySymbol}}</span>
+    <span v-if="currencySymbol" class="text-xl text-gray-500 font-bold dark:text-gray-300">{{currencySymbol}}</span>
     <input v-model="inputValue"
            @input="onInput"
            :placeholder="`Example: ${currencySymbol} 20000`"

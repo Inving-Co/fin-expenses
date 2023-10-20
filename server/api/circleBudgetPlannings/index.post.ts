@@ -1,18 +1,17 @@
-import {createBudget, createOrUpdateBudget} from "~/server/models/bugets";
+import {createBudgetPlannings, createOrUpdateBudgetPlannings} from "~/server/models/bugetPlannings";
 
 export default defineEventHandler(async (event) => {
-    const {amount} = await readBody(event);
+    const {amount, categoryId, circleBudgetId} = await readBody(event);
 
     try {
         const cookies = parseCookies(event)
         const userId = cookies['user-id']
-        const circle = cookies['selected-circle'] ? JSON.parse(cookies['selected-circle']) : undefined
 
-        const result = await createOrUpdateBudget(amount as number, userId, circle?.id)
+        const result = await createOrUpdateBudgetPlannings(amount as number, userId, circleBudgetId, categoryId)
 
         return {
             status: 200,
-            message: 'Success to save budget',
+            message: 'Success to create budget plan',
             data: result
         }
     } catch (e) {
