@@ -1,28 +1,59 @@
 <template>
   <div>
     <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Budget
-    <span class="text-red-500">*</span></label>
-    <general-currency-field v-model="budget" name="amount-budgeting" class="mb-3" />
-    <button  type="button"
-      :disabled="isDisableSaveBudget"
-      :class="`${isDisableSaveBudget ? 'bg-gray-500' : 'bg-primary-700 hover:bg-primary-800 dark:bg-primary-600 dark:hover:bg-primary-700'} w-full text-white focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-primary-800`"
-      @click="onSave">
-      <span v-if="isLoadingSubmit">
-        <icons-circular-indicator class="inline w-4 h-4 mr-3 text-white animate-spin" />
-        Loading...
+      <span class="text-red-500">*</span>
+    </label>
+    <div class="flex gap-2 items-center justify-between">
+      <general-currency-field v-model="budget" name="amount-budgeting" class="w-full"/>
+      <button type="button"
+              :disabled="isDisableSaveBudget"
+              :class="`${isDisableSaveBudget ? 'bg-gray-500' : 'bg-primary-700 hover:bg-primary-800 dark:bg-primary-600 dark:hover:bg-primary-700'} align-center w-10 h-10 text-white focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm pa-2.5 text-center dark:focus:ring-primary-800`"
+              @click="onSaveBudget">
+      <span v-if="isLoadingSubmitBudget">
+        <icons-circular-indicator class="inline w-4 h-4 text-white animate-spin"/>
       </span>
-      <span v-else>Save</span>
-    </button>
-    <div class="mt-5">
-      <div v-for="category of expensesCategories" class="my-6 text-gray-700 dark:text-gray-400">
-        <span class="font-semibold">{{ capitalizeFirstLetter(category.name) }}</span>
-
-        <div class="flex items-center gap-4">
-          <span>0%</span>
-          <input :id="`${category.id}-minmax-range`" class="rounded-lg overflow-hidden appearance-none bg-gray-300 dark:bg-gray-500 h-[14px] w-full" type="range" min="1" max="100" step="1" :value="100 / expensesCategories.length" />
-          <span>100%</span>
+        <icons-save v-else class="h-5 w-full"/>
+      </button>
+    </div>
+    <div v-if="budget" class="mt-5 max-h-56">
+      <hr class="w-full my-8 border-gray-200 dark:border-gray-700">
+      <!--      <div class="flex justify-end">-->
+      <!--        <button type="button"-->
+      <!--                    :disabled="isDisableSaveBudget"-->
+      <!--                    :class="`${isDisableSaveBudget ? 'bg-gray-500' : 'bg-primary-700 hover:bg-primary-800 dark:bg-primary-600 dark:hover:bg-primary-700'} justify-around align-center w-20 h-10 text-white focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm pa-2.5 text-center dark:focus:ring-primary-800`"-->
+      <!--                    @click="onSaveBudget">-->
+      <!--          <span v-if="isLoadingSubmitBudget">-->
+      <!--            <icons-circular-indicator class="inline w-4 h-4 text-white animate-spin"/>-->
+      <!--          </span>-->
+      <!--          <span class="flex w-full items-center justify-center" v-else><icons-save class="h-5 mr-2"/>Save</span>-->
+      <!--        </button>-->
+      <!--      </div>-->
+      <div class="flex justify-between">
+        <span class="font-semibold">Total</span>
+        <div class="flex gap-4">
+          <span class="font-normal text-primary-200">{{ currencyIDRFormatter($circleUsers.selected?.currency, sum(budgetPlanningsData)) }}</span>
+          <span class="font-semibold w-20 text-primary-500">{{ sum(planner).toFixed(0) }}%</span>
         </div>
-
+      </div>
+      <hr class="w-full my-8 border-gray-200 dark:border-gray-700">
+      <div v-for="(category, index) of expensesCategories"
+           class="flex items-center justify-between my-6 text-gray-700 dark:text-gray-400 ">
+        <div class="font-semibold">{{ capitalizeFirstLetter(category.name) }}</div>
+        <div class="flex gap-2 items-center">
+          <span
+              class="font-semibold">{{
+              currencyIDRFormatter($circleUsers.selected?.currency, budget * (planner[index] / 100).toFixed(2))
+            }}</span>
+          <input
+              v-model="planner[index]"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-20 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+              min="0"
+              max="100"
+              type="number"
+              @input="(event) => debounceSubmit({category: category, percentage: event.target.value, amount: budget * (planner[index] / 100)})"
+          />
+          <span class="font-semibold">%</span>
+        </div>
       </div>
     </div>
   </div>
@@ -30,34 +61,46 @@
 
 <script setup lang="ts">
 
+import {debounce, sum} from "lodash";
+import {CircleBudget} from "~/utils/types";
+
 const isBudgetUpdated = ref<boolean>(false)
 const budget = ref<number | undefined>()
-const isLoadingSubmit = ref<boolean>(false)
+const isLoadingSubmitBudget = ref<boolean>(false)
+const isLoadingPlanner = ref<boolean>(false)
+const planner = ref<number[]>([])
+const circleBudget = ref<CircleBudget | undefined>()
 const $categories = useCategories()
 const $loading = useLoading();
 const $circleUsers = useCircleUsers()
 
 const emit = defineEmits(['on-success'])
 const selectedCircle = computed(() => $circleUsers.value.selected)
-const expensesCategories = computed(() => $categories.value.data.filter((e: Category) => e.type !== 'income' &&  e.type !== 'receive' && e.type !== 'transfer'))
-const isDisableSaveBudget = computed(() => (isLoadingSubmit.value || isLoading.value || !isBudgetUpdated.value) && budgets.value?.length !== 0)
+const expensesCategories = computed(() => $categories.value.data.filter((e: Category) => e.type !== 'income' && e.type !== 'receive' && e.type !== 'transfer'))
+const isDisableSaveBudget = computed(() => (isLoadingSubmitBudget.value || isLoading.value || !isBudgetUpdated.value) && budgets.value?.length !== 0)
+const budgetPlanningsData = computed(() => budgetPlannings.value?.map((e) => e.amount) ?? [])
+
+let debounceSubmit = undefined
+
+onMounted(() => {
+  debounceSubmit = debounce((value) => {
+    if (budgets.value && budgets.value.length > 0) {
+      onSaveBudgetPlanner(value.amount, value.category.id, budgets.value!.at(0)!.id)
+    }
+  }, 300)
+})
 
 watch(() => budget.value, (val) => {
-  if(budgets.value && budgets.value.length > 0) {
+  if (budgets.value && budgets.value.length > 0) {
     isBudgetUpdated.value = val !== budgets.value[0].amount
   }
 })
 
-// onMounted(() => {
-//   const slider = document.querySelector('.slider');
-//   const value = document.querySelector('.value');
-
-//   slider.oninput = function() {
-//     const percentage = (slider.value - slider.min) / (slider.max - slider.min) * 100;
-//     value.innerHTML = slider.value;
-//     slider.style.background = `linear-gradient(to right, #4dc0b5 0%, #4dc0b5 ${percentage}%, #e0e0e0 ${percentage}%, #e0e0e0 100%)`;
-//   }
-// })
+watch(() => expensesCategories.value, (val) => {
+  for (const item of val) {
+    planner.value.push(0)
+  }
+})
 
 const {
   data: budgets,
@@ -71,16 +114,60 @@ const {
   onResponse: ({response}) => {
     $loading.value = false
 
-    if(response._data.length > 0) {
+    if (response._data.length > 0) {
       budget.value = response._data[0].amount
+      circleBudget.value = response._data[0]
     }
   },
   watch: [selectedCircle]
 })
 
+const {
+  data: budgetPlannings,
+  error: errorFetchBudgetPlannings,
+  pending: isLoadingBudgetPlannings,
+  refresh: refreshBudgetPlannings,
+} = await useFetch('/api/circleBudgetPlannings', {
+  query: {
+    circleBudgetId: circleBudget.value?.id
+  },
+  immediate: false,
+  onRequest({request, response}) {
+    $loading.value = true
+  },
+  onResponse: ({response}) => {
+    $loading.value = false
 
-async function onSave() {
-  isLoadingSubmit.value = true
+    if (response._data.length > 0) {
+      for (const plan of response._data) {
+        const index = expensesCategories.value.map((e) => e.id).indexOf(plan.categoryId)
+
+        planner.value[index] = +(100 * (plan.amount / (budget.value ?? 1))).toFixed(0);
+      }
+
+    }
+  },
+  watch: [circleBudget]
+})
+
+async function onSaveBudgetPlanner(amount: number, categoryId: string, circleBudgetId: string) {
+  isLoadingPlanner.value = true
+
+  const {data: result, status} = await useFetch('/api/circleBudgetPlannings', {
+    method: 'POST',
+    body: JSON.stringify({
+      amount, categoryId, circleBudgetId
+    })
+  })
+
+  if (status.value === 'success') {
+    await refreshBudgetPlannings()
+  }
+  isLoadingPlanner.value = false
+}
+
+async function onSaveBudget() {
+  isLoadingSubmitBudget.value = true
 
   const {data: result, status} = await useFetch('/api/circleBudgets', {
     method: 'POST',
@@ -90,14 +177,14 @@ async function onSave() {
   })
 
   if (status.value === 'success') {
-    budget.value = 0
-
     await refreshBudgets()
-    if(budgets.value)
-      isBudgetUpdated.value =  budget.value !== budgets.value[0].amount
+
+    if (budgets.value) {
+      isBudgetUpdated.value = budget.value !== budgets.value[0].amount
+    }
     emit('on-success')
   }
-  isLoadingSubmit.value = false
+  isLoadingSubmitBudget.value = false
 }
 
 </script>
