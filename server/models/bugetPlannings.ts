@@ -42,8 +42,11 @@ export async function createOrUpdateBudgetPlannings(amount: number, userId: stri
 export function getBudgetPlannings(circleBudgetId: string | undefined) {
     return prisma.circleBudgetPlannings.findMany({
         where: {
-            circleBudgetId: circleBudgetId,
+            circleBudgetId: circleBudgetId ?? null,
             archivedAt: null
+        },
+        include: {
+            category: true
         },
         orderBy: {
             createdAt: 'desc'
