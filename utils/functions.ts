@@ -64,7 +64,10 @@ export const generateToken = async (data: any) => {
     const encodedPayload = base64url_encode(textEncoder(JSON.stringify(data)));
     const oTkn = `${encodedHeader}.${encodedPayload}`;
 
-    const key = await crypto.subtle.importKey("raw", textEncoder(secretKey), {name: "HMAC", hash: "SHA-256"}, false, ["sign", "verify"]);
+    const key = await crypto.subtle.importKey("raw", textEncoder(secretKey), {
+        name: "HMAC",
+        hash: "SHA-256"
+    }, false, ["sign", "verify"]);
     const signature = base64url_encode(new Uint8Array(await crypto.subtle.sign({name: "HMAC"}, key, textEncoder(oTkn))))
     return `${oTkn}.${signature}`
 }
@@ -95,15 +98,16 @@ export const getTimezone = () => {
     return timezone;
 };
 
-export const currencyIDRFormatter = (currency: string | undefined | null, value:number) => {
+export const currencyIDRFormatter = (currency: string | undefined | null, value: number | undefined) => {
     const formatted = Intl.NumberFormat('ID', {
         style: 'currency',
         currency: currency ?? 'IDR',
         maximumFractionDigits: currency == 'IDR' ? 0 : undefined
-    }).format(value);
+    }).format(value ?? 0);
 
     const isAmountVisible = useAmountVisibility().value
-    if(isAmountVisible) {
+
+    if (isAmountVisible) {
         return formatted
     } else {
         return "********";
@@ -144,7 +148,11 @@ export async function checkAuth() {
     }
 }
 
-export async function registerWhenNotExist(userId: string | undefined, email: string | undefined): Promise<{ status: boolean, message: string, error: any }> {
+export async function registerWhenNotExist(userId: string | undefined, email: string | undefined): Promise<{
+    status: boolean,
+    message: string,
+    error: any
+}> {
     if (!userId || !email) return {
         status: false,
         message: 'Unable to check user',
@@ -168,7 +176,11 @@ export async function registerWhenNotExist(userId: string | undefined, email: st
         }
 
 
-        const {data: resultCreate, status: statusCreate, error: errorCreate} = await useFetch('/api/users/create.user', {
+        const {
+            data: resultCreate,
+            status: statusCreate,
+            error: errorCreate
+        } = await useFetch('/api/users/create.user', {
             method: 'POST',
             body: JSON.stringify({
                 email: email,

@@ -63,7 +63,8 @@
 
 import lodash from 'lodash';
 
-import {CircleBudget} from "~/utils/types";
+import {useCircleBudget} from "~/composables/circles";
+import {CircleBudgetPlannings} from "~/utils/types";
 
 const {debounce, sum} = lodash;
 
@@ -72,16 +73,16 @@ const budget = ref<number | undefined>()
 const isLoadingSubmitBudget = ref<boolean>(false)
 const isLoadingPlanner = ref<boolean>(false)
 const planner = ref<number[]>([])
-const circleBudget = ref<CircleBudget | undefined>()
 const $categories = useCategories()
 const $loading = useLoading();
 const $circleUsers = useCircleUsers()
+const $circleBudget = useCircleBudget();
 
 const emit = defineEmits(['on-success'])
 const selectedCircle = computed(() => $circleUsers.value.selected)
 const expensesCategories = computed(() => $categories.value.data.filter((e: Category) => e.type !== 'income' && e.type !== 'receive' && e.type !== 'transfer'))
 const isDisableSaveBudget = computed(() => (isLoadingSubmitBudget.value || isLoading.value || !isBudgetUpdated.value) && budgets.value?.length !== 0)
-const budgetPlanningsData = computed(() => budgetPlannings.value?.map((e) => e.amount) ?? [])
+const budgetPlanningsData = computed(() => $circleBudget.value?.plannings.map((e) => e.amount) ?? [])
 
 let debounceSubmit = undefined
 
@@ -119,39 +120,48 @@ const {
 
     if (response._data.length > 0) {
       budget.value = response._data[0].amount
-      circleBudget.value = response._data[0]
+      $circleBudget.value.budget = response._data[0]
+    } else {
+      $circleBudget.value.budget = undefined
+      $circleBudget.value.plannings = []
     }
+    fetchCircleBudgetPlannings()
   },
   watch: [selectedCircle]
 })
 
-const {
-  data: budgetPlannings,
-  error: errorFetchBudgetPlannings,
-  pending: isLoadingBudgetPlannings,
-  refresh: refreshBudgetPlannings,
-} = await useFetch('/api/circleBudgetPlannings', {
-  query: {
-    circleBudgetId: circleBudget.value?.id
-  },
-  immediate: false,
-  onRequest({request, response}) {
-    $loading.value = true
-  },
-  onResponse: ({response}) => {
-    $loading.value = false
+async function fetchCircleBudgetPlannings() {
+  const {
+    data: budgetPlannings,
+    error: errorFetchBudgetPlannings,
+  } = await useFetch(`/api/circleBudgetPlannings`, {
+    params: {
+      circleBudgetId: $circleBudget.value.budget?.id
+    },
+    onRequest({request, response}) {
+      $loading.value = true
+    },
+    onResponse: ({response}) => {
+      $loading.value = false
+    },
+  })
 
-    if (response._data.length > 0) {
-      for (const plan of response._data) {
-        const index = expensesCategories.value.map((e) => e.id).indexOf(plan.categoryId)
+  if(errorFetchBudgetPlannings.value) return;
 
-        planner.value[index] = +(100 * (plan.amount / (budget.value ?? 1))).toFixed(0);
-      }
+  let curBudgePlannings: CircleBudgetPlannings[];
+  curBudgePlannings = budgetPlannings.value ?? [];
 
+  $circleBudget.value.plannings = curBudgePlannings;
+  console.log(curBudgePlannings)
+
+  if (curBudgePlannings && curBudgePlannings.length > 0) {
+    for (const plan of curBudgePlannings) {
+      const index = expensesCategories.value.map((e) => e.id).indexOf(plan.categoryId)
+
+      planner.value[index] = +(100 * (plan.amount / (budget.value ?? 1))).toFixed(0);
     }
-  },
-  watch: [circleBudget]
-})
+  }
+}
 
 async function onSaveBudgetPlanner(amount: number, categoryId: string, circleBudgetId: string) {
   isLoadingPlanner.value = true
@@ -164,7 +174,7 @@ async function onSaveBudgetPlanner(amount: number, categoryId: string, circleBud
   })
 
   if (status.value === 'success') {
-    await refreshBudgetPlannings()
+    await fetchCircleBudgetPlannings()
   }
   isLoadingPlanner.value = false
 }
