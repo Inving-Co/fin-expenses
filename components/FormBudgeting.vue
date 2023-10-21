@@ -61,8 +61,11 @@
 
 <script setup lang="ts">
 
-import {debounce, sum} from "lodash";
+import lodash from 'lodash';
+
 import {CircleBudget} from "~/utils/types";
+
+const {debounce, sum} = lodash;
 
 const isBudgetUpdated = ref<boolean>(false)
 const budget = ref<number | undefined>()
