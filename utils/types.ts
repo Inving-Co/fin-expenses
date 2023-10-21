@@ -91,6 +91,18 @@ export interface CircleBudget {
     updatedAt: string
 }
 
+export interface CircleBudgetPlannings {
+    circleBudgetId: string
+    amount: number
+    id: string
+    categoryId: string
+    userId: string
+    archivedAt: string
+    createdAt: string
+    updatedAt: string
+    category: Category,
+}
+
 export interface Asset {
     id: string
     name: string

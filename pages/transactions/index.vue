@@ -36,7 +36,9 @@
 
   <general-modal id="modal-budget-plan" classModal="max-w-lg" title="Budgeting" @on-mounted="modalBudgeting = $event">
     <template #body>
-       <form-budgeting />
+      <client-only>
+        <form-budgeting />
+      </client-only>
     </template>
   </general-modal>
 
@@ -63,8 +65,11 @@
     <div v-if="transactions" class="max-h-1/4 w-full gap-4 sm:flex justify-center mb-8 mt-2">
       <expenses-structure-chart class="sm:w-1/2 md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
                                 :transactions="chartTransactions"/>
-      <div class="sm:w-1/2 md:w-1/ h-full w-full flex-grow justify-between mt-4 sm:mt-0">
-        <cash-flow-chart class="mb-4" :label-time="filterDate" :transactions="chartTransactions"/>
+      <div class="sm:w-1/2 md:w-1/2 h-full w-full flex-grow justify-between mt-4 sm:mt-0">
+        <div class="flex flex-col lg:flex-row mb-4 gap-4">
+          <cash-flow-chart class="w-full sm:w-[500px]" :label-time="filterDate" :transactions="chartTransactions"/>
+          <budget-plan-chart class="w-full" :transactions="chartTransactions" />
+        </div>
         <debt-percentage-by-income :label-time="filterDate" :transactions="chartTransactions"/>
       </div>
     </div>
@@ -262,6 +267,7 @@ import {useCategories} from "~/composables/categories";
 import {useCircleUsers} from "~/composables/circles";
 import {useTransactions} from "~/composables/transactions";
 import FormCategory from "~/components/FormCategory.vue";
+import BudgetPlanChart from "~/components/BudgetPlanChart.vue";
 
 const searchKey = ref<string>('')
 const filterDate = ref<string>('this month')

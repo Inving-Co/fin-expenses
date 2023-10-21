@@ -2,7 +2,7 @@
   <div
     class="p-6 bg-white border border-gray-200 rounded-lg drop-shadow-soft hover:drop-shadow-xl dark:bg-gray-800 dark:border-gray-700">
     <h3 class="font-bold dark:text-gray-300">Cash Flow</h3>
-    <div class="flex-grow border-t mt-2 mb-4 border-gray-400" />
+    <hr class="flex-grow border-t mt-2 mb-4 border-gray-400"/>
     <div class="mt-4 text-sm text-gray-500 font-bold dark:text-gray-300">{{
       capitalizeFirstLetter(labelTime)
     }}</div>
