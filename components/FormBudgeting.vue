@@ -15,7 +15,7 @@
         <icons-save v-else class="h-5 w-full"/>
       </button>
     </div>
-    <div v-if="budget" class="mt-5 max-h-56">
+    <div v-if="budget && isHideListCategory" class="mt-5 max-h-56">
       <hr class="w-full my-8 border-gray-200 dark:border-gray-700">
       <!--      <div class="flex justify-end">-->
       <!--        <button type="button"-->
@@ -82,6 +82,7 @@ const emit = defineEmits(['on-success'])
 const selectedCircle = computed(() => $circleUsers.value.selected)
 const expensesCategories = computed(() => $categories.value.data.filter((e: Category) => e.type !== 'income' && e.type !== 'receive' && e.type !== 'transfer'))
 const isDisableSaveBudget = computed(() => (isLoadingSubmitBudget.value || isLoading.value || !isBudgetUpdated.value) && budgets.value?.length !== 0)
+const isHideListCategory = computed(() => budgets.value?.length !== 0)
 const budgetPlanningsData = computed(() => $circleBudget.value?.plannings.map((e) => e.amount) ?? [])
 
 let debounceSubmit = undefined
@@ -124,6 +125,7 @@ const {
     } else {
       $circleBudget.value.budget = undefined
       $circleBudget.value.plannings = []
+      budget.value = undefined
     }
     fetchCircleBudgetPlannings()
   },
@@ -152,7 +154,6 @@ async function fetchCircleBudgetPlannings() {
   curBudgePlannings = budgetPlannings.value ?? [];
 
   $circleBudget.value.plannings = curBudgePlannings;
-  console.log(curBudgePlannings)
 
   if (curBudgePlannings && curBudgePlannings.length > 0) {
     for (const plan of curBudgePlannings) {
