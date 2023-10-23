@@ -64,7 +64,7 @@
 import lodash from 'lodash';
 
 import {useCircleBudget} from "~/composables/circles";
-import {CircleBudgetPlannings} from "~/utils/types";
+import {Category, CircleBudgetPlannings} from "~/utils/types";
 
 const {debounce, sum} = lodash;
 
@@ -102,9 +102,7 @@ watch(() => budget.value, (val) => {
 })
 
 watch(() => expensesCategories.value, (val) => {
-  for (const item of val) {
-    planner.value.push(0)
-  }
+  setInitialPlanner(val)
 })
 
 const {
@@ -161,6 +159,14 @@ async function fetchCircleBudgetPlannings() {
 
       planner.value[index] = +(100 * (plan.amount / (budget.value ?? 1))).toFixed(0);
     }
+  }else {
+    setInitialPlanner(expensesCategories.value)
+  }
+}
+
+function setInitialPlanner(categories: Category[]) {
+  for (const item of categories) {
+    planner.value.push(0)
   }
 }
 
