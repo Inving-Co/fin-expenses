@@ -1,14 +1,14 @@
 import {createBudget, createOrUpdateBudget} from "~/server/models/bugets";
 
 export default defineEventHandler(async (event) => {
-    const {amount} = await readBody(event);
+    const {amount, windowTime} = await readBody(event);
 
     try {
         const cookies = parseCookies(event)
         const userId = cookies['user-id']
         const circle = cookies['selected-circle'] ? JSON.parse(cookies['selected-circle']) : undefined
 
-        const result = await createOrUpdateBudget(amount as number, userId, circle?.id)
+        const result = await createOrUpdateBudget(amount as number, userId, circle?.id, windowTime)
 
         return {
             status: 200,
