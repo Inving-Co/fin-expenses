@@ -94,6 +94,8 @@ model CircleBudgets {
   userId     String?   @db.Uuid
   circleId   String?   @db.Uuid
   amount     Float
+  startedAt  DateTime
+  endedAt    DateTime
   archivedAt DateTime?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now()) @updatedAt
