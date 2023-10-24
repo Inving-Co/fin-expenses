@@ -11,7 +11,6 @@ export async function createBudgetPlannings(amount: number, userId: string | und
 export async function createOrUpdateBudgetPlannings(amount: number, userId: string | undefined, circleBudgetId: string, categoryId: string) {
     const existingBudgetPlanning = await prisma.circleBudgetPlannings.findFirst({
         where: {
-            userId: userId,
             circleBudgetId: circleBudgetId,
             categoryId: categoryId
         }
