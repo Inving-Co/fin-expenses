@@ -18,7 +18,6 @@ export async function createOrUpdateBudget(amount: number, userId: string | unde
     if (today >= startDate && today <= endDate) {
         const existingBudget = await prisma.circleBudgets.findFirst({
             where: {
-                userId: userId,
                 circleId: circleId,
                 endedAt: endDate
             }
