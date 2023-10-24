@@ -79,19 +79,25 @@ const props = defineProps({
 
 watch(() => [$circleBudget.value.plannings, props.transactions], ([newPlan, newTrx], [oldPlan, oldTrx]) => {
   data.value = setData(newPlan as CircleBudgetPlannings[], newTrx as Record[])
-}, { deep: true })
+}, {deep: true})
 
 const filteredCategories = computed(() => Array.from($categories.value.data.filter((e) => e.type !== 'income' && e.type !== 'transfer' && e.type !== 'receive')
     .sort((a, b) => {
-  if (a.name > b.name) return 1;
-  if (a.name < b.name) return -1;
-  return 0;
-}).map((e) => capitalizeFirstLetter(e.name))))
+      if (a.name > b.name) return 1;
+      if (a.name < b.name) return -1;
+      return 0;
+    }).map((e) => capitalizeFirstLetter(e.name))))
 
 const sumOfPlanned = computed(() => $circleBudget.value.plannings?.reduce((sum: number, n: CircleBudgetPlannings) => sum + n.amount, 0))
 
 function setData(plannings: CircleBudgetPlannings[], listTrx: Record[]): { labels: string[], datasets: Datasets[] } {
-  const grouped = groupBy(listTrx.filter((val: Record) => val.category.type !== 'income'), (trx: Record) => `${trx.category.name}`);
+  const filteredPlannings = plannings.filter((e) => e.amount);
+
+  const filteredTransactions = listTrx.filter((val: Record) =>
+      val.category.type !== 'income' && filteredPlannings.map((e) => e.categoryId).includes(val.category.id)
+  );
+
+  const grouped = groupBy(filteredTransactions, (trx: Record) => `${trx.category.name}`);
   const sortedKeys = Object.keys(grouped).sort();
 
   const groupedTrx = sortedKeys.reduce((acc: any, key: any) => {
@@ -103,22 +109,19 @@ function setData(plannings: CircleBudgetPlannings[], listTrx: Record[]): { label
     return reduce(values, (sum: number, n: Record) => sum + n.amount, 0);
   });
 
+
   return {
-    labels: filteredCategories.value,
+    labels: filteredPlannings.map((e) => e.category.name),
     datasets: [
       {
         label: 'Actual',
         backgroundColor: '#EC7514',
-        data: Object.values(summedData),
+        data: filteredPlannings.map((e) => summedData[e.category.name] || 0),
       },
       {
         label: 'Planned',
         backgroundColor: '#0080a3',
-        data: plannings?.sort((a, b) => {
-          if (a.category.name > b.category.name) return 1;
-          if (a.category.name < b.category.name) return -1;
-          return 0;
-        }).map((e) => e.amount) ?? []
+        data: filteredPlannings.map((e) => e.amount) ?? []
       },
     ]
   }
