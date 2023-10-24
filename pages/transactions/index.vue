@@ -34,25 +34,46 @@
     </template>
   </general-modal>
 
+  <general-modal id="modal-budget-plan" classModal="max-w-lg" title="Budgeting" @on-mounted="modalBudgeting = $event">
+    <template #body>
+      <client-only>
+        <form-budgeting/>
+      </client-only>
+    </template>
+  </general-modal>
+
   <div v-if="errorFetchTransactions">{{ errorFetchTransactions.statusMessage }}</div>
   <div v-show="!errorFetchTransactions" class="relative sm:rounded-lg">
-    <div class="flex flex-col my-6">
-      <div class="flex">
-        <div class="text-2xl text-gray-500">My Financial Records</div>
-        <div class="ml-2 mr-1" @click.prevent="toggleIsAmountVisible()">
-          <span v-if="isAmountVisible"><icons-eye-visible class="w-6 h-6 cursor-pointer text-gray-500"/></span>
-          <span v-else><icons-eye-invisible class="w-6 h-6 cursor-pointer text-gray-500"/></span>
+    <div class="flex justify-between items-center">
+      <div class="flex flex-col my-6">
+        <div class="flex">
+          <div class="text-2xl text-gray-500">My Financial Records</div>
+          <div class="ml-2 mr-1" @click.prevent="toggleIsAmountVisible()">
+            <span v-if="isAmountVisible"><icons-eye-visible class="w-6 h-6 cursor-pointer text-gray-500"/></span>
+            <span v-else><icons-eye-invisible class="w-6 h-6 cursor-pointer text-gray-500"/></span>
+          </div>
         </div>
+        <div class="text-md mt-2 text-gray-400">Records and Plan your next move for a better week</div>
       </div>
-      <div class="text-md mt-2 text-gray-400">Records and Plan your next move for a better week</div>
+      <button type="button"
+              class="h-[38px] inline-flex items-center text-white bg-primary-500 dark:bg-primary-700 dark:text-white drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:hover:bg-gray-700"
+              @click="modalBudgeting?.show()">
+        <icons-plan class="mr-2"/>
+        Plan
+      </button>
     </div>
-    <div v-if="transactions" class="max-h-1/4 w-full gap-4 sm:flex justify-center mb-8 mt-2">
-      <expenses-structure-chart class="sm:w-1/2 md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
-                                :transactions="chartTransactions"/>
-      <div class="sm:w-1/2 md:w-1/ h-full w-full flex-grow justify-between mt-4 sm:mt-0">
-        <cash-flow-chart class="mb-4" :label-time="filterDate" :transactions="chartTransactions"/>
-        <debt-percentage-by-income :label-time="filterDate" :transactions="chartTransactions"/>
-      </div>
+    <div v-if="transactions" class="max-h-1/4 w-full gap-4 md:flex justify-center mb-8 mt-2">
+      <client-only>
+        <expenses-structure-chart class="md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
+                                  :transactions="chartTransactions"/>
+        <div class="md:w-1/2 h-full w-full flex-grow justify-between mt-4 md:mt-0">
+          <div class="flex flex-col lg:flex-row mb-4 gap-4">
+            <cash-flow-chart class="w-full lg:w-1/3" :label-time="filterDate" :transactions="chartTransactions"/>
+            <budget-plan-chart class="w-full sm:w-2/1" :transactions="chartTransactions"/>
+          </div>
+          <debt-percentage-by-income :label-time="filterDate" :transactions="chartTransactions"/>
+        </div>
+      </client-only>
     </div>
     <div class="sm:flex p-4 justify-center sm:rounded-t-lg sm:justify-between bg-white dark:bg-gray-700"
          style="box-shadow: 0 10px 12px rgba(0, 0, 0, 0.1)">
@@ -248,6 +269,7 @@ import {useCategories} from "~/composables/categories";
 import {useCircleUsers} from "~/composables/circles";
 import {useTransactions} from "~/composables/transactions";
 import FormCategory from "~/components/FormCategory.vue";
+import BudgetPlanChart from "~/components/BudgetPlanChart.vue";
 
 const searchKey = ref<string>('')
 const filterDate = ref<string>('this month')
@@ -262,6 +284,7 @@ const isAmountVisible = useAmountVisibility()
 let modalFormTransaction: ElementEvent | null = null
 let modalFormCategory: ElementEvent | null = null
 let modalConfDelete: ElementEvent | null = null
+let modalBudgeting: ElementEvent | null = null
 let refreshInputAmount: any = null
 
 const selectedCircle = computed(() => $circleUsers.value.selected)

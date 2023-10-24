@@ -82,7 +82,7 @@ const handler = async (_request: Request): Promise<Response> => {
         const statusSent = []
 
         for (let i = 0; i < circleUsers.length; i++) {
-            const res = await fetch('https://qstash.upstash.io/v1/publish/https://xoixclvjgysqxybilnfk.supabase.co/functions/v1/send-email', {
+            const res = await fetch('https://qstash.upstash.io/v2/publish/https://xoixclvjgysqxybilnfk.supabase.co/functions/v1/send-email', {
                 method: 'POST',
                 headers: {
                     'Upstash-Forward-Authorization': `Bearer ${Deno.env.get('SUP_ANON_KEY')}`,

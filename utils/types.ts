@@ -71,7 +71,7 @@ export interface Circle {
 }
 
 export interface CircleUser {
-circleId: string
+    circleId: string
     id: string
     userId: string
     createdAt: string
@@ -80,6 +80,27 @@ circleId: string
     activeNote: string | undefined
     activeNoteId: string | undefined
     circle: Circle | undefined
+}
+
+export interface CircleBudget {
+    circleId: string
+    amount: number
+    id: string
+    userId: string
+    createdAt: string
+    updatedAt: string
+}
+
+export interface CircleBudgetPlannings {
+    circleBudgetId: string
+    amount: number
+    id: string
+    categoryId: string
+    userId: string
+    archivedAt: string
+    createdAt: string
+    updatedAt: string
+    category: Category,
 }
 
 export interface Asset {
