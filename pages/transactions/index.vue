@@ -64,14 +64,19 @@
     </div>
     <div v-if="transactions" class="max-h-1/4 w-full gap-4 md:flex justify-center mb-8 mt-2">
       <client-only>
-        <expenses-structure-chart class="md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
-                                  :transactions="chartTransactions"/>
+
         <div class="md:w-1/2 h-full w-full flex-grow justify-between mt-4 md:mt-0">
-          <div class="flex flex-col lg:flex-row mb-4 gap-4">
-            <cash-flow-chart class="w-full lg:w-1/3" :label-time="filterDate" :transactions="chartTransactions"/>
-            <budget-plan-chart class="w-full sm:w-2/1" :transactions="chartTransactions"/>
+          <div class="flex flex-col mb-4 gap-4">
+            <div class="flex w-full flex-col lg:flex-row gap-4">
+              <expenses-structure-chart class="w-full lg:w-4/12" :label-time="filterDate"
+                                        :transactions="chartTransactions"/>
+              <budget-plan-chart class="w-full lg:w-8/12" :transactions="chartTransactions"/>
+            </div>
+            <div class="flex flex-col lg:flex-row gap-4">
+              <cash-flow-chart class="w-full" :label-time="filterDate" :transactions="chartTransactions"/>
+              <debt-percentage-by-income class="w-full" :label-time="filterDate" :transactions="chartTransactions"/>
+            </div>
           </div>
-          <debt-percentage-by-income :label-time="filterDate" :transactions="chartTransactions"/>
         </div>
       </client-only>
     </div>
