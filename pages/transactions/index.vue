@@ -37,7 +37,7 @@
   <general-modal id="modal-budget-plan" classModal="max-w-lg" title="Budgeting" @on-mounted="modalBudgeting = $event">
     <template #body>
       <client-only>
-        <form-budgeting />
+        <form-budgeting/>
       </client-only>
     </template>
   </general-modal>
@@ -55,23 +55,25 @@
         </div>
         <div class="text-md mt-2 text-gray-400">Records and Plan your next move for a better week</div>
       </div>
-        <button type="button"
-                class="h-[38px] inline-flex items-center text-white bg-primary-500 dark:bg-primary-700 dark:text-white drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:hover:bg-gray-700"
-                @click="modalBudgeting?.show()">
-          <icons-plan class="mr-2"/>
-          Plan
-        </button>
+      <button type="button"
+              class="h-[38px] inline-flex items-center text-white bg-primary-500 dark:bg-primary-700 dark:text-white drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:hover:bg-gray-700"
+              @click="modalBudgeting?.show()">
+        <icons-plan class="mr-2"/>
+        Plan
+      </button>
     </div>
     <div v-if="transactions" class="max-h-1/4 w-full gap-4 md:flex justify-center mb-8 mt-2">
-      <expenses-structure-chart class="md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
-                                :transactions="chartTransactions"/>
-      <div class="md:w-1/2 h-full w-full flex-grow justify-between mt-4 md:mt-0">
-        <div class="flex flex-col lg:flex-row mb-4 gap-4">
-          <cash-flow-chart class="w-full lg:w-1/3" :label-time="filterDate" :transactions="chartTransactions"/>
-          <budget-plan-chart class="w-full sm:w-2/1" :transactions="chartTransactions" />
+      <client-only>
+        <expenses-structure-chart class="md:w-1/4 lg:w-1/5 w-full" :label-time="filterDate"
+                                  :transactions="chartTransactions"/>
+        <div class="md:w-1/2 h-full w-full flex-grow justify-between mt-4 md:mt-0">
+          <div class="flex flex-col lg:flex-row mb-4 gap-4">
+            <cash-flow-chart class="w-full lg:w-1/3" :label-time="filterDate" :transactions="chartTransactions"/>
+            <budget-plan-chart class="w-full sm:w-2/1" :transactions="chartTransactions"/>
+          </div>
+          <debt-percentage-by-income :label-time="filterDate" :transactions="chartTransactions"/>
         </div>
-        <debt-percentage-by-income :label-time="filterDate" :transactions="chartTransactions"/>
-      </div>
+      </client-only>
     </div>
     <div class="sm:flex p-4 justify-center sm:rounded-t-lg sm:justify-between bg-white dark:bg-gray-700"
          style="box-shadow: 0 10px 12px rgba(0, 0, 0, 0.1)">
