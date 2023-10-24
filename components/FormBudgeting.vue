@@ -16,10 +16,10 @@
           <icons-save v-else class="h-5 w-full"/>
         </button>
       </div>
-      <div class="flex gap-3 justify-between">
+      <div class="flex gap-3 justify-between mb-3">
         <div
             v-for="(window, index) of windowTime"
-            class="h-10 inline-flex items-center mb-4">
+            class="h-10 inline-flex items-center">
           <input v-model="selectedWindowTime.selectedValue" :id="`radio-${index}`" type="radio" :value="window.value"
                  class="w-4 h-4 hidden peer text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                  :name="`radio-${index}`" required
@@ -32,6 +32,7 @@
           </label>
         </div>
       </div>
+      <div class="flex items-center text-sm text-gray-400 mb-4"><span class="mr-2"><icons-info/></span>Pick your recurring budgeting time</div>
     </div>
     <div v-if="budget && isHideListCategory" class="mt-5 max-h-56">
       <hr class="w-full my-8 border-gray-200 dark:border-gray-700">
@@ -47,7 +48,7 @@
       <!--        </button>-->
       <!--      </div>-->
       <div class="flex justify-between">
-        <span class="font-semibold">Total</span>
+        <span class="font-semibold text-gray-400">Total</span>
         <div class="flex gap-4">
           <span class="font-normal text-primary-200">{{
               currencyIDRFormatter($circleUsers.selected?.currency, sum(budgetPlanningsData))
