@@ -32,7 +32,9 @@
           </label>
         </div>
       </div>
-      <div class="flex items-center text-sm text-gray-400 mb-4"><span class="mr-2"><icons-info/></span>Pick your recurring budgeting time</div>
+      <div class="flex items-center text-sm text-gray-400 mb-4"><span class="mr-2"><icons-info/></span>Pick your
+        recurring budgeting time
+      </div>
     </div>
     <div v-if="budget && isHideListCategory" class="mt-5 max-h-56">
       <hr class="w-full my-8 border-gray-200 dark:border-gray-700">
@@ -53,7 +55,7 @@
           <span class="font-normal text-primary-200">{{
               currencyIDRFormatter($circleUsers.selected?.currency, sum(budgetPlanningsData))
             }}</span>
-          <span class="font-semibold w-20 text-primary-500">{{ sum(planner).toFixed(0) }}%</span>
+          <span class="font-semibold w-20 text-primary-500">{{ sumPlanner(planner) }}%</span>
         </div>
       </div>
       <hr class="w-full my-8 border-gray-200 dark:border-gray-700">
@@ -71,7 +73,7 @@
               min="0"
               max="100"
               type="number"
-              @input="(event) => debounceSubmit({category: category, percentage: event.target.value, amount: budget * (planner[index] / 100)})"
+              @input="(event) => debounceSubmit({category: category, percentage: event.target.value, amount: !planner[index] ? 0 : budget * (planner[index] / 100)})"
           />
           <span class="font-semibold">%</span>
         </div>
@@ -122,6 +124,13 @@ const expensesCategories = computed(() => $categories.value.data.filter((e: Cate
 const isDisableSaveBudget = computed(() => (isLoadingSubmitBudget.value || isLoading.value || !isBudgetUpdated.value) && currentBudget.value)
 const isHideListCategory = computed(() => !currentBudget.value || !isBudgetUpdated.value)
 const budgetPlanningsData = computed(() => $circleBudget.value?.plannings.map((e) => e.amount) ?? [])
+const sumPlanner = (planner: any) => {
+  try {
+    return sum(planner).toFixed(0)
+  } catch(e) {
+    return 0
+  }
+}
 
 const windowTime: { label: string, value: string }[] = [
   {
