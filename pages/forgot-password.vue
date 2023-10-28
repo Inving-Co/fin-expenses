@@ -48,7 +48,7 @@ const isLoadingSubmit = ref(false)
 const email = ref('')
 
 onMounted(async () => {
-    const result = await supabase.auth.getSession()
+    const result = await supabase().auth.getSession()
     if (result.data.session) {
         return navigateTo('/transactions')
     }
@@ -62,7 +62,7 @@ async function onSubmit() {
         return;
     }
 
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email.value, {
+    const { data, error } = await supabase().auth.resetPasswordForEmail(email.value, {
         redirectTo: `${window.location.origin}/`
     })
 

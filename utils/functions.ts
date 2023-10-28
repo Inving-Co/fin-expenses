@@ -114,7 +114,11 @@ export const currencyIDRFormatter = (currency: string | undefined | null, value:
     }
 }
 
-export const supabase = createClient('', '')
+// @ts-ignore
+export const supabase = () => {
+    const config = useRuntimeConfig()
+    return createClient(config.public.SUPABASE_URL, config.public.SUPABASE_KEY)
+}
 
 export async function onSignOut() {
     localStorage.clear()
@@ -129,13 +133,13 @@ export async function onSignOut() {
     }
 
 
-    await supabase.auth.signOut()
+    await supabase().auth.signOut()
 
     window.location.href = '/'
 }
 
 export async function checkAuth() {
-    const result = await supabase.auth.getSession()
+    const result = await supabase().auth.getSession()
     const auth = useAuth()
 
     if (result.data.session) {

@@ -7,7 +7,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     const accessToken = useCookie('my-access-token')
 
     if (refreshToken.value && accessToken.value) {
-        const result = await supabase.auth.setSession({
+        const result = await supabase().auth.setSession({
             access_token: accessToken.value,
             refresh_token: refreshToken.value
         })

@@ -7,7 +7,7 @@ export default defineNuxtPlugin(async () => {
     const accessToken = useCookie('my-access-token')
 
     if (accessToken) {
-        const result = await supabase.auth.getSession()
+        const result = await supabase().auth.getSession()
 
         if(result.data.session) {
             const auth = useAuth()

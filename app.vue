@@ -34,7 +34,7 @@ onMounted(() => {
   }
 
 
-  supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
+  supabase().auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
     if (event === 'SIGNED_OUT') {
       // delete cookies on sign out
       const expires = new Date(0).toUTCString()

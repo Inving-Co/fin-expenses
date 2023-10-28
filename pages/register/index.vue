@@ -78,7 +78,7 @@ async function onSubmitRegister() {
       throw 'Password Confirmation Invalid'
     }
 
-    const { data, error: errorSignup } = await supabase.auth.signUp({
+    const { data, error: errorSignup } = await supabase().auth.signUp({
       email: email.value,
       password: password.value,
       options: {
