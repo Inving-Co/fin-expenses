@@ -56,7 +56,7 @@ const newPassword = ref('')
 const confPassword = ref('')
 
 onMounted(async () => {
-    const result = await supabase.auth.getSession()
+    const result = await supabase().auth.getSession()
     if (!result.data.session) {
         return navigateTo('/')
     }
@@ -70,7 +70,7 @@ async function onSubmitNewPassword() {
         return;
     }
 
-    const { data, error } = await supabase.auth.updateUser({
+    const { data, error } = await supabase().auth.updateUser({
         password: newPassword.value
     })
 
@@ -78,7 +78,7 @@ async function onSubmitNewPassword() {
         toast.error(error.message);
     } else {
         toast.success('Password Updated');
-        
+
         return navigateTo('/transactions')
     }
 

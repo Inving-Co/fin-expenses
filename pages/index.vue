@@ -125,7 +125,7 @@ async function onSubmitLogin() {
     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
   }
 
-  const {data, error} = await supabase.auth.signInWithPassword({
+  const {data, error} = await supabase().auth.signInWithPassword({
     email: email.value,
     password: password.value,
   })
@@ -152,7 +152,7 @@ async function onSubmitLogin() {
 }
 
 async function onSubmitLoginWithGoogle() {
-  const {data, error} = await supabase.auth.signInWithOAuth({
+  const {data, error} = await supabase().auth.signInWithOAuth({
     provider: 'google',
   })
 
