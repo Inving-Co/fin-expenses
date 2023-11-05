@@ -28,8 +28,17 @@ const handler = async (_request: Request): Promise<Response> => {
                 "CircleBudgets" as cb
             WHERE
                 cb."endedAt" < NOW()
+                AND cb."archivedAt" IS NULL
             `
+
       for (const row of result.rows) {
+
+        await connection.queryObject`
+          UPDATE "CircleBudgets"
+          SET "archivedAt" = NOW()
+          WHERE "id" = ${row.id}
+        `;
+
         // Calculate the difference between startedAt and endedAt
         const differenceInMilliseconds = new Date(row.endedAt).getTime() - new Date(row.startedAt).getTime();
 
