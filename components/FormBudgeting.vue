@@ -89,16 +89,19 @@ import lodash from 'lodash';
 import {useCircleBudget} from "~/composables/circles";
 import {Category, CircleBudgetPlannings} from "~/utils/types";
 import {
-  addMonths, differenceInMonths,
+  addMonths,
+  differenceInMonths,
   endOfMonth,
   endOfToday,
   endOfWeek,
-  endOfYesterday, format, isSameMonth, isSameWeek, isToday, parseISO,
+  format,
+  isSameMonth,
+  isSameWeek,
+  isToday,
+  parseISO,
   startOfMonth,
   startOfToday,
-  startOfWeek,
-  startOfYear,
-  startOfYesterday, subMonths
+  startOfWeek
 } from "date-fns";
 import {toast} from "vue3-toastify";
 
@@ -195,7 +198,6 @@ const {
   },
   onResponse: ({response}) => {
     $loading.value = false
-
     if (response._data) {
       budget.value = response._data.amount
       selectedWindowTime.value.selectedValue = getDateRangeString(parseISO(response._data.startedAt), parseISO(response._data.endedAt))
@@ -343,11 +345,11 @@ function getDateRangeString(start: Date, end: Date): string {
       case 5:
         return '6 months';
       default:
-        throw new Error('Invalid date range');
+        return 'Many Days'
     }
   }
 
-  throw new Error('Invalid date range');
+  return 'Many Days'
 }
 
 </script>
