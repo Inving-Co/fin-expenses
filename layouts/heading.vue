@@ -132,6 +132,13 @@
             </nuxt-link>
           </span>
         </li>
+        <li>
+          <span class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg py-3">
+            <nuxt-link to="/stocks"
+                       :class="isCurrentPathActive('/stocks')">Stocks
+            </nuxt-link>
+          </span>
+        </li>
         <li v-if="isLoggedIn">
           <span class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg py-3">
             <nuxt-link to="/notes"
@@ -249,4 +256,3 @@ function isCurrentPathActive(path: string): string {
 }
 
 </script>
-

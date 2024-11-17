@@ -1,4 +1,3 @@
-import QuillEditor from '@vueup/vue-quill';
 <template>
   <div class="mb-24">
     <div class="flex flex-col sm:flex-row justify-between sm:items-end my-6">

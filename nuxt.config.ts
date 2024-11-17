@@ -42,6 +42,7 @@ export default defineNuxtConfig({
     plugins: ["~/plugins/vercel.client.ts", "~/plugins/lottie.ts", "~/plugins/quill.client.ts"],
     runtimeConfig: {
         APP_SECRET_PIN: process.env.APP_SECRET_PIN,
+        ALPHA_VANTAGE_API_KEY: process.env.ALPHA_VANTAGE_API_KEY,
         public: {
             APP_SECRET_KEY: process.env.APP_SECRET_KEY,
             APP_DOMAIN: process.env.APP_DOMAIN,

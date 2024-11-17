@@ -23,6 +23,7 @@ model Users {
   circles               Circles[]
   records               Records[]
   UserSettings          UserSettings[]
+  stockFavorites        StockFavorites[]
 }
 
 model UserSettings {
@@ -202,4 +203,15 @@ model BulkRecords {
   recordId       String        @db.Uuid
   record         Records?      @relation(fields: [recordId], references: [id])
   assetHistory   AssetHistory? @relation(fields: [assetHistoryId], references: [id])
+}
+
+model StockFavorites {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String?  @db.Uuid
+  symbol    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  user      Users?   @relation(fields: [userId], references: [id])
+
+  @@unique([userId, symbol])
 }
