@@ -1,7 +1,14 @@
 <template>
   <div
       class="p-6 bg-white border border-gray-200 rounded-lg drop-shadow-soft hover:drop-shadow-xl dark:bg-gray-800 dark:border-gray-700">
-    <h3 class="font-bold dark:text-gray-300">Expenses Structure</h3>
+    <div class="flex justify-between items-center">
+      <h3 class="font-bold dark:text-gray-300">Expenses Structure</h3>
+      <button v-if="isFiltered"
+          class="h-[30px] p-1 text-gray-500 hover:text-gray-700 focus:outline-none font-medium rounded-lg text-sm dark:text-gray-400"
+          type="button" @click="resetFilter">
+        <icons-refresh class="inline" />
+      </button>
+    </div>
     <hr class="flex-grow border-t mt-2 mb-4 border-gray-400"/>
     <div class="mt-4 text-sm text-gray-500 font-bold dark:text-gray-300">{{
         capitalizeFirstLetter(labelTime)
@@ -13,22 +20,34 @@
     </div>
     <Doughnut v-if="data.labels.length > 0" class="my-4" :data="data" :options="{
       responsive: true,
+      onClick: (event, elements) => {
+        if (elements && elements.length > 0) {
+          const index = elements[0].index;
+          const categoryId = categoryIds[index];
+          handleChartClick(categoryId);
+        }
+      },
       elements: {
         center: {
           text: currencyIDRFormatter($circleUsers.selected?.currency, sumOfAmount),
-          color: '#9F9384', // Default is #000000
-          fontStyle: 'Arial', // Default is Arial
-          sidePadding: 50, // Default is 20 (as a percentage)
-          minFontSize: 9, // Default is 20 (in px), set to false and text will not wrap.
-          lineHeight: 25 // Default is 25 (in px), used for when text wraps
+          color: '#9F9384',
+          fontStyle: 'Arial',
+          sidePadding: 50,
+          minFontSize: 9,
+          lineHeight: 25
         }
       },
       plugins: {
         legend: {
           display: false
         },
-        customPlugin: {
-          consoleText: 'testText'
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const value = context.raw;
+              return ` ${currencyIDRFormatter($circleUsers.selected?.currency, value)}`;
+            }
+          }
         }
       },
     }" :plugins="[{
@@ -46,7 +65,7 @@ import {PropType} from "@vue/runtime-core";
 import {Record} from "~/utils/types";
 import {capitalizeFirstLetter} from "~/utils/functions";
 import {useCircleUsers} from "~/composables/circles";
-
+import {useCategories} from "~/composables/categories";
 
 interface Datasets {
   backgroundColor: string[],
@@ -65,7 +84,13 @@ const data = ref<{ labels: string[], datasets: Datasets[] }>({
   }]
 })
 
+const categoryIds = ref<string[]>([])
+const previousFilterState = ref<string[]>([])
+const hasChartFilter = ref(false)
 const $circleUsers = useCircleUsers()
+const $categories = useCategories()
+
+const emit = defineEmits(['on-filter-changed'])
 
 const props = defineProps({
   labelTime: {
@@ -77,6 +102,8 @@ const props = defineProps({
     required: true,
   }
 })
+
+const isFiltered = computed(() => hasChartFilter.value)
 
 onMounted(() => {
   if (props.transactions) {
@@ -97,23 +124,71 @@ function setData(listTrx: Record[]): { labels: string[], datasets: Datasets[] } 
 
   let names = new Set()
   let colors = new Set()
+  categoryIds.value = []
 
   forEach(keys, (val: string) => {
-    const splitted = split(val, '/')
-
-    names.add(capitalizeFirstLetter(splitted[1]))
-    colors.add(`#${splitted[2]}`)
+    const [id, name, color] = split(val, '/')
+    names.add(capitalizeFirstLetter(name))
+    colors.add(`#${color}`)
+    categoryIds.value.push(id)
   })
-
-  const data = map(values, (values: Record[]) => reduce(values, (sum: number, n: Record) => sum + n.amount, 0))
 
   return {
     labels: Array.from(names) as string[],
     datasets: [{
       backgroundColor: Array.from(colors) as string[],
-      data: data
+      data: map(values, (val: Record[]) => reduce(val, (sum: number, n: Record) => sum + n.amount, 0))
     }]
   }
+}
+
+function handleChartClick(categoryId: string) {
+  const selectedCircle = $circleUsers.value.selected;
+  if (!selectedCircle) return;
+
+  // Store current filter state before changing it
+  const cats = useCookie<string>(`${selectedCircle.id}-current-filtered-categories-selected`);
+  previousFilterState.value = cats.value ? cats.value.split(',') : [];
+  
+  // Reset all categories checked state
+  $categories.value.data.forEach((cat: any) => {
+    cat.checked = false;
+  });
+
+  // Find and check the clicked category
+  const category = $categories.value.data.find((cat: any) => cat.id === categoryId);
+  if (category) {
+    category.checked = true;
+  }
+
+  // Save to cookie and emit event
+  cats.value = categoryId;
+  hasChartFilter.value = true;
+  emit('on-filter-changed', [categoryId]);
+}
+
+function resetFilter() {
+  const selectedCircle = $circleUsers.value.selected;
+  if (!selectedCircle) return;
+
+  // Reset all categories checked state
+  $categories.value.data.forEach((cat: any) => {
+    cat.checked = false;
+  });
+
+  // Restore previous filter state
+  previousFilterState.value.forEach((categoryId) => {
+    const category = $categories.value.data.find((cat: any) => cat.id === categoryId);
+    if (category) {
+      category.checked = true;
+    }
+  });
+
+  // Save to cookie and emit event
+  const cats = useCookie<string>(`${selectedCircle.id}-current-filtered-categories-selected`);
+  cats.value = previousFilterState.value.length > 0 ? previousFilterState.value.join(',') : undefined;
+  hasChartFilter.value = false;
+  emit('on-filter-changed', previousFilterState.value);
 }
 
 function onBeforeDraw(chart: any) {
@@ -202,8 +277,6 @@ function onBeforeDraw(chart: any) {
   }
 
 }
-
-
 </script>
 
 <style scoped></style>

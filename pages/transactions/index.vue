@@ -92,7 +92,7 @@
 
         <dropdowns-filter-dates
             @on-filter-changed="startFilterDate = $event.start; endFilterDate = $event.end; filterDate = $event.label"/>
-        <dropdowns-filter-categories/>
+        <dropdowns-filter-categories style="z-index: 99999;"/>
 
         <button
             class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
