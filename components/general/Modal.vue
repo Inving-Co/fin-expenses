@@ -1,7 +1,7 @@
 <template>
   <slot name="trigger" :activator="() => { toggleModal(true); emit('on-trigger-click') }"/>
   <div :id=props.id tabindex="-1" aria-hidden="true"
-       class="backdrop-blur-sm fixed flex justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 hidden bg-black bg-opacity-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full">
+       class="backdrop-blur-sm fixed flex justify-center items-center align-center top-0 left-0 right-0 bottom-0 z-50 hidden bg-black bg-opacity-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full" style="z-index: 99999999;">
     <div :class="`relative w-full ${classModal} max-h-full`">
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 p-4">
         <div class="w-full mb-4">
