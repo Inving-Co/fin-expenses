@@ -49,45 +49,29 @@
               class="text-red-500">*</span></label>
           <general-currency-field v-model="formTransaction.amount" name="amount" @keyup.enter="onSaveExpenses" />
         </div>
-        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category <span
-            class="text-red-500">*</span> <span v-if="auth?.userId" class="inline-flex cursor-pointer"
-            @click="emit('edit-category'); isEditModeCategory = !isEditModeCategory">
-            <icons-edit v-if="!isEditModeCategory" class="h-4" />
-            <icons-close v-else class="h-4" />
-          </span>
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Category <span class="text-red-500">*</span>
         </label>
-        <div v-if="!isEditModeCategory"
-          class="h-10 w-10 inline-flex align-bottom mx-2 p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
-          style="margin-top: 0" @click="emit('add-category')">
+        <div class="h-10 w-10 inline-flex align-bottom mx-2 p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+             style="margin-top: 0" @click="emit('add-category')">
           <icons-plus />
         </div>
-        <div v-else class="h-10 w-10 inline-flex mx-2 p-2" style="margin-top: 0" />
-        <div v-for="(category, index) of $categories.data.filter((cat: any) => cat.type !== 'receive' && cat.type !== 'transfer')" class="relative h-10 inline-flex items-center mb-4 mx-3">
-          <div v-if="!category.edited">
-            <div v-if="isEditModeCategory && category.circleId">
-              <icons-trash class="absolute -top-3 -left-2 w-5 h-5 rounded-md p-1 bg-red-500 text-white cursor-pointer"
-                @click="onDeleteCategory(category.id)" />
-              <icons-edit class="absolute -top-3 -right-2 w-5 h-5 rounded-md p-1 bg-purple-500 text-white cursor-pointer"
-                @click="category.edited = true" />
+        <div v-for="(category, index) of $categories.data.filter((cat: any) => cat.type !== 'receive' && cat.type !== 'transfer')" 
+             class="relative h-10 inline-flex items-center mb-4 mx-3">
+          <input v-model="formTransaction.categoryId" 
+                 :id="`radio-${category.id}`" 
+                 type="radio" 
+                 :value="category.id"
+                 class="w-4 h-4 hidden peer text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                 :name="`radio-${category.id}`" 
+                 required 
+                 @keyup.enter="onSaveExpenses">
+          <label :for="`radio-${category.id}`"
+                 class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+            <div class="text-lg font-semibold">
+              {{ capitalizeFirstLetter(category.name) }}
             </div>
-            <input v-model="formTransaction.categoryId" :id="`radio-${category.id}`" type="radio" :value="category.id"
-              class="w-4 h-4 hidden peer text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              :name="`radio-${category.id}`" required @keyup.enter="onSaveExpenses">
-            <label :for="`radio-${category.id}`"
-              class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-              <div class="text-lg font-semibold">
-                {{ capitalizeFirstLetter(category.name) }}
-              </div>
-            </label>
-          </div>
-          <div v-else class="relative align-bottom" style="margin-top: 0">
-            <icons-check class="absolute -top-3 -right-2 w-5 h-5 rounded-md p-1 bg-green-500 text-white cursor-pointer"
-              @click="onUpdateCategory(index, category.id, category.name)" />
-            <input name="category-name" id="category-name" :value="category.name"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-20 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-              type="text" placeholder="Example: Food" required @input="category.name = $event.target.value"
-              v-on:keydown.enter="onUpdateCategory(index, category.id, $event.target.value)" />
-          </div>
+          </label>
         </div>
         <div v-if="$circleUsers.selected?.assets">
           <label for="asset" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Asset</label>
@@ -127,7 +111,7 @@
                 </li>
                 <li v-if="$circleUsers.selected?.assets.length > 0" class="mx-3 my-2">
                   <button type="button"
-                    class="w-full mt-4 text-gray-500 hover:text-white bg-gray-100 hover:bg-primary-500 border-transparent focus:border-transparent focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:bg-gray-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                    class="w-full mt-4 text-gray-500 hover:text-white bg-gray-100 hover:bg-primary-500 border-transparent focus:border-transparent focus:ring-0 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:bg-gray-600 dark:hover:bg-primary-700"
                     @click="isSetDefaultAsset = !isSetDefaultAsset">
                     <span>{{ !isSetDefaultAsset ? 'Set Default Asset' : 'Back' }}</span>
                   </button>
@@ -239,6 +223,28 @@
         <span v-else>Save</span>
       </button>
     </form>
+
+    <!-- Delete Confirmation Modal -->
+    <div v-if="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-sm mx-4">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Delete Category</h3>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          Are you sure you want to delete "{{ selectedCategory?.name }}"? This action cannot be undone.
+        </p>
+        <div class="flex justify-end gap-3">
+          <button type="button"
+                  class="px-4 py-2 text-sm font-medium text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  @click="showDeleteModal = false">
+            Cancel
+          </button>
+          <button type="button"
+                  class="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 dark:hover:bg-red-700"
+                  @click="confirmDelete">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -273,7 +279,6 @@ const isDarkMode = useDarkMode()
 
 const typeTransaction = ref<TypeFormTransaction>(TypeFormTransaction.expenses)
 const isSetDefaultAsset = ref<boolean>(false)
-const isEditModeCategory = ref<boolean>(false)
 const isLoadingSubmit = ref<boolean>(false)
 const formTransaction = ref<{
   description: string,
@@ -296,7 +301,7 @@ const formTransfer = ref({
   charge: undefined
 })
 
-const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'add-category', 'edit-category', 'on-mounted'])
+const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'add-category', 'on-mounted'])
 
 const auth = useAuth()
 const $categories = useCategories()
@@ -317,14 +322,6 @@ watch(() => props.transaction, (newVal, oldVal) => {
 
 watchEffect(() => {
   formTransaction.value.asset = asset.value
-})
-
-watch(() => isEditModeCategory.value, (val) => {
-  if (!val) {
-    $categories.value.data.forEach((val: Category) => {
-      val.edited = false
-    })
-  }
 })
 
 const isButtonExpensesEnabled = computed(() => {
@@ -428,19 +425,33 @@ async function onSaveExpenses() {
   }
 }
 
-async function onUpdateCategory(index: number, categoryId: string, name: string) {
-  const { data, error, status } = await useFetch('/api/categories/update.category', {
-    method: 'POST',
+async function onSetDefaultAsset(circleSettingId: string, defaultAssetId: string | undefined) {
+  const { error, status } = await useFetch(`/api/circleSettings/${circleSettingId}`, {
+    method: 'PUT',
     body: JSON.stringify({
-      id: categoryId,
-      name,
+      defaultAssetId: defaultAssetId,
     }),
   })
 
   if (status.value === 'success') {
-    $categories.value.data[index] = data.value as Category
-  } else {
-    toast.error(error.value?.statusMessage ?? '')
+    $circleUsers.value?.refreshSelected($circleUsers.value.selected?.id)
+  }
+
+}
+
+const showDeleteModal = ref(false)
+const selectedCategory = ref<any>(null)
+
+function showDeleteConfirm(category: any) {
+  selectedCategory.value = category
+  showDeleteModal.value = true
+}
+
+async function confirmDelete() {
+  if (selectedCategory.value) {
+    await onDeleteCategory(selectedCategory.value.id)
+    showDeleteModal.value = false
+    selectedCategory.value = null
   }
 }
 
@@ -456,20 +467,6 @@ async function onDeleteCategory(categoryId: string) {
   } else {
     toast.error(error.value?.statusMessage ?? '')
   }
-}
-
-async function onSetDefaultAsset(circleSettingId: string, defaultAssetId: string | undefined) {
-  const { error, status } = await useFetch(`/api/circleSettings/${circleSettingId}`, {
-    method: 'PUT',
-    body: JSON.stringify({
-      defaultAssetId: defaultAssetId,
-    }),
-  })
-
-  if (status.value === 'success') {
-    $circleUsers.value?.refreshSelected($circleUsers.value.selected?.id)
-  }
-
 }
 </script>
 

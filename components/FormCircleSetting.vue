@@ -1,65 +1,156 @@
 <template>
   <div>
-    <div class="font-semibold text-2xl text-transparent bg-clip-text bg-gradient-to-r to-emerald-500 from-lime-600">{{
-      capitalizeFirstLetter(circle?.name)
-    }}
+    <div class="font-semibold text-2xl text-transparent bg-clip-text bg-gradient-to-r to-emerald-500 from-lime-600">
+      {{ capitalizeFirstLetter(circle?.name) }}
     </div>
 
-    <div class="flex flex-col">
-      <label class="my-2 mt-4 relative inline-flex items-center cursor-pointer"
-        @click.prevent="onToggleEmailReportChange(!circleUser?.receiveReport)">
+    <!-- Category Management Section -->
+    <div class="mt-8">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Categories</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage your expense and income categories</p>
+        </div>
+        <button type="button"
+                class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 dark:bg-primary-700 dark:hover:bg-primary-800 transition-colors duration-200"
+                @click="onAddCategory">
+          <icons-plus class="w-4 h-4 mr-2"/>
+          Add Category
+        </button>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700 max-h-[400px] overflow-y-auto">
+        <div v-for="(category, index) of $categories.data.filter((cat: any) => cat.type !== 'receive' && cat.type !== 'transfer' && cat.circleId === circle?.id)" 
+             :key="category.id"
+             class="relative transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+          <div class="flex items-start justify-between py-2.5 px-4">
+            <div class="min-w-0 flex-1">
+              <span class="text-sm font-medium text-gray-900 dark:text-white truncate block">
+                {{ capitalizeFirstLetter(category.name) }}
+              </span>
+              <span class="inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-xs font-medium"
+                    :class="{
+                      'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300': category.type === 'income',
+                      'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300': category.type === 'expense',
+                      'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300': category.type === 'debt'
+                    }">
+                {{ capitalizeFirstLetter(category.type) }}
+              </span>
+            </div>
+            <div class="flex items-center gap-1 ml-4">
+              <button type="button"
+                      class="p-1 text-gray-500 hover:text-purple-600 rounded-lg transition-colors duration-200"
+                      @click="onEditCategory(category)"
+                      title="Edit Category">
+                <icons-edit class="w-4 h-4"/>
+              </button>
+              <button type="button"
+                      class="p-1 text-gray-500 hover:text-red-600 rounded-lg transition-colors duration-200"
+                      @click="showDeleteConfirm(category)"
+                      title="Delete Category">
+                <icons-trash class="w-4 h-4"/>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div v-if="$categories.data.filter((cat: any) => cat.type !== 'receive' && cat.type !== 'transfer' && cat.circleId === circle?.id).length === 0"
+             class="py-3 px-4 text-center text-sm text-gray-500 dark:text-gray-400">
+          No categories found. Click "Add Category" to create one.
+        </div>
+      </div>
+    </div>
+
+    <!-- Email Report Toggle -->
+    <div class="flex flex-col mt-8">
+      <label class="my-2 relative inline-flex items-center cursor-pointer"
+             @click.prevent="onToggleEmailReportChange(!circleUser?.receiveReport)">
         <input type="checkbox" :checked="circleUser?.receiveReport" class="sr-only peer">
-        <div
-          class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-400 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600">
+        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-400 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600">
         </div>
         <span class="ml-3 text-sm font-semibold text-gray-900 dark:text-gray-300">Receive email report</span>
         <svg v-if="isLoadingToggle" aria-hidden="true"
-          class="ml-2 w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-primary-600" viewBox="0 0 100 101"
-          fill="none" xmlns="http://www.w3.org/2000/svg">
+             class="ml-2 w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-primary-600" viewBox="0 0 100 101"
+             fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
-            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-            fill="currentColor" />
+              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+              fill="currentColor"/>
           <path
-            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-            fill="currentFill" />
+              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+              fill="currentFill"/>
         </svg>
       </label>
     </div>
 
-
-    <div class="flex block my-2">
+    <!-- Invite Link Section -->
+    <div class="flex block my-6">
       <input :value="copiedLink" ref="elink"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-gray-300"
-        type="text" readonly />
-
-      <button
-        class="ml-2 rounded-md text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-        type="button" @click="copyText">
-        <span class="sr-only"><icons-user-group-add /></span>
-        <icons-copy />
+             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-gray-300"
+             type="text" readonly/>
+      <button class="ml-2 rounded-md text-center text-gray-500 bg-white border-none focus:ring-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+              type="button" @click="copyText">
+        <span class="sr-only">
+          <icons-user-group-add/>
+        </span>
+        <icons-copy/>
       </button>
     </div>
+
+    <!-- Delete Confirmation Modal -->
+    <general-modal id="modal-confirmation-delete" title="Confirmation" @on-mounted="modalConfDelete = $event">
+      <template #body>
+        <p class="text-gray-500">Are you sure you want to delete this category?</p>
+
+        <div class="flex mt-4">
+          <button
+              type="button"
+              class="text-white bg-primary-600 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+              @click="modalConfDelete?.hide()">No
+          </button>
+          <button
+              type="button"
+              class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+              @click="confirmDelete(); modalConfDelete?.hide()">Yes
+          </button>
+        </div>
+      </template>
+    </general-modal>
+
+    <general-modal id="modal-form-category" title="Form Category" @on-mounted="modalFormCategory = $event">
+      <template #body>
+        <form-category 
+          :edit-mode="true"
+          :category="selectedCategory"
+          @category-created="modalFormCategory?.hide()"
+          @category-updated="modalFormCategory?.hide()"/>
+      </template>
+    </general-modal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Circle, CircleUser } from "~/utils/types";
-import { toast } from "vue3-toastify";
+import {Circle, CircleUser, Category} from "~/utils/types";
+import {toast} from "vue3-toastify";
 
 const circle = ref<Circle | null>(null)
 const circleUser = ref<CircleUser | null>(null)
 const copiedLink = ref<string | null>(null)
 const elink = ref<string | null>(null)
 const isLoadingToggle = ref<boolean>(false)
+const selectedCategory = ref<any>(null)
+const modalFormCategory = ref<any>(null)
+const modalConfDelete = ref<any>(null)
 const $circleUsers = useCircleUsers()
+const $categories = useCategories()
 const $auth = useAuth()
 
+defineEmits(['add-category', 'add-category-id'])
+
 watch(() => $circleUsers.value.selected, ((val) => {
+  circle.value = val
   copiedLink.value = `${window.location.origin}/circles/${val?.id}`
   const myCircles = $circleUsers.value?.selected?.circleUsers?.filter((e: CircleUser) => e.userId === $auth.value?.userId) ?? []
   circleUser.value = myCircles.length > 0 ? myCircles[0] : null
 }))
-
 
 function copyText() {
   const element = elink.value as any;
@@ -76,7 +167,7 @@ async function onToggleEmailReportChange(receiveReport: boolean) {
   if (circleUser.value) {
     circleUser.value.receiveReport = receiveReport
 
-    const { data: result, status } = await useFetch('/api/circleUsers/update.circleUsers', {
+    const {data: result, status} = await useFetch('/api/circleUsers/update.circleUsers', {
       method: 'POST',
       body: JSON.stringify({
         id: circleUser.value?.id,
@@ -92,4 +183,61 @@ async function onToggleEmailReportChange(receiveReport: boolean) {
   isLoadingToggle.value = false
 }
 
+function showDeleteConfirm(category: any) {
+  selectedCategory.value = category
+  modalConfDelete.value?.show()
+}
+
+async function confirmDelete() {
+  if (selectedCategory.value) {
+    await onDeleteCategory(selectedCategory.value.id)
+    selectedCategory.value = null
+  }
+}
+
+async function onUpdateCategory(index: number, categoryId: string, name: string) {
+  const {data, error, status} = await useFetch('/api/categories/update.category', {
+    method: 'POST',
+    body: JSON.stringify({
+      id: categoryId,
+      name,
+    }),
+  })
+
+  if (status.value === 'success') {
+    $categories.value.data[index] = data.value as Category
+    toast.success('Category updated successfully')
+  } else {
+    toast.error(error.value?.statusMessage ?? '')
+  }
+}
+
+async function onDeleteCategory(categoryId: string) {
+  const {error, status} = await useFetch('/api/categories/delete.category', {
+    query: {
+      id: categoryId,
+    },
+  })
+
+  if (status.value === 'success') {
+    $categories.value.data = $categories.value.data.filter((val: Category) => val.id !== categoryId)
+    toast.success('Category deleted successfully')
+  } else {
+    toast.error(error.value?.statusMessage ?? '')
+  }
+}
+
+function onAddCategory() {
+  selectedCategory.value = null
+  if (modalFormCategory.value) {
+    modalFormCategory.value.show()
+  }
+}
+
+function onEditCategory(category: any) {
+  selectedCategory.value = category
+  if (modalFormCategory.value) {
+    modalFormCategory.value.show()
+  }
+}
 </script>

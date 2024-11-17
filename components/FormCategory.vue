@@ -49,6 +49,12 @@ import {useCategories} from "~/composables/categories";
 import {Category} from "~/utils/types";
 import {initTooltips} from "flowbite";
 
+const props = defineProps({
+  category: {
+    type: Object as PropType<Category | undefined>,
+  },
+})
+
 onMounted(() => {
   initTooltips()
 })
@@ -70,6 +76,13 @@ const isLoadingSubmit = ref<boolean>(false)
 const $categories = useCategories()
 
 const emit = defineEmits(['category-created'])
+
+watch(() => props.category, (val) => {
+  if (val) {
+    name.value = val.name
+    type.value = val.type ?? 'expense'
+  }
+})
 
 async function onSave() {
   isLoadingSubmit.value = true
