@@ -95,7 +95,7 @@
         <dropdowns-filter-categories />
 
         <button
-            class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+            class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
             type="button" @click="(_) => refreshTrx()" :disabled="isLoading">
           <icons-circular-indicator v-if="isLoading" class="inline w-4 h-4 mr-1 text-white animate-spin"/>
           <icons-refresh v-else class="inline w-4 h-4 mr-1"/>
@@ -104,7 +104,7 @@
       </div>
       <div class="flex gap-3 mt-3 sm:mt-0 flex-col lg:flex-row">
         <div
-            class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700">
+            class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700">
           <label class="my-2 relative inline-flex items-center cursor-pointer"
                  @click.prevent="toggleCheckReceiveTransferCategories()">
             <input type="checkbox" :checked="isIncludeTransferReceive" class="sr-only peer">
@@ -145,62 +145,49 @@
       <table v-if="!$isMobile()" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 sticky top-0 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
-          <th scope="col" class="px-6 py-3">
+          <th scope="col" class="px-3 py-2">
             Date
           </th>
-          <th scope="col" class="px-6 py-3">
+          <th scope="col" class="px-3 py-2">
             Description
           </th>
-          <th scope="col" class="px-6 py-3">
+          <th scope="col" class="px-3 py-2">
             Amount
           </th>
-          <th scope="col" class="px-6 py-3">
+          <th scope="col" class="px-3 py-2">
             Category
+          </th>
+          <th scope="col" class="px-3 py-2 w-20">
+            Actions
           </th>
         </tr>
         </thead>
         <tbody class="overflow-y-scroll">
         <tr v-for="trx in transactions"
-            :class="`${isRowTransferReceive(trx)} hover:bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700`"
-            v-on:dblclick="onDoubleClickRow(trx)"
-            v-on:keydown.esc="trx.isEditMode = false; selectedTransaction = undefined">
-          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-            <span v-if="!trx.isEditMode">{{ format(parseISO(trx.date), 'dd/MM/yyyy') }}</span>
-            <span v-else><vue-date-picker v-model="selectedTransaction!.date" format="dd/MM/yyyy"
-                                          :enable-time-picker="false" name="datepicker" locale="id-ID" auto-apply
-                                          :teleport="true"
-                                          @update:model-value="onUpdate(trx)"/></span>
+            :class="`${isRowTransferReceive(trx)} hover:bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700`">
+          <th scope="row" class="px-3 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            {{ format(parseISO(trx.date), 'dd/MM/yyyy') }}
           </th>
-          <td class="px-6 py-4">
-            <span v-if="!trx.isEditMode">{{ capitalizeFirstLetter(trx.description) }}</span>
-            <span v-else class="flex">
-                <input v-model="selectedTransaction!.description" type="text" name="Description" id="Description"
-                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                       v-on:keydown.enter="onUpdate">
-                <button class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                        type="button" @click="modalConfDelete?.show()"><icons-trash/></button>
-              </span>
+          <td class="px-3 py-2">
+            {{ capitalizeFirstLetter(trx.description) }}
           </td>
-          <td class="px-6 py-4">
-            <span v-if="!trx.isEditMode">
-                        {{ currencyIDRFormatter($circleUsers.selected.currency, trx.amount) }}
-            </span>
-            <span v-else>
-                  <general-currency-field v-model="selectedTransaction!.amount" name="amount"
-                                          @keydown.enter="onUpdate"/>
-              </span>
+          <td class="px-3 py-2">
+            {{ currencyIDRFormatter($circleUsers.selected.currency, trx.amount) }}
           </td>
-          <td class="px-6 py-4">
-            <span v-if="!trx.isEditMode">{{ capitalizeFirstLetter(trx.category.name) }}</span>
-            <span v-else>
-                <select v-model="selectedTransaction!.categoryId" id="categories"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        @change="onUpdate">
-                  <option v-for="category in $categories.data" :value="category.id" selected>
-                    {{ capitalizeFirstLetter(category.name) }}
-                  </option>
-                </select>
-              </span>
+          <td class="px-3 py-2">
+            {{ capitalizeFirstLetter(trx.category.name) }}
+          </td>
+          <td class="px-3 py-2">
+            <div class="flex gap-1">
+              <button class="p-1 text-gray-400 hover:text-primary-600 dark:text-gray-500 dark:hover:text-primary-400"
+                      @click="selectedTransaction = {...trx}; modalFormTransaction?.show()">
+                <icons-edit class="w-4 h-4"/>
+              </button>
+              <button class="p-1 text-gray-400 hover:text-red-600 dark:text-gray-500 dark:hover:text-red-400"
+                      @click="selectedTransaction = trx; modalConfDelete?.show()">
+                <icons-trash class="w-4 h-4"/>
+              </button>
+            </div>
           </td>
         </tr>
         </tbody>

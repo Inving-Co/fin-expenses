@@ -39,7 +39,8 @@
                 class="text-red-500">*</span></label>
             <VueDatePicker v-model="formTransaction.date" name="datepicker" id="datepicker" locale="id-ID"
               format="dd/MM/yyyy" input-class-name="dp-custom-input" hide-input-icon :enable-time-picker="false"
-              placeholder="Select Date" auto-apply />
+              placeholder="Select Date" auto-apply position="bottom" :close-on-scroll="false" :teleport="true"
+              :transitions="{ open: '', close: '' }" menu-class-name="date-picker-menu" :dark="isDarkMode" />
           </div>
         </div>
 
@@ -95,10 +96,7 @@
               <button name="asset"
                 class="h-[38px] flex w-full justify-between items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                 type="button" @click="activator">
-                {{ formTransaction.asset ?
-                  `${capitalizeFirstLetter(formTransaction.asset?.name)} ${formTransaction.asset?.platform ? '(' : ''}
-                                ${capitalizeFirstLetter(formTransaction.asset?.platform)} ${formTransaction.asset?.platform ? ')' : ''}` :
-                  'Select Asset' }}
+                {{ formTransaction.asset ? `${capitalizeFirstLetter(formTransaction.asset?.name)} ${formTransaction.asset?.platform ? '(' : ''} ${capitalizeFirstLetter(formTransaction.asset?.platform)} ${formTransaction.asset?.platform ? ')' : ''}` : 'Select Asset' }}
                 <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                   viewBox="0 0 10 6">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -115,10 +113,7 @@
                         type="radio" :value="asset" name="list-asset-radio"
                         class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                       <label :for="`${index}-asset-radio`"
-                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ `
-                        ${capitalizeFirstLetter(asset.name)} ${asset?.platform ? '(' : ''}
-                                                ${capitalizeFirstLetter(asset.platform)} ${asset?.platform ? ')' : ''}`
-                        }}</label>
+                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ `${capitalizeFirstLetter(asset.name)} ${asset?.platform ? '(' : ''} ${capitalizeFirstLetter(asset.platform)} ${asset?.platform ? ')' : ''}` }}</label>
                     </div>
                     <icons-select-outline
                       v-if="isSetDefaultAsset && asset.id !== $circleUsers.selected?.circleSettings?.defaultAssetId"
@@ -151,11 +146,7 @@
               <button name="asset"
                 class="h-[38px] flex w-full justify-between items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                 type="button" @click="activator">
-                {{ formTransfer.originAsset ?
-                  `${capitalizeFirstLetter(formTransfer.originAsset?.name)} ${formTransfer.originAsset?.platform ? '(' : ''}
-                                ${capitalizeFirstLetter(formTransfer.originAsset?.platform)} ${formTransfer.originAsset?.platform ? ')' :
-                    ''}` :
-                  'Select Asset' }}
+                {{ formTransfer.originAsset ? `${capitalizeFirstLetter(formTransfer.originAsset?.name)} ${formTransfer.originAsset?.platform ? '(' : ''} ${capitalizeFirstLetter(formTransfer.originAsset?.platform)} ${formTransfer.originAsset?.platform ? ')' : ''}` : 'Select Asset' }}
                 <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                   viewBox="0 0 10 6">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -173,10 +164,7 @@
                         :name="`${index}-origin-asset-radio`"
                         class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                       <label :for="`${index}-origin-asset-radio`"
-                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ `
-                        ${capitalizeFirstLetter(asset.name)} ${asset?.platform ? '(' : ''}
-                                                ${capitalizeFirstLetter(asset.platform)} ${asset?.platform ? ')' : ''}`
-                        }}</label>
+                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ `${capitalizeFirstLetter(asset.name)} ${asset?.platform ? '(' : ''} ${capitalizeFirstLetter(asset.platform)} ${asset?.platform ? ')' : ''}` }}</label>
                     </div>
                   </div>
                 </li>
@@ -193,12 +181,7 @@
               <button name="asset"
                 class="h-[38px] flex w-full justify-between items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                 type="button" @click="activator">
-                {{ formTransfer.destinationAsset ?
-                  `${capitalizeFirstLetter(formTransfer.destinationAsset?.name)} ${formTransfer.destinationAsset?.platform ?
-                    '(' : ''}
-                                ${capitalizeFirstLetter(formTransfer.destinationAsset?.platform)}
-                                ${formTransfer.destinationAsset?.platform ? ')' : ''}` :
-                  'Select Asset' }}
+                {{ formTransfer.destinationAsset ? `${capitalizeFirstLetter(formTransfer.destinationAsset?.name)} ${formTransfer.destinationAsset?.platform ? '(' : ''} ${capitalizeFirstLetter(formTransfer.destinationAsset?.platform)} ${formTransfer.destinationAsset?.platform ? ')' : ''}` : 'Select Asset' }}
                 <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                   viewBox="0 0 10 6">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -216,10 +199,7 @@
                         :name="`${index}-destination-asset-radio`"
                         class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                       <label :for="`${index}-destination-asset-radio`"
-                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ `
-                        ${capitalizeFirstLetter(asset.name)} ${asset?.platform ? '(' : ''}
-                                                ${capitalizeFirstLetter(asset.platform)} ${asset?.platform ? ')' : ''}`
-                        }}</label>
+                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ `${capitalizeFirstLetter(asset.name)} ${asset?.platform ? '(' : ''} ${capitalizeFirstLetter(asset.platform)} ${asset?.platform ? ')' : ''}` }}</label>
                     </div>
                   </div>
                 </li>
@@ -289,6 +269,7 @@ const asset = computed(() => {
 })
 
 const $circleUsers = useCircleUsers()
+const isDarkMode = useDarkMode()
 
 const typeTransaction = ref<TypeFormTransaction>(TypeFormTransaction.expenses)
 const isSetDefaultAsset = ref<boolean>(false)
@@ -320,7 +301,6 @@ const emit = defineEmits(['on-success', 'on-failed', 'update:modelValue', 'add-c
 const auth = useAuth()
 const $categories = useCategories()
 
-
 watchDebounced(formTransaction.value, (value) => emit('update:modelValue', value), { debounce: 1000 })
 
 watch(() => props.transaction, (newVal, oldVal) => {
@@ -346,7 +326,6 @@ watch(() => isEditModeCategory.value, (val) => {
     })
   }
 })
-
 
 const isButtonExpensesEnabled = computed(() => {
   const description = formTransaction.value.description
@@ -402,7 +381,7 @@ async function onSaveExpenses() {
           description: formTransaction.value.description,
           amount: formTransaction.value.amount,
           categoryId: formTransaction.value.categoryId,
-          date:formTransaction.value.date,
+          date: formTransaction.value.date,
           currency: $circleUsers.value.selected?.currency,
           assetId: formTransaction.value.asset?.id
         })
@@ -499,20 +478,56 @@ async function onSetDefaultAsset(circleSettingId: string, defaultAssetId: string
   font-size: 0.875rem;
   line-height: 1.25rem;
   padding: 0.625rem;
-  display: block;
   width: 100%;
   border-radius: 0.5rem;
+  background-color: rgb(249 250 251);
+  border: 1px solid rgb(209 213 219);
+  color: rgb(17 24 39);
 }
 
-.light .dp-custom-input {
-  background: #f9fafb;
-  border-color: #d1d5db;
-  color: gray;
+.dp-custom-input:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  border-color: rgb(99 102 241);
 }
 
-.dark .dp-custom-input {
-  background: #4b5563;
-  border-color: #6b7280;
-  color: #D1D5DB;
+:root {
+  --dp-border-radius: 0.5rem;
+  --dp-cell-border-radius: 0.375rem;
+  --dp-common-padding: 0.5rem;
+  --dp-menu-min-width: 260px;
+}
+
+.dp__menu {
+  position: absolute !important;
+  margin-top: 4px;
+  z-index: 999999;
+  transform: none !important;
+  transition: none !important;
+}
+
+.dp__outer_menu_wrap {
+  position: absolute !important;
+  width: var(--dp-menu-min-width);
+  transform: none !important;
+  transition: none !important;
+}
+
+.date-picker-menu {
+  z-index: 999999999 !important;
+}
+
+.dark {
+  .dp-custom-input {
+    background-color: rgb(75 85 99);
+    border-color: rgb(75 85 99);
+    color: rgb(255 255 255);
+    &::placeholder {
+      color: rgb(156 163 175);
+    }
+  }
 }
 </style>

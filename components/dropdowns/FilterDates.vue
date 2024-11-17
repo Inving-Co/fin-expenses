@@ -13,7 +13,7 @@
       </button>
     </template>
     <template #content="{activator}">
-      <div class="flex flex-col sm:flex-row gap-4 items-center p-3">
+      <div class="flex flex-col sm:flex-row gap-4 items-start p-3">
         <ul v-if="!isDateVisible || !$isMobile()" class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
             aria-labelledby="dropdownFilterDateButton">
           <li v-for="valueFilterDate in valuesFilterDate">
@@ -54,9 +54,21 @@
               type="button" @click="isDateVisible = false">
             Back
           </button>
-          <VueDatePicker v-model="date" name="datepicker" id="datepicker" locale="id-ID"
-                         format="dd/MM/yyyy"  hide-input-icon :enable-time-picker="false"
-                         placeholder="Select Date" auto-apply autorange range inline :readonly="filterDate !== 'custom'" />
+          <VueDatePicker v-model="date" 
+                         name="datepicker" 
+                         id="datepicker" 
+                         locale="id-ID"
+                         format="dd/MM/yyyy"  
+                         hide-input-icon 
+                         :dark="isDarkMode"
+                         :enable-time-picker="false"
+                         placeholder="Select Date" 
+                         auto-apply 
+                         autorange 
+                         range 
+                         inline 
+                         :readonly="filterDate !== 'custom'"
+                         :transitions="{ open: '', close: '' }" />
         </div>
       </div>
     </template>
@@ -84,6 +96,7 @@ const date = ref<any>([undefined, undefined])
 const isDateVisible = ref(false)
 
 const emit = defineEmits(['on-filter-changed'])
+const isDarkMode = useDarkMode()
 
 onMounted(() => {
   const dt = localStorage.getItem('current-filtered-date-selected')
@@ -141,3 +154,18 @@ function setFilterDate(start: Date, end: Date, filterValue: string) {
   localStorage.setItem('current-filtered-date-selected', filterValue)
 }
 </script>
+
+<style scoped>
+:deep(.dp__menu) {
+  position: static !important;
+  transform: none !important;
+  transition: none !important;
+  margin: 0 !important;
+}
+
+:deep(.dp__outer_menu_wrap) {
+  position: static !important;
+  transform: none !important;
+  transition: none !important;
+}
+</style>

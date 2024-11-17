@@ -26,7 +26,7 @@ onMounted(() => {
     useDarkMode().value = false
   }
 
-  if(localStorage.getItem('is-amount-visible')) {
+  if (localStorage.getItem('is-amount-visible')) {
     useAmountVisibility().value = localStorage.getItem('is-amount-visible') === 'true'
   } else {
     localStorage.setItem('is-amount-visible', 'true')
@@ -57,11 +57,12 @@ onMounted(() => {
 
 <style>
 .dp__theme_light {
-  --dp-primary-color: #E1914D;
+  --dp-primary-color: #E1914D !important;
 }
 
 .dp__theme_dark {
+  --dp-hover-color: rgb(55 65 81);
   --dp-background-color: #394150;
-  --dp-primary-color: #E1914D;
+  --dp-primary-color: #E1914D !important;
 }
 </style>
