@@ -501,8 +501,18 @@ async function onSetDefaultAsset(circleSettingId: string, defaultAssetId: string
   --dp-menu-min-width: 260px;
 }
 
+.dp__arrow_top {
+  top: 0px !important;
+  right: 0px !important;
+  margin: 0 auto !important
+}
+
 .dp__menu {
   position: absolute !important;
+  width: var(--dp-menu-min-width);
+  left: 0px !important;
+  right: 0px !important;
+  margin: 0 auto !important;
   margin-top: 4px;
   z-index: 999999;
   transform: none !important;
