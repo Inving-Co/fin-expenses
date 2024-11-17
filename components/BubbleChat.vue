@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-container" :class="{ 'expanded': isExpanded }">
+  <div class="chat-container hidden md:block" :class="{ 'expanded': isExpanded }" style="z-index: 5;">
     <div v-if="!isExpanded" @click="isExpanded = true" class="collapsed-chat flex flex-col flex-grow max-w-xl h-[45px] w-80 dark:bg-gray-50 bg-gray-900 shadow-xl rounded-t-md overflow-hidden z-20 cursor-pointer">
       <div class="flex justify-between items-center px-2 py-2">
         <div class="text-gray-200 dark:text-gray-500 font-semibold">

@@ -82,26 +82,25 @@
     </div>
     <div class="sm:flex p-4 justify-center sm:rounded-t-lg sm:justify-between bg-white dark:bg-gray-700"
          style="box-shadow: 0 10px 12px rgba(0, 0, 0, 0.1)">
-      <div class="flex flex-wrap gap-2 justify-center">
-        <button type="button"
-                class="h-[38px] inline-flex items-center text-white bg-primary-500 dark:bg-primary-700 dark:text-white drop-shadow-sm hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:hover:bg-gray-700"
-                @click="resetAllIsEditMode(); selectedTransaction = undefined; refreshInputAmount?.setInputAmount(); modalFormTransaction?.show()">
-          <icons-plus class="mr-1"/>
+      <div class="flex flex-wrap gap-2 items-center mb-4">
+        <button
+            class="hidden md:inline-flex h-[38px] items-center text-white bg-primary-500 hover:bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+            type="button" @click="toggleModal(true)">
+          <icons-plus class="inline w-4 h-4 mr-1"/>
           Create
         </button>
 
         <dropdowns-filter-dates
             @on-filter-changed="startFilterDate = $event.start; endFilterDate = $event.end; filterDate = $event.label"/>
-        <dropdowns-filter-categories style="z-index: 99999;"/>
+        <dropdowns-filter-categories />
 
         <button
             class="h-[38px] inline-flex items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
             type="button" @click="(_) => refreshTrx()" :disabled="isLoading">
           <icons-circular-indicator v-if="isLoading" class="inline w-4 h-4 mr-1 text-white animate-spin"/>
-          <icons-refresh v-else class="w-4 h-4 text-gray-500 dark:text-gray-400 mr-1"/>
+          <icons-refresh v-else class="inline w-4 h-4 mr-1"/>
           Refresh
         </button>
-
       </div>
       <div class="flex gap-3 mt-3 sm:mt-0 flex-col lg:flex-row">
         <div
@@ -254,6 +253,7 @@
       </div>
     </div>
   </div>
+  <general-floating-action-button @click="toggleModal(true)" />
 </template>
 
 <script setup lang="ts">
@@ -335,7 +335,6 @@ const {
   },
   watch: [selectedCategories, selectedCircle]
 })
-
 
 function toggleIsAmountVisible() {
   const val = !isAmountVisible.value
@@ -431,7 +430,14 @@ function resetAllIsEditMode() {
   transactions.value!.forEach((val: any) => val.isEditMode = false)
 }
 
-
+function toggleModal(create: boolean) {
+  if (create) {
+    resetAllIsEditMode()
+    selectedTransaction.value = undefined
+    refreshInputAmount?.setInputAmount()
+    modalFormTransaction?.show()
+  }
+}
 </script>
 
 <style lang="scss">
