@@ -3,12 +3,19 @@
       class="p-4 bg-white border border-gray-200 rounded-lg drop-shadow-soft hover:drop-shadow-xl dark:bg-gray-800 dark:border-gray-700">
     <div class="flex justify-between items-center">
       <h3 class="font-bold dark:text-gray-300">Budget Plan</h3>
-      <button @click="showBudgetInfo = !showBudgetInfo" 
-              class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" :class="{'rotate-180': showBudgetInfo}" viewBox="0 0 24 24">
-          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9l-7 7l-7-7"/>
-        </svg>
-      </button>
+      <div class="flex items-center gap-2">
+        <button v-if="isFiltered"
+            class="h-[30px] p-1 text-gray-500 hover:text-gray-700 focus:outline-none font-medium rounded-lg text-sm dark:text-gray-400"
+            type="button" @click="resetFilter">
+          <icons-refresh class="inline" />
+        </button>
+        <button @click="showBudgetInfo = !showBudgetInfo" 
+                class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" :class="{'rotate-180': showBudgetInfo}" viewBox="0 0 24 24">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9l-7 7l-7-7"/>
+          </svg>
+        </button>
+      </div>
     </div>
     
     <transition name="slide">
@@ -41,8 +48,9 @@
     
     <div class="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 max-h-[400px] md:max-h-none overflow-y-auto pr-2">
       <div v-for="(item, index) in budgetItems" :key="index" 
-           class="bg-gray-50 dark:bg-gray-700 rounded-lg p-2 md:p-4"
-           :class="{'border-l-4 border-red-500': item.actual > item.planned}">
+           class="bg-gray-50 dark:bg-gray-700 rounded-lg p-2 md:p-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+           :class="{'border-l-4 border-red-500': item.actual > item.planned}"
+           @click="selectCategory(item)">
         <div class="flex justify-between items-center mb-1.5 md:mb-3">
           <div class="flex items-center gap-1 md:gap-2">
             <span class="font-medium text-gray-700 dark:text-gray-200 text-xs md:text-sm">{{ item.category }}</span>
@@ -84,7 +92,10 @@ import {PropType} from "@vue/runtime-core";
 import {CircleBudgetPlannings, Record} from "~/utils/types";
 import {capitalizeFirstLetter} from "~/utils/functions";
 import {useCircleBudget, useCircleUsers} from "~/composables/circles";
+import {useCategories} from "~/composables/categories";
 import {ref} from 'vue';
+
+const emit = defineEmits(['category-selected', 'reset-filter'])
 
 const {forEach, groupBy, map, mapValues, omit, reduce, split} = lodash;
 const $circleUsers = useCircleUsers()
@@ -105,20 +116,23 @@ const budgetItems = computed(() => {
 
   const plannings = $circleBudget.value.plannings.filter(p => p.amount > 0);
   const transactions = props.transactions.filter(t => 
-    t.category.type !== 'income' && 
-    plannings.map(p => p.categoryId).includes(t.category.id)
+    plannings.some(p => p.categoryId === t.categoryId)
   );
 
-  const groupedTransactions = groupBy(transactions, t => t.category.name);
-  const summedTransactions = mapValues(groupedTransactions, transactions =>
-    reduce(transactions, (sum, t) => sum + t.amount, 0)
-  );
-
-  return plannings.map(planning => ({
-    category: capitalizeFirstLetter(planning.category.name),
-    planned: planning.amount,
-    actual: summedTransactions[planning.category.name] || 0
-  })).sort((a, b) => b.planned - a.planned);
+  const groupedTransactions = groupBy(transactions, 'categoryId');
+  
+  return plannings.map(p => {
+    const categoryTransactions = groupedTransactions[p.categoryId] || [];
+    const actual = categoryTransactions.reduce((sum, t) => sum + t.amount, 0);
+    const category = $categories.value.data.find(c => c.id === p.categoryId)?.name;
+    
+    return {
+      categoryId: p.categoryId,
+      category: capitalizeFirstLetter(category || ''),
+      planned: p.amount,
+      actual: Math.abs(actual)
+    };
+  });
 })
 
 function getProgressColor(ratio: number): string {
@@ -147,6 +161,32 @@ function getBudgetStatusColor(ratio: number): string {
 }
 
 const showBudgetInfo = ref(false)
+const previousFilterState = ref<string[]>([])
+const isFiltered = ref(false)
+
+function selectCategory(item: any) {
+  const category = $categories.value.data.find(c => c.id === item.categoryId);
+  if (category) {
+    // Store current filter state if not already filtered
+    if (!isFiltered.value) {
+      previousFilterState.value = $categories.value.data
+        .filter((cat: any) => cat.checked)
+        .map((cat: any) => cat.id);
+      isFiltered.value = true;
+    }
+    emit('category-selected', category);
+  }
+}
+
+function resetFilter() {
+  // Restore previous filter state
+  $categories.value.data.forEach((cat: any) => {
+    cat.checked = previousFilterState.value.includes(cat.id);
+  });
+  
+  isFiltered.value = false;
+  emit('reset-filter');
+}
 </script>
 
 <style scoped>

@@ -74,7 +74,9 @@
             <div class="flex w-full flex-col lg:flex-row gap-4">
               <expenses-structure-chart class="w-full lg:w-4/12" :label-time="filterDate"
                                         :transactions="chartTransactions"/>
-              <budget-plan-chart class="w-full lg:w-8/12" :transactions="chartTransactions"/>
+              <budget-plan-chart class="w-full lg:w-8/12" :transactions="chartTransactions"
+                                @category-selected="onCategorySelected"
+                                @reset-filter="onResetFilter"/>
             </div>
             <div class="flex flex-col lg:flex-row gap-4">
               <cash-flow-chart class="w-full" :label-time="filterDate" :transactions="chartTransactions"/>
@@ -430,6 +432,35 @@ function toggleModal(create: boolean) {
   }
 }
 
+function onCategorySelected(category: any) {
+  // Clear all category selections first
+  $categories.value.data.forEach((cat: any) => {
+    cat.checked = false;
+  });
+  
+  // Select only the clicked category
+  const selectedCategory = $categories.value.data.find((cat: any) => cat.id === category.id);
+  if (selectedCategory) {
+    selectedCategory.checked = true;
+    
+    // Update cookie and emit filter change
+    const values = $categories.value.data.filter((cat: any) => cat.checked).map((cat: any) => cat.id);
+    document.cookie = `${$circleUsers.value.selected?.id}-current-filtered-categories-selected=${values.join(',')}`;
+    
+    // Trigger filter update
+    onFilterCategoriesChanged(values);
+  }
+}
+
+function onResetFilter() {
+  // Update cookie with reset state
+  const values = $categories.value.data.filter((cat: any) => cat.checked).map((cat: any) => cat.id);
+  document.cookie = `${$circleUsers.value.selected?.id}-current-filtered-categories-selected=${values.join(',')}`;
+  
+  // Trigger filter update
+  onFilterCategoriesChanged(values);
+}
+
 function onCategoryCreated() {
   modalFormCategory?.hide()
   refreshInputAmount?.setInputAmount()
@@ -440,6 +471,10 @@ function onCategoryUpdated() {
   modalFormCategory?.hide()
   refreshInputAmount?.setInputAmount()
   modalFormTransaction?.show()
+}
+
+function onFilterCategoriesChanged(values: any[]) {
+  refreshTrx()
 }
 </script>
 
