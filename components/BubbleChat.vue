@@ -160,7 +160,6 @@ Ensure your response is well-structured and easy to read using these markdown el
   });
 });
 
-
 const renderMarkdown = (content) => {
   const rawMarkup = marked(content);
   return DOMPurify.sanitize(rawMarkup);
@@ -301,13 +300,19 @@ const onSave = async () => {
   position: fixed;
   bottom: 0;
   right: 20px;
-  z-index: 999;
+  z-index: 40;
 }
 
 .expanded-chat {
   position: absolute;
   bottom: 0;
   right: 0;
+  z-index: 40;
+}
+
+.collapsed-chat {
+  position: relative;
+  z-index: 40;
 }
 
 .resize-handle {
