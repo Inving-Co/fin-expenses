@@ -7,11 +7,15 @@
                         @add-category="modalFormTransaction?.hide(); modalFormCategory?.show();"/>
     </template>
   </general-modal>
-  <general-modal id="modal-form-category" title="Form Category" @on-mounted="modalFormCategory = $event"
-                 @on-modal-closed="refreshInputAmount?.setInputAmount(); modalFormTransaction?.show();">
+  
+  <general-modal id="modal-form-category-trx" title="Form Category" 
+    @on-mounted="modalFormCategory = $event"
+    @on-modal-closed="refreshInputAmount?.setInputAmount(); modalFormTransaction?.show();">
     <template #body>
       <form-category
-          @category-created="modalFormCategory?.hide(); refreshInputAmount?.setInputAmount(); modalFormTransaction?.show();"/>
+          source="transactions"
+          @category-created="onCategoryCreated"
+          @category-updated="onCategoryUpdated"/>
     </template>
   </general-modal>
 
@@ -424,6 +428,18 @@ function toggleModal(create: boolean) {
     refreshInputAmount?.setInputAmount()
     modalFormTransaction?.show()
   }
+}
+
+function onCategoryCreated() {
+  modalFormCategory?.hide()
+  refreshInputAmount?.setInputAmount()
+  modalFormTransaction?.show()
+}
+
+function onCategoryUpdated() {
+  modalFormCategory?.hide()
+  refreshInputAmount?.setInputAmount()
+  modalFormTransaction?.show()
 }
 </script>
 

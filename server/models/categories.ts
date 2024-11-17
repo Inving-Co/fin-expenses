@@ -12,8 +12,8 @@ export async function createCategory(name: string, color: string | undefined, ty
     });
 }
 
-export async function updateCategory(categoryId: string, name: string) {
-    return prisma.categories.update({where: {id: categoryId}, data: { name }})
+export async function updateCategory(categoryId: string, name: string, type: string | undefined) {
+    return prisma.categories.update({where: {id: categoryId}, data: { name, type }})
 }
 
 export async function deleteCategory(categoryId: string, userId: string | undefined) {

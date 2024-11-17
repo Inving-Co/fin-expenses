@@ -48,11 +48,16 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import {useCategories} from "~/composables/categories";
 import {Category} from "~/utils/types";
 import {initTooltips} from "flowbite";
+import {toast} from 'vue3-toastify';
 
 const props = defineProps({
   category: {
     type: Object as PropType<Category | undefined>,
   },
+  source: {
+    type: String,
+    default: 'circle-settings'
+  }
 })
 
 onMounted(() => {
@@ -75,47 +80,72 @@ const type = ref<string>('expense')
 const isLoadingSubmit = ref<boolean>(false)
 const $categories = useCategories()
 
-const emit = defineEmits(['category-created'])
+const emit = defineEmits(['category-created', 'category-updated'])
+
+function resetForm() {
+  name.value = ''
+  type.value = 'expense'
+}
 
 watch(() => props.category, (val) => {
   if (val) {
     name.value = val.name
     type.value = val.type ?? 'expense'
+  } else {
+    resetForm()
   }
-})
+}, { immediate: true })
 
 async function onSave() {
   isLoadingSubmit.value = true
 
   if (name.value) {
-    const {data: result, status} = await useFetch('/api/categories/create.category', {
-      method: 'POST',
-      body: JSON.stringify({
-        name: name.value.toLowerCase(),
-        type: type.value.toLowerCase()
+    if (props.category) {
+      // Update existing category
+      const {data: result, status} = await useFetch('/api/categories/update.category', {
+        method: 'POST',
+        body: JSON.stringify({
+          id: props.category.id,
+          name: name.value.toLowerCase(),
+          type: type.value.toLowerCase()
+        })
       })
-    })
 
-    if (status.value === 'success') {
-      name.value = ''
+      if (status.value === 'success') {
+        const updatedCategory = result.value as Category
+        const index = $categories.value.data.findIndex((cat: Category) => cat.id === updatedCategory.id)
+        if (index !== -1) {
+          $categories.value.data[index] = updatedCategory
+        }
+        emit('category-updated', { category: updatedCategory, source: props.source })
+        toast.success('Category updated successfully')
+      } else {
+        toast.error('Failed to update category')
+      }
+    } else {
+      // Create new category
+      const {data: result, status} = await useFetch('/api/categories/create.category', {
+        method: 'POST',
+        body: JSON.stringify({
+          name: name.value.toLowerCase(),
+          type: type.value.toLowerCase()
+        })
+      })
 
-      const newCategory = result.value as Category
-      newCategory.checked = true
-
-      $categories.value.data.push(newCategory)
-      emit('category-created', result)
-      
-      setTimeout(() => {
-        type.value = 'expense'
-      }, 250)
-
+      if (status.value === 'success') {
+        name.value = ''
+        const newCategory = result.value as Category
+        $categories.value.data.push(newCategory)
+        emit('category-created', { category: newCategory, source: props.source })
+        toast.success('Category created successfully')
+      } else {
+        toast.error('Failed to create category')
+      }
     }
-
-    isLoadingSubmit.value = false
   }
 
+  isLoadingSubmit.value = false
 }
-
 </script>
 
 <style scoped></style>

@@ -16,7 +16,43 @@
   <general-modal id="modal-setting" title="Setting" subtitle="Change your circle settings here"
     @on-mounted="modalSetting = $event">
     <template #body>
-      <form-circle-setting />
+      <form-circle-setting 
+        @show-category-form="showCategoryForm"
+        @show-delete-confirm="showDeleteConfirm"
+        @category-created="onCategoryCreated"
+        @category-updated="onCategoryUpdated"/>
+    </template>
+  </general-modal>
+
+  <general-modal id="modal-form-category-circle-settings" title="Form Category" 
+    @on-mounted="modalFormCategory = $event"
+    @on-modal-closed="selectedCategory = null; modalSetting?.show()">
+    <template #body>
+      <form-category 
+        :edit-mode="editMode"
+        :category="selectedCategory"
+        source="circle-settings"
+        @category-created="onCategoryCreated"
+        @category-updated="onCategoryUpdated"/>
+    </template>
+  </general-modal>
+
+  <general-modal id="modal-confirmation-delete" title="Confirmation" @on-mounted="modalConfDelete = $event">
+    <template #body>
+      <p class="text-gray-500">Are you sure you want to delete this category?</p>
+
+      <div class="flex mt-4">
+        <button
+            type="button"
+            class="text-white bg-primary-600 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+            @click="cancelDelete">No
+        </button>
+        <button
+            type="button"
+            class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+            @click="confirmDelete">Yes
+        </button>
+      </div>
     </template>
   </general-modal>
 
@@ -56,7 +92,7 @@
               <span class="sr-only">Setting</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path fill="currentColor"
-                  d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97c0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1c0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66Z" />
+                  d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97c0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49 1c-.22.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1c0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66Z" />
               </svg>
             </button>
           </div>
@@ -78,18 +114,27 @@
 import { capitalizeFirstLetter } from "~/utils/functions";
 import {Circle, CircleUser, ElementEvent} from "~/utils/types";
 import FormCircleSetting from "~/components/FormCircleSetting.vue";
+import FormCategory from "~/components/FormCategory.vue";
 import { useCircleUsers } from "~/composables/circles";
 import { useAuth } from "~/composables/auth";
+import { useCategories } from "~/composables/categories";
 import {useAsyncData} from "#app";
+import { ref } from "vue";
+import { toast } from 'vue3-toastify';
 
 const emit = defineEmits(['on-mounted', 'circle-changed'])
-let modalFormCircle: ElementEvent | null = null
-let modalFormCircleInvitation: ElementEvent | null = null
-let modalSetting: ElementEvent | null = null
+let modalFormCircle: ElementEvent | null = null;
+let modalFormCircleInvitation: ElementEvent | null = null;
+let modalSetting: ElementEvent | null = null;
+let modalFormCategory: ElementEvent | null = null;
+let modalConfDelete: ElementEvent | null = null;
+const selectedCategory = ref<any>(null)
+const editMode = ref<boolean>(false)
 
 const $auth = useAuth()
 const $circleUsers = useCircleUsers()
-let selected = ref<string | null>(null)
+const $categories = useCategories()
+const selected = ref<string | null>(null)
 const isHasClose = ref<boolean>(false)
 
 const { data: circleUsers, refresh: refreshCircles } = await useFetch('/api/circleUsers', {
@@ -105,7 +150,6 @@ const { data: circleUsers, refresh: refreshCircles } = await useFetch('/api/circ
   },
   server: false,
 })
-
 
 const checkCircleUser = async () => {
   const value = $circleUsers.value.data;
@@ -134,7 +178,6 @@ watch(() => selected.value, async (value) => {
 watchEffect(() => {
   checkCircleUser()
 })
-
 
 const activatorLoad = async (value: string) => {
   const { data } = await useAsyncData('circleDetail', () => $fetch(`/api/circles/${value}`, {
@@ -186,7 +229,6 @@ onMounted(() => {
   }
 })
 
-
 function onCircleChange(value: Circle) {
   selected.value = value.id
 
@@ -196,6 +238,65 @@ function onCircleChange(value: Circle) {
   /// It will still use the old value when I refresh the trx, so I need to delay some milliseconds
   /// to make it refresh later
   setTimeout(() => emit('circle-changed'), 50)
+}
+
+function showCategoryForm(category: any) {
+  modalSetting?.hide()
+  selectedCategory.value = category
+  editMode.value = !!category
+  modalFormCategory?.show()
+}
+
+function onCategoryCreated(data: any) {
+  selectedCategory.value = null
+  modalFormCategory?.hide()
+  if (data.source === 'circle-settings') {
+    modalSetting?.show()
+  }
+}
+
+function onCategoryUpdated(data: any) {
+  selectedCategory.value = null
+  modalFormCategory?.hide()
+  if (data.source === 'circle-settings') {
+    modalSetting?.show()
+  }
+}
+
+function showDeleteConfirm(category: any) {
+  modalSetting?.hide()
+  selectedCategory.value = category
+  modalConfDelete?.show()
+}
+
+function cancelDelete() {
+  modalConfDelete?.hide()
+  modalSetting?.show()
+}
+
+async function confirmDelete() {
+  if (selectedCategory.value) {
+    try {
+      const { error, status } = await useFetch('/api/categories/delete.category', {
+        query: {
+          id: selectedCategory.value.id,
+        },
+      })
+
+      if (status.value === 'success') {
+        $categories.value.data = $categories.value.data.filter((cat: any) => cat.id !== selectedCategory.value.id)
+        toast.success('Category deleted successfully')
+        modalConfDelete?.hide()
+        modalSetting?.show()
+        selectedCategory.value = null
+      } else {
+        toast.error(error.value?.statusMessage ?? 'Failed to delete category')
+      }
+    } catch (error) {
+      console.error('Failed to delete category:', error)
+      toast.error('Failed to delete category')
+    }
+  }
 }
 </script>
 
