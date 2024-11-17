@@ -87,6 +87,7 @@ const data = ref<{ labels: string[], datasets: Datasets[] }>({
 const categoryIds = ref<string[]>([])
 const previousFilterState = ref<string[]>([])
 const hasChartFilter = ref(false)
+const selectedCategoryId = ref<string | null>(null)
 const $circleUsers = useCircleUsers()
 const $categories = useCategories()
 
@@ -133,10 +134,24 @@ function setData(listTrx: Record[]): { labels: string[], datasets: Datasets[] } 
     categoryIds.value.push(id)
   })
 
+  // Update chart options to highlight selected category
+  const backgroundColors = Array.from(colors) as string[];
+  if (selectedCategoryId.value) {
+    const selectedIndex = categoryIds.value.findIndex(id => id === selectedCategoryId.value);
+    if (selectedIndex !== -1) {
+      // Make other segments more transparent
+      backgroundColors.forEach((color, index) => {
+        if (index !== selectedIndex) {
+          backgroundColors[index] = color + '80'; // Add 50% transparency
+        }
+      });
+    }
+  }
+
   return {
     labels: Array.from(names) as string[],
     datasets: [{
-      backgroundColor: Array.from(colors) as string[],
+      backgroundColor: backgroundColors,
       data: map(values, (val: Record[]) => reduce(val, (sum: number, n: Record) => sum + n.amount, 0))
     }]
   }
@@ -145,6 +160,12 @@ function setData(listTrx: Record[]): { labels: string[], datasets: Datasets[] } 
 function handleChartClick(categoryId: string) {
   const selectedCircle = $circleUsers.value.selected;
   if (!selectedCircle) return;
+
+  // If clicking the same category, reset the filter
+  if (selectedCategoryId.value === categoryId) {
+    resetFilter();
+    return;
+  }
 
   // Store current filter state before changing it
   const cats = useCookie<string>(`${selectedCircle.id}-current-filtered-categories-selected`);
@@ -164,6 +185,7 @@ function handleChartClick(categoryId: string) {
   // Save to cookie and emit event
   cats.value = categoryId;
   hasChartFilter.value = true;
+  selectedCategoryId.value = categoryId;
   emit('on-filter-changed', [categoryId]);
 }
 
@@ -188,6 +210,7 @@ function resetFilter() {
   const cats = useCookie<string>(`${selectedCircle.id}-current-filtered-categories-selected`);
   cats.value = previousFilterState.value.length > 0 ? previousFilterState.value.join(',') : undefined;
   hasChartFilter.value = false;
+  selectedCategoryId.value = null;
   emit('on-filter-changed', previousFilterState.value);
 }
 

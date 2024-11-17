@@ -21,7 +21,7 @@
     <transition name="slide">
       <div v-if="showBudgetInfo" class="mt-2">
         <hr class="flex-grow border-t mb-2 border-gray-400"/>
-        <div class="flex flex-col sm:flex-row gap-2 justify-between">
+        <div class="flex flex-col sm:flex-row gap-4 justify-between">
           <div class="flex flex-col">
             <div class="text-xs text-gray-500 font-medium dark:text-gray-300">
               Budget
@@ -41,6 +41,59 @@
             </div>
           </div>
         </div>
+
+        <!-- Budget Summary Section -->
+        <div class="mt-4">
+          <div class="text-xs text-gray-500 font-semibold dark:text-gray-300 mb-2">Summary</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="flex items-center gap-2">
+              <div :class="getOverallStatusColor(totalSpentPercentage)" class="w-2 h-2 rounded-full"></div>
+              <div class="text-sm group relative">
+                <span class="text-gray-500 dark:text-gray-300">Overall Spent: </span>
+                <span class="font-semibold cursor-help" 
+                      :class="getOverallStatusColor(totalSpentPercentage)"
+                      @mouseenter="showTotalSpent = true"
+                      @mouseleave="showTotalSpent = false">
+                  {{ Math.round(totalSpentPercentage) }}%
+                </span>
+                <!-- Tooltip -->
+                <div v-if="showTotalSpent" 
+                     class="absolute z-10 px-3 py-2 text-sm font-normal text-white bg-gray-900 rounded-lg shadow-sm tooltip dark:bg-gray-700"
+                     style="top: -40px; left: 50%; transform: translateX(-50%)">
+                  {{ currencyIDRFormatter($circleUsers.selected?.currency, totalSpent) }}
+                  <div class="tooltip-arrow" data-popper-arrow></div>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div :class="{'bg-red-500': overBudgetCategories > 0, 'bg-green-500': overBudgetCategories === 0}" class="w-2 h-2 rounded-full"></div>
+              <div class="text-sm">
+                <span class="text-gray-500 dark:text-gray-300">Over Budget: </span>
+                <span class="font-semibold" :class="{'text-red-500': overBudgetCategories > 0, 'text-green-500': overBudgetCategories === 0}">
+                  {{ overBudgetCategories }} {{ overBudgetCategories === 1 ? 'category' : 'categories' }}
+                </span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div :class="{'bg-green-500': underBudgetCategories > 0, 'bg-yellow-500': underBudgetCategories === 0}" class="w-2 h-2 rounded-full"></div>
+              <div class="text-sm">
+                <span class="text-gray-500 dark:text-gray-300">Under Budget: </span>
+                <span class="font-semibold" :class="{'text-green-500': underBudgetCategories > 0, 'text-yellow-500': underBudgetCategories === 0}">
+                  {{ underBudgetCategories }} {{ underBudgetCategories === 1 ? 'category' : 'categories' }}
+                </span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full" :class="getRemainingBudgetColor"></div>
+              <div class="text-sm">
+                <span class="text-gray-500 dark:text-gray-300">Remaining: </span>
+                <span class="font-semibold" :class="getRemainingBudgetColor">
+                  {{ currencyIDRFormatter($circleUsers.selected?.currency, remainingBudget) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </transition>
 
@@ -49,7 +102,10 @@
     <div class="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 max-h-[400px] md:max-h-none overflow-y-auto pr-2">
       <div v-for="(item, index) in budgetItems" :key="index" 
            class="bg-gray-50 dark:bg-gray-700 rounded-lg p-2 md:p-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-           :class="{'border-l-4 border-red-500': item.actual > item.planned}"
+           :class="{
+             'border-l-4 border-red-500': item.actual > item.planned,
+             'ring-2 ring-primary-500': selectedCategoryId === item.categoryId
+           }"
            @click="selectCategory(item)">
         <div class="flex justify-between items-center mb-1.5 md:mb-3">
           <div class="flex items-center gap-1 md:gap-2">
@@ -93,7 +149,7 @@ import {CircleBudgetPlannings, Record} from "~/utils/types";
 import {capitalizeFirstLetter} from "~/utils/functions";
 import {useCircleBudget, useCircleUsers} from "~/composables/circles";
 import {useCategories} from "~/composables/categories";
-import {ref} from 'vue';
+import {ref, computed} from 'vue';
 
 const emit = defineEmits(['category-selected', 'reset-filter'])
 
@@ -109,7 +165,7 @@ const props = defineProps({
   }
 })
 
-const sumOfPlanned = computed(() => $circleBudget.value.plannings?.reduce((sum: number, n: CircleBudgetPlannings) => sum + n.amount, 0))
+const sumOfPlanned = computed(() => $circleBudget.value.plannings?.reduce((sum: number, n: CircleBudgetPlannings) => sum + n.amount, 0) || 0)
 
 const budgetItems = computed(() => {
   if (!props.transactions || !$circleBudget.value.plannings) return [];
@@ -136,25 +192,28 @@ const budgetItems = computed(() => {
 })
 
 function getProgressColor(ratio: number): string {
-  if (ratio <= 0.7) return '#10B981'; // Green for under budget
-  if (ratio <= 0.9) return '#F59E0B'; // Yellow for close to budget
-  return '#EF4444'; // Red for over/near budget
+  if (ratio < 0.7) return '#10B981'; // Green for under budget
+  if (ratio < 0.9) return '#F59E0B'; // Yellow for close to budget
+  if (ratio === 1) return '#3B82F6'; // Blue for exactly on budget
+  return '#EF4444'; // Red for over budget
 }
 
 function getBudgetStatus(actual: number, planned: number): string {
   const ratio = actual / planned;
-  if (ratio >= 1) {
+  if (ratio > 1) {
     const overAmount = actual - planned;
     return `Over ${currencyIDRFormatter($circleUsers.selected?.currency, overAmount)}`;
   }
-  if (ratio >= 0.9) return 'Near Limit';
+  if (ratio === 1) return 'On Budget';
+  if (ratio >= 0.9) return 'Near Budget';
   if (ratio >= 0.7) return 'On Track';
   const remainingAmount = planned - actual;
   return currencyIDRFormatter($circleUsers.selected?.currency, remainingAmount);
 }
 
 function getBudgetStatusColor(ratio: number): string {
-  if (ratio >= 1) return 'text-red-500 dark:text-red-400';
+  if (ratio > 1) return 'text-red-500 dark:text-red-400';
+  if (ratio === 1) return 'text-blue-500 dark:text-blue-400';
   if (ratio >= 0.9) return 'text-yellow-500 dark:text-yellow-400';
   if (ratio >= 0.7) return 'text-blue-500 dark:text-blue-400';
   return 'text-green-500 dark:text-green-400';
@@ -163,17 +222,29 @@ function getBudgetStatusColor(ratio: number): string {
 const showBudgetInfo = ref(false)
 const previousFilterState = ref<string[]>([])
 const isFiltered = ref(false)
+const showTotalSpent = ref(false)
+const selectedCategoryId = ref<string | null>(null)
 
 function selectCategory(item: any) {
   const category = $categories.value.data.find(c => c.id === item.categoryId);
   if (category) {
+    // If clicking the same category, reset the filter
+    if (selectedCategoryId.value === category.id) {
+      resetFilter();
+      selectedCategoryId.value = null;
+      return;
+    }
+
     // Store current filter state if not already filtered
     if (!isFiltered.value) {
       previousFilterState.value = $categories.value.data
         .filter((cat: any) => cat.checked)
         .map((cat: any) => cat.id);
-      isFiltered.value = true;
     }
+
+    // Update selected category and filter state
+    selectedCategoryId.value = category.id;
+    isFiltered.value = true;
     emit('category-selected', category);
   }
 }
@@ -185,7 +256,44 @@ function resetFilter() {
   });
   
   isFiltered.value = false;
+  selectedCategoryId.value = null;
   emit('reset-filter');
+}
+
+const totalSpent = computed(() => {
+  return budgetItems.value.reduce((sum, item) => sum + item.actual, 0);
+});
+
+const totalSpentPercentage = computed(() => {
+  if (!$circleBudget.value?.budget?.amount || !sumOfPlanned.value) return 0;
+  return (totalSpent.value / sumOfPlanned.value) * 100;
+});
+
+const overBudgetCategories = computed(() => {
+  return budgetItems.value.filter(item => item.actual > item.planned).length;
+});
+
+const underBudgetCategories = computed(() => {
+  return budgetItems.value.filter(item => item.actual < item.planned).length;
+});
+
+const remainingBudget = computed(() => {
+  if (!sumOfPlanned.value) return 0;
+  const totalSpent = budgetItems.value.reduce((sum, item) => sum + item.actual, 0);
+  return sumOfPlanned.value - totalSpent;
+});
+
+const getRemainingBudgetColor = computed(() => {
+  if (!sumOfPlanned.value) return 'text-gray-500';
+  if (remainingBudget.value <= 0) return 'text-red-500';
+  if (remainingBudget.value < sumOfPlanned.value * 0.2) return 'text-yellow-500';
+  return 'text-green-500';
+});
+
+function getOverallStatusColor(percentage: number) {
+  if (percentage >= 100) return 'text-red-500';
+  if (percentage >= 80) return 'text-yellow-500';
+  return 'text-green-500';
 }
 </script>
 
