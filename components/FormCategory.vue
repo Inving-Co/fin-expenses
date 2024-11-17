@@ -1,13 +1,17 @@
 <template>
   <div>
     <div class="mb-5">
-      <label for="category-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category Name</label>
+      <label for="category-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+        Category Name <span class="text-red-500">*</span>
+      </label>
       <input v-model="name" ref="inputRef" name="category-name" id="category-name"
              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
              type="text" placeholder="Example: Food" required v-on:keydown.enter="onSave"/>
     </div>
 
-    <label for="type-category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select type</label>
+    <label for="type-category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+      Select type <span class="text-red-500">*</span>
+    </label>
     <div v-for="definedType in definedTypes" class="inline-flex h-10 items-center mb-4 mx-3">
       <div :data-tooltip-target="`tooltip-default-${definedType.name}`" class="w-full">
         <input v-model="type" :id="`radio-${definedType.name}`" type="radio" :value="definedType.name"
@@ -50,6 +54,9 @@ onMounted(() => {
 })
 
 const definedTypes = [{
+  name: 'expense',
+  description: 'Expenses are used to track your spending'
+}, {
   name: 'debt',
   description: 'Debt are used to calculate the percentage of your debt based on income'
 }, {
@@ -57,9 +64,8 @@ const definedTypes = [{
   description: 'Income are used to calculate cash flow'
 }]
 
-
 const name = ref<string>('')
-const type = ref<string>('')
+const type = ref<string>('expense')
 const isLoadingSubmit = ref<boolean>(false)
 const $categories = useCategories()
 
@@ -79,13 +85,17 @@ async function onSave() {
 
     if (status.value === 'success') {
       name.value = ''
-      type.value = ''
 
       const newCategory = result.value as Category
       newCategory.checked = true
 
       $categories.value.data.push(newCategory)
       emit('category-created', result)
+      
+      setTimeout(() => {
+        type.value = 'expense'
+      }, 250)
+
     }
 
     isLoadingSubmit.value = false
