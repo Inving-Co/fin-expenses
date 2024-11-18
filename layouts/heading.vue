@@ -139,6 +139,13 @@
             </nuxt-link>
           </span>
         </li>
+        <li v-if="isLoggedIn">
+          <span class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg py-3">
+            <nuxt-link to="/subscriptions"
+                       :class="isCurrentPathActive('/subscriptions')">Subscriptions
+            </nuxt-link>
+          </span>
+        </li>
 
       </ul>
       <ul>
@@ -165,7 +172,6 @@
 import CirclesSelector from "~/components/dropdowns/CirclesSelector.vue";
 import {useRoute} from "vue-router";
 
-import {useAuth} from "~/composables/auth";
 import {useCategories} from "~/composables/categories";
 import {useCircleUsers} from "~/composables/circles";
 import {useTransactions} from "~/composables/transactions";

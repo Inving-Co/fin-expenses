@@ -136,3 +136,16 @@ export interface AssetHistory {
     assetId: string
     asset: Asset
 }
+
+export interface Subscription {
+    id: string
+    name: string
+    cost: number
+    billingCycle: 'monthly' | 'yearly'
+    nextPaymentDate: string
+    category: 'streaming' | 'software' | 'utilities' | 'other'
+    createdAt: string
+    updatedAt: string
+    userId?: string
+    circleId?: string
+}

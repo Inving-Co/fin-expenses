@@ -52,22 +52,19 @@
         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
           Category <span class="text-red-500">*</span>
         </label>
-        <div class="h-10 w-10 inline-flex align-bottom mx-2 p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
-             style="margin-top: 0" @click="emit('add-category')">
+        <div
+          class="h-10 w-10 inline-flex align-bottom mx-2 p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+          style="margin-top: 0" @click="emit('add-category')">
           <icons-plus />
         </div>
-        <div v-for="(category, index) of $categories.data.filter((cat: any) => cat.type !== 'receive' && cat.type !== 'transfer')" 
-             class="relative h-10 inline-flex items-center mb-4 mx-3">
-          <input v-model="formTransaction.categoryId" 
-                 :id="`radio-${category.id}`" 
-                 type="radio" 
-                 :value="category.id"
-                 class="w-4 h-4 hidden peer text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                 :name="`radio-${category.id}`" 
-                 required 
-                 @keyup.enter="onSaveExpenses">
+        <div
+          v-for="(category, index) of $categories.data.filter((cat: any) => cat.type !== 'receive' && cat.type !== 'transfer')"
+          class="relative h-10 inline-flex items-center mb-4 mx-3">
+          <input v-model="formTransaction.categoryId" :id="`radio-${category.id}`" type="radio" :value="category.id"
+            class="w-4 h-4 hidden peer text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            :name="`radio-${category.id}`" required @keyup.enter="onSaveExpenses">
           <label :for="`radio-${category.id}`"
-                 class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+            class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-primary-500 peer-checked:border-primary-600 peer-checked:text-primary-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
             <div class="text-lg font-semibold">
               {{ capitalizeFirstLetter(category.name) }}
             </div>
@@ -80,7 +77,9 @@
               <button name="asset"
                 class="h-[38px] flex w-full justify-between items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                 type="button" @click="activator">
-                {{ formTransaction.asset ? `${capitalizeFirstLetter(formTransaction.asset?.name)} ${formTransaction.asset?.platform ? '(' : ''} ${capitalizeFirstLetter(formTransaction.asset?.platform)} ${formTransaction.asset?.platform ? ')' : ''}` : 'Select Asset' }}
+                {{ formTransaction.asset ? `${capitalizeFirstLetter(formTransaction.asset?.name)}
+                ${formTransaction.asset?.platform ? '(' : ''} ${capitalizeFirstLetter(formTransaction.asset?.platform)}
+                ${formTransaction.asset?.platform ? ')' : ''}` : 'Select Asset' }}
                 <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                   viewBox="0 0 10 6">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -97,7 +96,9 @@
                         type="radio" :value="asset" name="list-asset-radio"
                         class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                       <label :for="`${index}-asset-radio`"
-                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ `${capitalizeFirstLetter(asset.name)} ${asset?.platform ? '(' : ''} ${capitalizeFirstLetter(asset.platform)} ${asset?.platform ? ')' : ''}` }}</label>
+                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{
+                          `${capitalizeFirstLetter(asset.name)} ${asset?.platform ? '(' : ''}
+                        ${capitalizeFirstLetter(asset.platform)} ${asset?.platform ? ')' : ''}` }}</label>
                     </div>
                     <icons-select-outline
                       v-if="isSetDefaultAsset && asset.id !== $circleUsers.selected?.circleSettings?.defaultAssetId"
@@ -130,7 +131,10 @@
               <button name="asset"
                 class="h-[38px] flex w-full justify-between items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                 type="button" @click="activator">
-                {{ formTransfer.originAsset ? `${capitalizeFirstLetter(formTransfer.originAsset?.name)} ${formTransfer.originAsset?.platform ? '(' : ''} ${capitalizeFirstLetter(formTransfer.originAsset?.platform)} ${formTransfer.originAsset?.platform ? ')' : ''}` : 'Select Asset' }}
+                {{ formTransfer.originAsset ? `${capitalizeFirstLetter(formTransfer.originAsset?.name)}
+                ${formTransfer.originAsset?.platform ? '(' : ''}
+                ${capitalizeFirstLetter(formTransfer.originAsset?.platform)} ${formTransfer.originAsset?.platform ? ')'
+                : ''}` : 'Select Asset' }}
                 <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                   viewBox="0 0 10 6">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -148,7 +152,9 @@
                         :name="`${index}-origin-asset-radio`"
                         class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                       <label :for="`${index}-origin-asset-radio`"
-                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ `${capitalizeFirstLetter(asset.name)} ${asset?.platform ? '(' : ''} ${capitalizeFirstLetter(asset.platform)} ${asset?.platform ? ')' : ''}` }}</label>
+                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{
+                          `${capitalizeFirstLetter(asset.name)} ${asset?.platform ? '(' : ''}
+                        ${capitalizeFirstLetter(asset.platform)} ${asset?.platform ? ')' : ''}` }}</label>
                     </div>
                   </div>
                 </li>
@@ -165,7 +171,10 @@
               <button name="asset"
                 class="h-[38px] flex w-full justify-between items-center text-gray-500 bg-white drop-shadow hover:drop-shadow-md focus:drop-shadow-md focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                 type="button" @click="activator">
-                {{ formTransfer.destinationAsset ? `${capitalizeFirstLetter(formTransfer.destinationAsset?.name)} ${formTransfer.destinationAsset?.platform ? '(' : ''} ${capitalizeFirstLetter(formTransfer.destinationAsset?.platform)} ${formTransfer.destinationAsset?.platform ? ')' : ''}` : 'Select Asset' }}
+                {{ formTransfer.destinationAsset ? `${capitalizeFirstLetter(formTransfer.destinationAsset?.name)}
+                ${formTransfer.destinationAsset?.platform ? '(' : ''}
+                ${capitalizeFirstLetter(formTransfer.destinationAsset?.platform)}
+                ${formTransfer.destinationAsset?.platform ? ')' : ''}` : 'Select Asset' }}
                 <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                   viewBox="0 0 10 6">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -183,7 +192,9 @@
                         :name="`${index}-destination-asset-radio`"
                         class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                       <label :for="`${index}-destination-asset-radio`"
-                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ `${capitalizeFirstLetter(asset.name)} ${asset?.platform ? '(' : ''} ${capitalizeFirstLetter(asset.platform)} ${asset?.platform ? ')' : ''}` }}</label>
+                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{
+                          `${capitalizeFirstLetter(asset.name)} ${asset?.platform ? '(' : ''}
+                        ${capitalizeFirstLetter(asset.platform)} ${asset?.platform ? ')' : ''}` }}</label>
                     </div>
                   </div>
                 </li>
@@ -200,7 +211,8 @@
         <div v-if="typeTransaction == TypeFormTransaction.transfer">
           <label for="amount-transfer" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Charge <span
               class="text-red-500"></span></label>
-          <general-currency-field v-model="formTransfer.charge" name="charge-amount-transfer" @keyup.enter="onSaveTransfer" />
+          <general-currency-field v-model="formTransfer.charge" name="charge-amount-transfer"
+            @keyup.enter="onSaveTransfer" />
         </div>
       </div>
       <button v-if="typeTransaction == TypeFormTransaction.expenses" type="button"
@@ -233,14 +245,14 @@
         </p>
         <div class="flex justify-end gap-3">
           <button type="button"
-                  class="px-4 py-2 text-sm font-medium text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-                  @click="showDeleteModal = false">
-            Cancel
+            class="px-4 py-2 text-sm font-medium text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+            @click="showDeleteModal = false">
+            No, Cancel
           </button>
           <button type="button"
-                  class="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 dark:hover:bg-red-700"
-                  @click="confirmDelete">
-            Delete
+            class="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 dark:hover:bg-red-700"
+            @click="confirmDelete">
+            Yes, Delete
           </button>
         </div>
       </div>
@@ -532,6 +544,7 @@ async function onDeleteCategory(categoryId: string) {
     background-color: rgb(75 85 99);
     border-color: rgb(75 85 99);
     color: rgb(255 255 255);
+
     &::placeholder {
       color: rgb(156 163 175);
     }

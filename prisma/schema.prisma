@@ -23,6 +23,7 @@ model Users {
   circles               Circles[]
   records               Records[]
   UserSettings          UserSettings[]
+  subscriptions         Subscriptions[]
 }
 
 model UserSettings {
@@ -51,6 +52,7 @@ model Circles {
   circleNotes     CircleNotes[]
   circleBudgets   CircleBudgets[]
   circleSettings  CircleSettings? @relation(fields: [circleSettingId], references: [id])
+  subscriptions   Subscriptions[]
 }
 
 model CircleSettings {
@@ -202,4 +204,20 @@ model BulkRecords {
   recordId       String        @db.Uuid
   record         Records?      @relation(fields: [recordId], references: [id])
   assetHistory   AssetHistory? @relation(fields: [assetHistoryId], references: [id])
+}
+
+model Subscriptions {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String
+  cost            Float
+  billingCycle    String    // 'monthly' or 'yearly'
+  nextPaymentDate DateTime
+  category        String    // 'streaming', 'software', 'utilities', 'other'
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @default(now()) @updatedAt
+  userId          String?   @db.Uuid
+  circleId        String?   @db.Uuid
+  currency        String    @default("IDR")
+  user            Users?    @relation(fields: [userId], references: [id])
+  circle          Circles?  @relation(fields: [circleId], references: [id])
 }
