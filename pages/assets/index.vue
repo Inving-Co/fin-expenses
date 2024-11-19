@@ -66,7 +66,7 @@
       </button>
     </div>
 
-    <div v-if="assets?.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div v-if="assets?.length > 0" class="mb-16 sm:mb-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <div v-for="(asset, index) of assets"
            class="w-full p-6 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
         <div class="flex justify-between mb-2">
