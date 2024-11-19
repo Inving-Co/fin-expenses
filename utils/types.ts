@@ -148,4 +148,5 @@ export interface Subscription {
     updatedAt: string
     userId?: string
     circleId?: string
+    currency: string
 }

@@ -44,10 +44,20 @@
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
           <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Monthly Spending</h3>
           <p class="text-2xl font-bold text-primary-600">{{ currencyIDRFormatter('IDR', monthlyTotal) }}</p>
+          <div v-if="hasMultipleCurrencies" class="text-sm text-gray-500">
+            <div v-for="(amount, curr) in monthlyCurrencyTotals" :key="curr">
+              {{ currencyIDRFormatter(curr, amount) }}
+            </div>
+          </div>
         </div>
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
           <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Yearly Spending</h3>
           <p class="text-2xl font-bold text-primary-600">{{ currencyIDRFormatter('IDR', yearlyTotal) }}</p>
+          <div v-if="hasMultipleCurrencies" class="text-sm text-gray-500">
+            <div v-for="(amount, curr) in yearlyCurrencyTotals" :key="curr">
+              {{ currencyIDRFormatter(curr, amount) }}
+            </div>
+          </div>
         </div>
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
           <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Upcoming Payments</h3>
@@ -100,8 +110,9 @@
               <tr v-for="sub in subscriptions" :key="sub.id" class="hover:bg-gray-50 dark:hover:bg-gray-700">
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{{ sub.name }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{
-                  currencyIDRFormatter('IDR', sub.cost) }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                  {{ currencyIDRFormatter(sub.currency, sub.cost) }}
+                </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300 capitalize">{{
                   sub.billingCycle }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{
@@ -153,6 +164,11 @@
 import { toast } from "vue3-toastify";
 import { Subscription } from '~/utils/types'
 
+// Add new variables
+const monthlyCurrencyTotals = ref<Record<string, number>>({})
+const yearlyCurrencyTotals = ref<Record<string, number>>({})
+const exchangeRates = ref<Record<string, number>>({})
+const hasMultipleCurrencies = computed(() => Object.keys(monthlyCurrencyTotals.value).length > 1)
 
 let modalFormSubscription: ElementEvent | null = null;
 let modalConfDelete: ElementEvent | null = null
@@ -185,11 +201,13 @@ onMounted(async () => {
   isLoading.value = true
 
   await Promise.all([
+    fetchExchangeRates(),
     fetchSubscriptions(),
     fetchTotals(),
     fetchUpcoming()
   ])
 
+  calculateCurrencyTotals()
   isLoading.value = false
 })
 
@@ -241,6 +259,70 @@ async function fetchUpcoming() {
   }
 }
 
+// Calculate totals for each currency
+function calculateCurrencyTotals() {
+  const monthly: Record<string, number> = {}
+  const yearly: Record<string, number> = {}
+  let monthlyTotalIDR = 0
+  let yearlyTotalIDR = 0
+  
+  // First, calculate totals in original currencies
+  subscriptions.value.forEach(sub => {
+    const currency = sub.currency || 'IDR'
+    const cost = sub.cost || 0
+    
+    if (sub.billingCycle === 'monthly') {
+      monthly[currency] = (monthly[currency] || 0) + cost
+      yearly[currency] = (yearly[currency] || 0) + (cost * 12)
+    } else {
+      monthly[currency] = (monthly[currency] || 0) + (cost / 12)
+      yearly[currency] = (yearly[currency] || 0) + cost
+    }
+  })
+  
+  monthlyCurrencyTotals.value = monthly
+  yearlyCurrencyTotals.value = yearly
+  
+  // Then calculate IDR totals using exchange rates
+  Object.entries(monthly).forEach(([curr, amount]) => {
+    if (curr === 'IDR') {
+      monthlyTotalIDR += amount
+    } else if (exchangeRates.value[curr]) {
+      // Convert to EUR first (base currency) then to IDR
+      const amountInOthers = amount / exchangeRates.value[curr]
+      const amountInIDR = amountInOthers * exchangeRates.value['IDR']
+      monthlyTotalIDR += amountInIDR
+    }
+  })
+  
+  Object.entries(yearly).forEach(([curr, amount]) => {
+    if (curr === 'IDR') {
+      yearlyTotalIDR += amount
+    } else if (exchangeRates.value[curr]) {
+      // Convert to EUR first (base currency) then to IDR
+      const amountInOthers = amount / exchangeRates.value[curr]
+      const amountInIDR = amountInOthers * exchangeRates.value['IDR']
+      yearlyTotalIDR += amountInIDR
+    }
+  })
+  
+  monthlyTotal.value = monthlyTotalIDR
+  yearlyTotal.value = yearlyTotalIDR
+}
+
+// Fetch exchange rates
+async function fetchExchangeRates() {
+  try {
+    const response = await fetch('/api/currencies/rates')
+    if (response.ok) {
+      const data = await response.json()
+      exchangeRates.value = data.rates
+    }
+  } catch (error) {
+    console.error('Error fetching exchange rates:', error)
+  }
+}
+
 function editSubscription(subscription: Subscription) {
   selectedSubscription.value = subscription
   modalFormSubscription?.show()
@@ -266,6 +348,8 @@ async function confirmDeleteSubscription() {
         fetchTotals(),
         fetchUpcoming()
       ])
+  
+      calculateCurrencyTotals()
       toast.success('Subscription deleted successfully')
     } else {
       toast.error('Failed to delete subscription')
@@ -291,6 +375,8 @@ async function onSubscriptionCreated(subscription: Subscription) {
     fetchTotals(),
     fetchUpcoming()
   ])
+  
+  calculateCurrencyTotals()
 
   isLoading.value = false
 
@@ -308,6 +394,8 @@ async function onSubscriptionUpdated(subscription: Subscription) {
     fetchUpcoming()
   ])
 
+  calculateCurrencyTotals()
+
   isLoading.value = false
 }
 
@@ -318,4 +406,5 @@ function formatDate(date: string) {
     day: 'numeric'
   })
 }
+
 </script>

@@ -2,7 +2,8 @@ import { updateSubscription } from "~/server/models/subscription";
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id');
-    const { name, cost, billingCycle, nextPaymentDate, category } = await readBody(event);
+        
+    const { name, cost, billingCycle, nextPaymentDate, category, currency } = await readBody(event);
 
     if (!id) {
         throw createError({
@@ -17,6 +18,7 @@ export default defineEventHandler(async (event) => {
         cost,
         billingCycle,
         nextPaymentDate,
-        category
+        category,
+        currency
     );
 });

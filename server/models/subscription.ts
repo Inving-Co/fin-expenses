@@ -9,7 +9,8 @@ export async function createSubscription(
     nextPaymentDate: string,
     category: SubscriptionCategory,
     userId: string,
-    circleId?: string
+    circleId?: string,
+    currency: string = 'IDR'
 ) {
     return prisma.subscriptions.create({
         data: {
@@ -19,7 +20,8 @@ export async function createSubscription(
             nextPaymentDate,
             category,
             userId,
-            circleId
+            circleId,
+            currency
         },
         include: {
             user: true
@@ -33,11 +35,19 @@ export async function updateSubscription(
     cost: number,
     billingCycle: 'monthly' | 'yearly',
     nextPaymentDate: string,
-    category: SubscriptionCategory
+    category: SubscriptionCategory,
+    currency?: string
 ) {
     return prisma.subscriptions.update({
         where: { id },
-        data: { name, cost, billingCycle, nextPaymentDate, category }
+        data: { 
+            name, 
+            cost, 
+            billingCycle, 
+            nextPaymentDate, 
+            category,
+            ...(currency && { currency })
+        }
     });
 }
 

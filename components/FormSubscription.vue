@@ -9,11 +9,22 @@
         type="text" placeholder="Example: Netflix" required v-on:keydown.enter="onSave" />
     </div>
 
-    <div class="mb-5">
-      <label for="cost" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-        Cost <span class="text-red-500">*</span>
-      </label>
-      <general-currency-field v-model="cost" name="cost" @keyup.enter="onSave" />
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+      <div>
+        <label for="cost" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Cost <span class="text-red-500">*</span>
+        </label>
+        <general-currency-field v-model="cost" name="cost" @keyup.enter="onSave" />
+      </div>
+      <div>
+        <label for="currency" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Currency <span class="text-red-500">*</span>
+        </label>
+        <select v-model="currency" id="currency"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
+          <option v-for="curr in currencies" :key="curr" :value="curr">{{ curr }}</option>
+        </select>
+      </div>
     </div>
 
     <div class="mb-5">
@@ -106,8 +117,11 @@ const categories = [
   { value: 'other', label: 'Other', description: 'Other subscription types' }
 ]
 
+const currencies = ref(['IDR', 'USD', 'EUR', 'JPY', 'GBP', 'AUD', 'CAD', 'CHF', 'CNY', 'HKD', 'NZD', 'SGD'])
+
 const name = ref('')
 const cost = ref(0)
+const currency = ref('IDR')
 const billingCycle = ref('monthly')
 const nextPaymentDate = ref(new Date())
 const category = ref('')
@@ -120,20 +134,23 @@ const emit = defineEmits(['subscription-created', 'subscription-updated'])
 onMounted(() => {
   initTooltips()
   inputRef.value?.focus()
+  
+  // Fetch available currencies
+  fetch('/api/currencies/rates')
+    .then(response => response.json())
+    .then(data => {
+      currencies.value = Object.keys(data.rates)
+    })
+    .catch(error => {
+      console.error('Error fetching currencies:', error)
+    })
 })
-
-function resetForm() {
-  name.value = ''
-  cost.value = 0
-  billingCycle.value = 'monthly'
-  nextPaymentDate.value = new Date()
-  category.value = ''
-}
 
 watch(() => props.subscription, (val) => {
   if (val) {
     name.value = val.name
     cost.value = val.cost
+    currency.value = val.currency || 'IDR'
     billingCycle.value = val.billingCycle
     nextPaymentDate.value = new Date(val.nextPaymentDate)
     category.value = val.category
@@ -142,9 +159,18 @@ watch(() => props.subscription, (val) => {
   }
 }, { immediate: true })
 
+function resetForm() {
+  name.value = ''
+  cost.value = 0
+  currency.value = 'IDR'
+  billingCycle.value = 'monthly'
+  nextPaymentDate.value = new Date()
+  category.value = ''
+}
+
 async function onSave() {
   try {
-    if (!name.value || !cost.value || !billingCycle.value || !nextPaymentDate.value || !category.value) {
+    if (!name.value || !cost.value || !billingCycle.value || !nextPaymentDate.value || !category.value || !currency.value) {
       toast.error('Please fill in all required fields')
       return
     }
@@ -159,6 +185,7 @@ async function onSave() {
       body: JSON.stringify({
         name: name.value,
         cost: cost.value,
+        currency: currency.value,
         billingCycle: billingCycle.value,
         nextPaymentDate: nextPaymentDate.value.toISOString(),
         category: category.value

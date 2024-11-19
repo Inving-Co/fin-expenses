@@ -2,7 +2,7 @@ import { createSubscription } from '~/server/models/subscription'
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
-    const { name, cost, billingCycle, nextPaymentDate, category } = body
+    const { name, cost, billingCycle, nextPaymentDate, category, currency } = body
 
     const cookies = parseCookies(event)
     const userId = cookies['user-id']
@@ -22,6 +22,7 @@ export default defineEventHandler(async (event) => {
         nextPaymentDate,
         category,
         userId,
-        circle?.id
+        circle?.id,
+        currency
     )
 })
