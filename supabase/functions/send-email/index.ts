@@ -26,7 +26,7 @@ export interface Report {
 }
 
 
-const SENDGRID_API_KEY = Deno.env.get('SENDGRID_API_KEY')
+const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 
 const handler = async (_request: Request): Promise<Response> => {
 
@@ -55,11 +55,11 @@ const handler = async (_request: Request): Promise<Response> => {
     })
   }
 
-  const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
+  const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${SENDGRID_API_KEY}`,
+      Authorization: `Bearer ${RESEND_API_KEY}`,
     },
     body: JSON.stringify({
       'personalizations': [
