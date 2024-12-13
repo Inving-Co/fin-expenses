@@ -36,14 +36,16 @@
 
   <div class="pb-8 h-full">
     <div class="flex flex-wrap justify-between items-center">
-      <div class="flex flex-col my-6">
+      <div class="flex flex-col my-6 w-full sm:w-4/12">
         <div class="flex items-center">
-          <div class="text-2xl text-gray-500">My Assets</div>
-          <div class="ml-2 mr-1" @click.prevent="toggleIsAmountVisible()">
-            <span v-if="isAmountVisible"><icons-eye-visible class="w-6 h-6 cursor-pointer text-gray-500"/></span>
-            <span v-else><icons-eye-invisible class="w-6 h-6 cursor-pointer text-gray-500"/></span>
+          <div class="flex w-full sm:w-52">
+            <div class="text-2xl text-gray-500">My Assets</div>
+            <div class="ml-2 mr-1" @click.prevent="toggleIsAmountVisible()">
+              <span v-if="isAmountVisible"><icons-eye-visible class="w-6 h-6 cursor-pointer text-gray-500"/></span>
+              <span v-else><icons-eye-invisible class="w-6 h-6 cursor-pointer text-gray-500"/></span>
+            </div>
           </div>
-          <div class="flex items-start">
+          <div class="flex flex-col md:flex-row items-end sm:items-start w-full">
             <div v-if="summaryAssets?._sum"
                  class="text-2xl text-gray-500 dark:text-white font-semibold tracking-tight">
               {{ currencyIDRFormatter($circleUsers.selected?.currency, summaryAssets?._sum.amount ?? 0) }}
