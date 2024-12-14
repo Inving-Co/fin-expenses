@@ -1,7 +1,13 @@
 <template>
   <div>
-    <div class="font-semibold text-2xl text-transparent bg-clip-text bg-gradient-to-r to-emerald-500 from-lime-600">
-      {{ capitalizeFirstLetter(circle?.name) }}
+    <div class="flex justify-between items-center">
+      <div class="font-semibold text-xl sm:text-2xl text-transparent bg-clip-text bg-gradient-to-r to-emerald-500 from-lime-600">
+        {{ capitalizeFirstLetter(circle?.name) }}
+      </div>
+      <button type="button" class="text-sm font-medium text-primary-600 border border-primary-600 rounded-lg px-4 py-2 hover:bg-primary-600 hover:text-white focus:ring-4 focus:ring-primary-300"
+              @click="emit('show-archive-circle-confirm', circle)">
+        Archive
+      </button>
     </div>
 
     <!-- Category Management Section -->
@@ -112,7 +118,7 @@ const $circleUsers = useCircleUsers()
 const $categories = useCategories()
 const $auth = useAuth()
 
-const emit = defineEmits(['show-category-form', 'show-delete-confirm'])
+const emit = defineEmits(['show-category-form', 'show-delete-confirm', 'show-archive-circle-confirm'])
 
 watch(() => $circleUsers.value.selected, ((val) => {
   circle.value = val

@@ -19,8 +19,9 @@
       <form-circle-setting 
         @show-category-form="showCategoryForm"
         @show-delete-confirm="showDeleteConfirm"
+        @show-archive-circle-confirm="showArchiveCircleConfirm"
         @category-created="onCategoryCreated"
-        @category-updated="onCategoryUpdated"/>
+        @category-updated="onCategoryUpdated" />
     </template>
   </general-modal>
 
@@ -34,6 +35,25 @@
         source="circle-settings"
         @category-created="onCategoryCreated"
         @category-updated="onCategoryUpdated"/>
+    </template>
+  </general-modal>
+
+  <general-modal id="modal-confirmation-archive-circle" title="Confirmation" @on-mounted="modalArchiveCircleConfirm = $event">
+    <template #body>
+      <p class="text-gray-500">Are you sure you want to archive this circle?</p>
+
+      <div class="flex mt-4">
+        <button
+            type="button"
+            class="text-white bg-primary-600 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+            @click="cancelArchiveCircle">No, Cancel
+        </button>
+        <button
+            type="button"
+            class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+            @click="confirmArchiveCircle">Yes, Archive
+        </button>
+      </div>
     </template>
   </general-modal>
 
@@ -128,7 +148,9 @@ let modalFormCircleInvitation: ElementEvent | null = null;
 let modalSetting: ElementEvent | null = null;
 let modalFormCategory: ElementEvent | null = null;
 let modalConfDelete: ElementEvent | null = null;
+let modalArchiveCircleConfirm: ElementEvent | null = null;
 const selectedCategory = ref<any>(null)
+const selectedCircle = ref<any>(null)
 const editMode = ref<boolean>(false)
 
 const $auth = useAuth()
@@ -238,6 +260,41 @@ function onCircleChange(value: Circle) {
   /// It will still use the old value when I refresh the trx, so I need to delay some milliseconds
   /// to make it refresh later
   setTimeout(() => emit('circle-changed'), 50)
+}
+
+function showArchiveCircleConfirm(circle: Circle) {
+  modalSetting?.hide()
+  selectedCircle.value = circle
+  modalArchiveCircleConfirm?.show()
+}
+
+function cancelArchiveCircle() {
+  modalArchiveCircleConfirm?.hide()
+  modalSetting?.show()
+}
+
+async function confirmArchiveCircle() {
+  if (selectedCircle.value) {
+    try {
+      const { error, status } = await useFetch(`/api/circles/${selectedCircle.value.id}`, {
+        method: 'DELETE',
+      })
+
+      if (status.value === 'success') {
+        modalArchiveCircleConfirm?.hide()
+        toast.success('Circle archived successfully')
+        selectedCircle.value = null
+        useCookie('selected-circle').value = undefined
+
+        refreshCircles().then(() => checkCircleUser())
+      } else {
+        toast.error(error.value?.statusMessage ?? 'Failed to archive circle')
+      }
+    } catch (error) {
+      console.error('Failed to archive circle:', error)
+      toast.error('Failed to archive circle')
+    }
+  }
 }
 
 function showCategoryForm(category: any) {

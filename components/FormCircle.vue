@@ -89,11 +89,14 @@ async function onSave() {
       name.value = ''
       selectedCurrency.value = 'IDR'
 
-      $circleUsers.value.selected = result.value as Circle | null
+      $circleUsers.value.selected = result.value?.data as any
 
-      emit('on-success', result.value)
+      emit('on-success', result.value?.data)
     }
+
   }
+
+  isLoadingSubmit.value = false
 }
 </script>
 

@@ -43,6 +43,7 @@ model Circles {
   userId          String?         @db.Uuid
   circleSettingId String?         @db.Uuid
   currency        String          @default("IDR")
+  archiveAt       DateTime?
   assetHistory    AssetHistory[]
   assets          Assets[]
   categories      Categories[]

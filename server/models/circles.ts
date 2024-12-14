@@ -13,7 +13,7 @@ export async function createCircle(name: string, currency: string, userId: strin
 
             if (!resultCircle) throw new Error("Result circle not found");
 
-            await tx.circleUsers.create({
+            return await tx.circleUsers.create({
                 data: {
                     userId, circleId: resultCircle.id, receiveReport: userId !== undefined
                 }
@@ -50,13 +50,21 @@ export async function getCircles(key: string, userId: string | undefined) {
                 name: {
                     contains: key?.toLowerCase()
                 },
-                userId: {
-                    equals: userId ?? null,
+                circleUsers: {
+                    some: {
+                        userId
+                    }
                 },
+                archiveAt: null
             }
         },
         include: {
-            circleUsers: true
+            circleUsers: {
+                include: {
+                    user: true
+                }
+            },
+            assets: true
         }
     })
 }
@@ -78,6 +86,7 @@ export async function getCircleUsers(key: string, userId: string | undefined) {
                     name: {
                         contains: key?.toLowerCase()
                     },
+                    archiveAt: null
                 },
                 userId: {
                     equals: userId ?? null,
@@ -110,4 +119,14 @@ export async function updateNotesCircleUser(circleUserId: string, activeNote: st
 export async function updateCircleSettings(circleSettingId: string, defaultAssetId: string | undefined) {
 
     return prisma.circleSettings.update({where: {id: circleSettingId}, data: {defaultAssetId: defaultAssetId ?? null}})
+}
+
+export async function archiveCircle(userId: string | undefined,circleId: string) {
+    return prisma.circles.update({
+        where: { id: circleId, userId },
+        data: { 
+            archiveAt: new Date(),
+            updatedAt: new Date()
+        }
+    });
 }

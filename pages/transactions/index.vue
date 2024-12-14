@@ -178,7 +178,7 @@
             {{ capitalizeFirstLetter(trx.description) }}
           </td>
           <td class="px-3 py-2">
-            {{ currencyIDRFormatter($circleUsers.selected.currency, trx.amount) }}
+            {{ currencyIDRFormatter($circleUsers.selected?.currency, trx.amount) }}
           </td>
           <td class="px-3 py-2">
             {{ capitalizeFirstLetter(trx.category.name) }}
