@@ -30,9 +30,22 @@
             <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description
               <span class="text-red-500">*</span></label>
 
-            <input v-model="formTransaction.description" type="text" name="description" id="description"
+            <div class="relative">
+              <input 
+              v-model="formTransaction.description" 
+              type="text" 
+              name="description" 
+              id="description"
+              list="description-suggestions"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-              placeholder="Example: Makan Siang" required @keyup.enter="onSaveExpenses">
+              placeholder="Example: Makan Siang" 
+              required 
+              @keyup.enter="onSaveExpenses"
+              >
+              <datalist id="description-suggestions">
+                <option v-for="suggestion in descriptionSuggestions" :key="suggestion" :value="suggestion" />
+              </datalist>
+            </div>
           </div>
           <div>
             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date <span
@@ -269,6 +282,7 @@ import { useCategories } from "~/composables/categories";
 import { toast } from "vue3-toastify";
 import { useAuth } from "~/composables/auth";
 import { useCircleUsers } from "~/composables/circles";
+import { useTransactions } from '~/composables/transactions';
 import { Asset } from '../utils/types';
 
 enum TypeFormTransaction {
@@ -287,7 +301,15 @@ const asset = computed(() => {
 })
 
 const $circleUsers = useCircleUsers()
+const $transactions = useTransactions()
 const isDarkMode = useDarkMode()
+
+const descriptionSuggestions = computed(() => {
+  const descriptions = $transactions.value.data
+    .map(transaction => transaction.description)
+    .filter(Boolean)
+  return [...new Set(descriptions)] // Remove duplicates
+})
 
 const typeTransaction = ref<TypeFormTransaction>(TypeFormTransaction.expenses)
 const isSetDefaultAsset = ref<boolean>(false)

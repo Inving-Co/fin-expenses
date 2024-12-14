@@ -323,6 +323,8 @@ const {
       toast.error(context.response.statusText);
 
       onSignOut()
+    } else {
+      $transactions.value.data = context.response._data
     }
   },
   watch: [selectedCategories, selectedCircle]
