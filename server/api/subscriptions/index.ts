@@ -4,7 +4,6 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     const { category, sortBy, sortOrder, period } = query
     
-    
     const cookies = parseCookies(event)
     const userId = cookies['user-id']
     const circle = cookies['selected-circle'] ? JSON.parse(cookies['selected-circle']) : undefined

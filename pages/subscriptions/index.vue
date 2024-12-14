@@ -207,6 +207,8 @@ const sortOrder = ref('asc')
 // Available categories
 const categories = ['streaming', 'software', 'utilities', 'other']
 
+const selectedCircle = computed(() => useCookie('selected-circle').value)
+
 // Filtered and sorted subscriptions
 const filteredSubscriptions = computed(() => {
   let filtered = [...subscriptions.value]
@@ -231,16 +233,6 @@ const yearlyTotal = ref(0)
 const subscriptionToDelete = ref<string | null>(null)
 const selectedSubscription = ref<Subscription | null>(null)
 
-
-await Promise.all([
-  fetchSubscriptions(),
-  fetchTotals(),
-  fetchUpcoming(),
-  fetchExchangeRates()
-])
-
-calculateCurrencyTotals()
-
 $loading.value = false
 
 definePageMeta({
@@ -248,9 +240,35 @@ definePageMeta({
   layout: 'heading',
 });
 
+await Promise.all([
+    fetchSubscriptions(),
+    fetchTotals(),
+    fetchUpcoming(),
+    fetchExchangeRates()
+  ])
+
+calculateCurrencyTotals()
+
 watch([selectedCategory, sortOrder], async () => {
-  await fetchSubscriptions()
+  await Promise.all([
+    fetchSubscriptions(),
+    fetchTotals(),
+    fetchUpcoming(),
+  ])
+
+calculateCurrencyTotals()
 }, { deep: true })
+
+watch(() => selectedCircle.value, async () => {
+  await Promise.all([
+    fetchSubscriptions(),
+    fetchTotals(),
+    fetchUpcoming(),
+    fetchExchangeRates()
+  ])
+
+  calculateCurrencyTotals()
+})
 
 async function fetchSubscriptions() {
   try {
@@ -351,6 +369,8 @@ function calculateCurrencyTotals() {
 
 // Fetch exchange rates
 async function fetchExchangeRates() {
+  if(exchangeRates.value) return
+  
   try {
     const response = await fetch('/api/currencies/rates')
     if (response.ok) {

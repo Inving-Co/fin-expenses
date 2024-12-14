@@ -105,6 +105,12 @@ watch(() => $circleUsers.value.selectedCircleUser?.activeNote, (val, oldValue) =
     isLoading.value = true
   }
 
+  if (!val) {
+    content.value = '<p></p>'
+    isLoading.value = false
+    return
+  }
+
   try {
     if (!content.value) {
       const parsed = JSON.parse(val!)
