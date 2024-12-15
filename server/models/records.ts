@@ -71,6 +71,37 @@ export async function getRecords(key: string, dateFilter: { start: string, end: 
     })
 }
 
+export async function getRecordsForExport(circleId: string | undefined) {
+    const result = await prisma.records.findMany({
+        select: {
+            description: true,
+            amount: true,
+            date: true,
+            category: {
+                select: {
+                    name: true
+                },
+            }
+        },
+        where: {
+            circleId: circleId ?? null,
+        },
+        orderBy: {
+            date: 'desc'
+        }
+    })
+
+    const flatResult = result.map(record => ({
+        categoryName: record.category.name,
+        description: record.description,
+        amount: record.amount,
+        date: record.date,
+    }));
+    
+    return flatResult;
+
+}
+
 export async function getRecordsForChat(key: string, dateFilter: { start: string, end: string } | undefined, circleId: string | undefined) {
     let result = await prisma.records.findMany({
         select: {

@@ -4,10 +4,26 @@
       <div class="font-semibold text-xl sm:text-2xl text-transparent bg-clip-text bg-gradient-to-r to-emerald-500 from-lime-600">
         {{ capitalizeFirstLetter(circle?.name) }}
       </div>
-      <button type="button" class="text-sm font-medium text-primary-600 border border-primary-600 rounded-lg px-4 py-2 hover:bg-primary-600 hover:text-white focus:ring-4 focus:ring-primary-300"
-              @click="emit('show-archive-circle-confirm', circle)">
-        Archive
-      </button>
+      <div class="relative inline-block text-left">
+        <button type="button" class="inline-flex justify-center w-full text-sm font-medium text-primary-600 border border-primary-600 rounded-lg px-4 py-2 hover:bg-primary-600 hover:text-white focus:ring-4 focus:ring-primary-300" @click="openDropdown = !openDropdown">
+          Actions
+          <svg xmlns="http://www.w3.org/2000/svg" class="-mr-1 ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06 0L10 10.58l3.71-3.37a.75.75 0 111.06 1.06l-4.25 3.75a.75.75 0 01-1.06 0l-4.25-3.75a.75.75 0 010-1.06z" clip-rule="evenodd" />
+          </svg>
+        </button>
+
+        <div v-if="openDropdown" class="absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+          <div class="py-1" role="none">
+            <button type="button" class="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" @click="emit('show-archive-circle-confirm', circle)">
+              Archive
+            </button>
+            <button type="button" :disabled="isLoadingExport" class="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" @click="exportCircle(circle)">
+              Export 
+              <icons-circular-indicator v-if="isLoadingExport" class="inline w-3 h-3 ml-1 text-primary-500 self-center animate-spin"/>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Category Management Section -->
@@ -113,6 +129,8 @@ const copiedLink = ref<string | null>(null)
 const elink = ref<string | null>(null)
 const isLoadingToggle = ref<boolean>(false)
 const selectedCategory = ref<any>(null)
+const isLoadingExport = ref<boolean>(false)
+const openDropdown = ref<boolean>(false)
 
 const $circleUsers = useCircleUsers()
 const $categories = useCategories()
@@ -126,6 +144,23 @@ watch(() => $circleUsers.value.selected, ((val) => {
   const myCircles = $circleUsers.value?.selected?.circleUsers?.filter((e: CircleUser) => e.userId === $auth.value?.userId) ?? []
   circleUser.value = myCircles.length > 0 ? myCircles[0] : null
 }))
+
+async function exportCircle() {
+  isLoadingExport.value = true
+  const {data: result, status} = await useFetch('/api/records/export')
+
+  if (status.value === 'success') {
+    const blob = new Blob([result.value], {type: 'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'records.csv';
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  isLoadingExport.value = false
+}
 
 function copyText() {
   const element = elink.value as any;
