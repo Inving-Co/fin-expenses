@@ -6,7 +6,9 @@ export default defineEventHandler(async (event) => {
    
     const records = await getRecordsForExport(circle?.id)
 
-    const csvContent = records.map(record => Object.values(record).join(",")).join("\n");
+    const csvHeader = "category,description,amount,date\n";
+    const csvContent = csvHeader + records.map(record => Object.values(record).join(",")).join("\n");
+
     const filename = `records_${new Date().toISOString().split('T')[0]}.csv`;
     
     event.node.res.setHeader('Content-Type', 'text/csv');

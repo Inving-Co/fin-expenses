@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import {prisma} from './prisma'
 
 export async function createRecord(date: string, description: string, amount: number, currency: string, categoryId: string, userId: string | undefined, circleId: string | undefined, assetId: string | undefined) {
@@ -95,7 +96,7 @@ export async function getRecordsForExport(circleId: string | undefined) {
         categoryName: record.category.name,
         description: record.description,
         amount: record.amount,
-        date: record.date,
+        date: format(new Date(record.date), 'dd/MM/yyyy'),
     }));
     
     return flatResult;
