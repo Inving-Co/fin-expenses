@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-container hidden md:block" :class="{ 'expanded': isExpanded }" style="z-index: 5;">
+  <div class="chat-container hidden md:block" :class="{ 'expanded': isExpanded }" style="z-index: 15;">
     <div v-if="!isExpanded" @click="isExpanded = true" 
          class="collapsed-chat flex flex-col flex-grow max-w-xl h-[45px] w-80 bg-white dark:bg-gray-800 shadow-xl rounded-t-md overflow-hidden z-20 cursor-pointer">
       <div class="flex justify-between items-center px-2 py-2">
@@ -20,7 +20,7 @@
       <div class="resize-handle" @mousedown="startResize"></div>
       <div class="flex justify-between items-center px-2 py-2 border-b border-gray-200 dark:border-gray-700">
         <div class="text-gray-700 dark:text-gray-200 font-semibold">
-          Chat with Inving AI
+          Chat with Kluarga AI
         </div>
         <button
             class="h-[30px] p-1 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 focus:outline-none font-medium rounded-lg text-sm"
