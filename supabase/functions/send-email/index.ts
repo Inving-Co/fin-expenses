@@ -454,8 +454,8 @@ const emailHtml = (payload: Payload, unsubLink: String) => {
 
                               <div style="font-size: 14px; color: #f2784d; line-height: 160%; text-align: center; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 20px; line-height: 32px;"><strong>Get in touch</strong></span></p>
-                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 28.8px;">mail@inving.co</span></p>
-                                <a href="${unsubLink}" target="_blank" style="font-size: 10px; color: #F9AE4E; text-align: center; text-decoration: underline;">Ubsubscribe</a> <span><strong>|</strong></span> <a href="https://money.inving.co/" target="_blank" style="font-size: 10px; color: #F9AE4E; text-align: center; text-decoration: underline;">Edit your details</a>
+                                <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 16px; line-height: 28.8px;">mail@kluarga.com</span></p>
+                                <a href="${unsubLink}" target="_blank" style="font-size: 10px; color: #F9AE4E; text-align: center; text-decoration: underline;">Ubsubscribe</a> <span><strong>|</strong></span> <a href="https://finansial.kluarga.com/" target="_blank" style="font-size: 10px; color: #F9AE4E; text-align: center; text-decoration: underline;">Edit your details</a>
                               </div>
                             </td>
                           </tr>
