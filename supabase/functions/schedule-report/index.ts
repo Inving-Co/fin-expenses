@@ -82,10 +82,10 @@ const handler = async (_request: Request): Promise<Response> => {
         const statusSent = []
 
         for (let i = 0; i < circleUsers.length; i++) {
-            const res = await fetch('https://qstash.upstash.io/v2/publish/functions/v1/send-email', {
+            const res = await fetch('https://qstash.upstash.io/v2/publish/https://xoixclvjgysqxybilnfk.supabase.co/functions/v1/send-email', {
                 method: 'POST',
                 headers: {
-                    'Upstash-Forward-Authorization': `Bearer ${Deno.env.get('SUP_ANON_KEY')}`,
+                    'Upstash-Forward-Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${Deno.env.get('QSTASH_TOKEN')}`,
                 },
@@ -98,8 +98,8 @@ const handler = async (_request: Request): Promise<Response> => {
                             circleUserId: circleUsers[i].circleUserId,
                             report: {
                                 type: 'Weekly',
-                                    message_1: 'Here\'s your weekly financial report, plan your next move for a better week.',
-                                    message_2: `Last week\'s activity on circle <strong>${circleUsers[i].circleName}</strong>`,
+                                    message_1: `Here\"s your weekly financial report, plan your next move for a better week.`,
+                                    message_2: `Last week\"s activity on circle <strong>${circleUsers[i].circleName}</strong>`,
                                     expense_amount: circleUsers[i].expenseAmount,
                                     income_amount: circleUsers[i].incomeAmount
                             }
@@ -111,6 +111,7 @@ const handler = async (_request: Request): Promise<Response> => {
                 index: i,
                 email: circleUsers[i].userEmail,
                 status: res.status,
+                message: await res.text()
             })
         }
 

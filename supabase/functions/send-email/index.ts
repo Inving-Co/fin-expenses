@@ -29,91 +29,101 @@ export interface Report {
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 
 const handler = async (_request: Request): Promise<Response> => {
+  try {
+    const payload: Payload = await _request.json();
 
-  const payload: Payload = await _request.json();
+    let content;
 
-  let content;
+    try {
+      const token = await generateToken(payload);
+      const unsubLink = `https://${Deno.env.get('APP_DOMAIN')}/mail?type=unsubscribe&token=${token}`;
 
-  const token = await generateToken(payload)
+      if (payload.content.report) {
+        content = emailHtml(payload, unsubLink);
+      }
 
-  const unsubLink = `https://${Deno.env.get('APP_DOMAIN')}/mail?type=unsubscribe&token=${token}`
+      if (!content) {
+        return new Response(JSON.stringify({
+          status: 'failed',
+          message: 'Content unavailable'
+        }), {
+          status: 422,
+        });
+      }
 
-  if (payload.content.report) {
-    content = {
-      'type': 'text/html',
-      'value': emailHtml(payload, unsubLink)
-    }
-  }
-
-  if (!content) {
-    const data = {
-      status: 'failed',
-      message: 'Content unavailable'
-    }
-    return new Response(JSON.stringify(data), {
-      status: 422,
-    })
-  }
-
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${RESEND_API_KEY}`,
-    },
-    body: JSON.stringify({
-      'personalizations': [
-        {
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
           'to': [
-            {
-              'email': payload.recipient_email
-            }
-          ]
-        }
-      ],
-      'from': {
-        'email': payload.from,
-      },
-      'subject': payload.subject,
-      'content': [
-        content
-      ]
-    }),
-  })
+            payload.recipient_email
+          ],
+          'from': payload.from,
+          'subject': payload.subject,
+          'html': content
+        }),
+      });
 
-  if (res.ok) {
-    const data = {
-      status: 'ok'
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(`Email API error: ${JSON.stringify(errorData)}`);
+      }
+
+      return new Response(JSON.stringify({
+        status: 'ok'
+      }), {
+        status: 200,
+      });
+
+    } catch (error) {
+      console.error('Email processing error:', error);
+      return new Response(JSON.stringify({
+        status: 'failed',
+        message: 'Failed to process email request',
+        error: error.message
+      }), {
+        status: 500,
+      });
     }
-    return new Response(JSON.stringify(data), {
-      status: 200,
-    })
+
+  } catch (error) {
+    console.error('Request parsing error:', error);
+    return new Response(JSON.stringify({
+      status: 'failed',
+      message: 'Invalid request payload',
+      error: error.message
+    }), {
+      status: 400,
+    });
   }
-}
+};
 
 serve(handler)
 
 
 function base64url_encode(buffer: ArrayBuffer): string {
   return btoa(Array.from(new Uint8Array(buffer), b => String.fromCharCode(b)).join(''))
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
 }
 
 const generateToken = async (payload: Payload) => {
-  const textEncoder=(d:string)=>new TextEncoder().encode(d)
+  const textEncoder = (d: string) => new TextEncoder().encode(d)
 
   const secretKey = Deno.env.get('APP_SECRET_KEY');
-  const header={alg:'HS256', typ: 'JWT'}
-  const data={circleUserId: payload.content.circleUserId}
+  const header = { alg: 'HS256', typ: 'JWT' }
+  const data = { circleUserId: payload.content.circleUserId }
 
-  const encodedHeader=base64url_encode(textEncoder(JSON.stringify(header)));
-  const encodedPayload=base64url_encode(textEncoder(JSON.stringify(data)));
-  const oTkn=`${encodedHeader}.${encodedPayload}`;
+  const encodedHeader = base64url_encode(textEncoder(JSON.stringify(header)));
+  const encodedPayload = base64url_encode(textEncoder(JSON.stringify(data)));
+  const oTkn = `${encodedHeader}.${encodedPayload}`;
 
-  const key = await crypto.subtle.importKey("raw", textEncoder(secretKey), {name:"HMAC", hash:"SHA-256"}, false, ["sign", "verify"]);
-  const signature = base64url_encode(new Uint8Array(await crypto.subtle.sign({name:"HMAC"}, key, textEncoder(oTkn))))
+  const key = await crypto.subtle.importKey("raw", textEncoder(secretKey), { name: "HMAC", hash: "SHA-256" }, false, ["sign", "verify"]);
+  const signature = base64url_encode(new Uint8Array(await crypto.subtle.sign({ name: "HMAC" }, key, textEncoder(oTkn))))
   return `${oTkn}.${signature}`
 }
 
@@ -327,7 +337,7 @@ const emailHtml = (payload: Payload, unsubLink: String) => {
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="font-size: 14px; color: #e5eaf5; line-height: 140%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 140%;"><strong>HI${payload.recipient_name ? ` <span><strong>${payload.recipient_name}</strong></span>`:''},</strong></p>
+                                <p style="font-size: 14px; line-height: 140%;"><strong>HI${payload.recipient_name ? ` <span><strong>${payload.recipient_name}</strong></span>` : ''},</strong></p>
                               </div>
 
                             </td>
