@@ -10,7 +10,7 @@
         <a
             class="underline-offset-1 font-semibold underline dark:text-gray-300"
             target="_blank"
-            href="https://money.inving.co/privacy-policy">
+            href="https://finansial.kluarga.com/privacy-policy">
           Our Privacy Policy
         </a>
       </div>
