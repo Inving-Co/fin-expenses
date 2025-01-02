@@ -50,7 +50,7 @@
     <div class="mt-4">
       <div class="text-md text-gray-500 font-semibold dark:text-gray-300 mb-2">Summary</div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div class="flex items-center gap-2">
+        <div class="flex w-52 items-center gap-2">
           <div :class="getOverallStatusColor(totalSpentPercentage)" class="w-2 h-2 rounded-full"></div>
           <div class="text-sm group relative">
             <span class="text-gray-500 dark:text-gray-300">Overall Spent: </span>
@@ -69,7 +69,7 @@
             </div>
           </div>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex w-52 items-center gap-2">
           <div :class="{'bg-red-500': overBudgetCategories > 0, 'bg-green-500': overBudgetCategories === 0}" class="w-2 h-2 rounded-full"></div>
           <div class="text-sm">
             <span class="text-gray-500 dark:text-gray-300">Over Budget: </span>
@@ -78,7 +78,7 @@
             </span>
           </div>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex w-52 items-center gap-2">
           <div :class="{'bg-green-500': underBudgetCategories > 0, 'bg-yellow-500': underBudgetCategories === 0}" class="w-2 h-2 rounded-full"></div>
           <div class="text-sm">
             <span class="text-gray-500 dark:text-gray-300">Under Budget: </span>
@@ -87,7 +87,7 @@
             </span>
           </div>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex w-52 items-center gap-2">
           <div class="w-2 h-2 rounded-full" :class="getRemainingBudgetColor"></div>
           <div class="text-sm">
             <span class="text-gray-500 dark:text-gray-300">Remaining: </span>
