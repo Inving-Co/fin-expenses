@@ -152,61 +152,77 @@ const emailHtml = (payload: Payload, unsubLink: String) => {
     }
     .container {
       max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
+      margin: 24px auto;
+      background: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     .header {
       text-align: center;
-      padding: 30px 0;
+      padding: 32px;
       background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
-      border-radius: 12px 12px 0 0;
+      position: relative;
     }
     .logo {
-      width: 120px;
-      margin-bottom: 20px;
-    }
-    .content {
-      background: #ffffff;
-      padding: 40px;
-      border-radius: 0 0 12px 12px;
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      margin-bottom: 16px;
+      background: white;
+      padding: 12px;
+      border-radius: 12px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    .greeting {
+    .header-title {
+      color: #ffffff;
+      margin: 0;
       font-size: 24px;
       font-weight: 600;
-      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+    .content {
+      padding: 32px;
+    }
+    .greeting {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
       color: #1a202c;
     }
     .message {
       font-size: 16px;
       color: #4a5568;
-      margin-bottom: 30px;
+      margin-bottom: 24px;
+      line-height: 1.6;
     }
     .stats-container {
       background: #f8fafc;
-      border-radius: 8px;
+      border-radius: 12px;
       padding: 24px;
-      margin-bottom: 30px;
+      margin-bottom: 24px;
+      border: 1px solid #e2e8f0;
     }
     .stats-title {
       font-size: 18px;
       font-weight: 600;
       margin-bottom: 20px;
       color: #1a202c;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
     }
     .stat-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .stat-row:last-child {
-      border-bottom: none;
+      padding: 16px 0;
     }
     .stat-label {
       font-size: 16px;
       color: #4a5568;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     .stat-value {
       font-size: 18px;
@@ -218,29 +234,40 @@ const emailHtml = (payload: Payload, unsubLink: String) => {
     .income {
       color: #38a169;
     }
-    .footer {
-      text-align: center;
-      padding: 30px 0;
-      color: #718096;
-    }
-    .footer a {
-      color: #f97316;
-      text-decoration: none;
-    }
-    .footer a:hover {
-      text-decoration: underline;
-    }
-    .divider {
-      height: 1px;
-      background: #e2e8f0;
-      margin: 20px 0;
+    .balance-row {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid #e2e8f0;
     }
     .balance {
       font-size: 20px;
       font-weight: 600;
       text-align: right;
-      margin-top: 20px;
       color: ${(payload.content.report?.income_amount ?? 0) - (payload.content.report?.expense_amount ?? 0) >= 0 ? '#38a169' : '#e53e3e'};
+    }
+    .footer {
+      text-align: center;
+      padding: 32px;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+    }
+    .footer a {
+      color: #f97316;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    .footer-links {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #718096;
+    }
+    .copyright {
+      margin-top: 16px;
+      font-size: 12px;
+      color: #a0aec0;
     }
   </style>
 </head>
@@ -248,7 +275,7 @@ const emailHtml = (payload: Payload, unsubLink: String) => {
   <div class="container">
     <div class="header">
       <img src="https://assets.unlayer.com/projects/176864/1691487083616-logo-inving.png" alt="Inving Logo" class="logo">
-      <h1 style="color: #ffffff; margin: 0; font-size: 28px;">Weekly Financial Report</h1>
+      <h1 class="header-title">Weekly Financial Report</h1>
     </div>
     
     <div class="content">
@@ -273,8 +300,9 @@ const emailHtml = (payload: Payload, unsubLink: String) => {
           <span class="stat-value expense">${formatter.format(payload.content.report?.expense_amount ?? 0)}</span>
         </div>
 
-        <div class="balance">
-          Net Balance: ${formatter.format((payload.content.report?.income_amount ?? 0) - (payload.content.report?.expense_amount ?? 0))}
+        <div class="stat-row balance-row">
+          <span class="stat-label">Net Balance</span>
+          <span class="balance">${formatter.format((payload.content.report?.income_amount ?? 0) - (payload.content.report?.expense_amount ?? 0))}</span>
         </div>
       </div>
 
@@ -282,25 +310,21 @@ const emailHtml = (payload: Payload, unsubLink: String) => {
         ${payload.content.report?.message_2 ?? ''}
       </div>
 
-      <div class="divider"></div>
-
-      <div style="text-align: center; margin-top: 30px;">
-        <p style="margin: 0;">Best regards,</p>
-        <p style="margin: 5px 0; font-weight: 600;">The Inving Team</p>
+      <div style="text-align: center; margin-top: 32px;">
+        <p style="margin: 0; color: #4a5568;">Best regards,</p>
+        <p style="margin: 4px 0; font-weight: 600; color: #1a202c;">The Inving Team</p>
       </div>
     </div>
 
     <div class="footer">
-      <p>
-        <a href="mailto:mail@kluarga.com">mail@kluarga.com</a>
-      </p>
-      <p style="font-size: 12px;">
+      <a href="mailto:mail@kluarga.com">mail@kluarga.com</a>
+      <div class="footer-links">
         <a href="${unsubLink}">Unsubscribe</a> | 
         <a href="https://finansial.kluarga.com/">Edit your details</a>
-      </p>
-      <p style="font-size: 12px; margin-top: 20px;">
+      </div>
+      <div class="copyright">
         © 2023 Inving. All rights reserved.
-      </p>
+      </div>
     </div>
   </div>
 </body>

@@ -27,7 +27,7 @@
               Budget
             </div>
             <div class="text-sm text-gray-500 font-bold dark:text-gray-300">{{
-                currencyIDRFormatter($circleUsers.selected?.currency, $circleBudget.budget?.amount)
+              currencyIDRFormatter($circleUsers.selected?.currency, $circleBudget.budget?.amount)
               }}
             </div>
           </div>
@@ -36,7 +36,7 @@
               Planned
             </div>
             <div class="text-sm text-gray-500 font-bold dark:text-gray-300">{{
-                currencyIDRFormatter($circleUsers.selected?.currency, sumOfPlanned)
+              currencyIDRFormatter($circleUsers.selected?.currency, sumOfPlanned)
               }}
             </div>
           </div>
@@ -97,23 +97,23 @@
             </div>
           </div>
             <div class="flex w-52 items-center gap-2">
-            <div class="w-2 h-2 rounded-full" :class="getUnusedBudgetColor"></div>
-            <div class="text-sm group relative">
-              <span class="text-gray-500 dark:text-gray-300">Total Unused: </span>
-              <span class="font-semibold cursor-help" 
-                :class="getUnusedBudgetColor"
-                @mouseenter="showUnusedTotal = true"
-                @mouseleave="showUnusedTotal = false">
-              {{ currencyIDRFormatter($circleUsers.selected?.currency, totalUnusedBudget) }}
-              </span>
-              <!-- Tooltip -->
-              <div v-if="showUnusedTotal" 
-                 class="absolute z-10 px-3 py-2 text-sm font-normal text-white bg-gray-900 rounded-lg shadow-sm tooltip dark:bg-gray-700"
-                 style="top: -40px; left: 50%; transform: translateX(-50%)">
-              {{ Math.round(unusedBudgetPercentage) }}% of total budget
-              <div class="tooltip-arrow" data-popper-arrow></div>
+              <div class="w-2 h-2 rounded-full" :class="getOverBudgetColor"></div>
+              <div class="text-sm group relative">
+                <span class="text-gray-500 dark:text-gray-300">Total Over: </span>
+                <span class="font-semibold cursor-help" 
+                  :class="getOverBudgetColor"
+                  @mouseenter="showOverTotal = true"
+                  @mouseleave="showOverTotal = false">
+                  {{ currencyIDRFormatter($circleUsers.selected?.currency, totalOverBudget) }}
+                </span>
+                <!-- Tooltip -->
+                <div v-if="showOverTotal" 
+                   class="absolute z-10 px-3 py-2 text-sm font-normal text-white bg-gray-900 rounded-lg shadow-sm tooltip dark:bg-gray-700"
+                   style="top: -40px; left: 50%; transform: translateX(-50%)">
+                  {{ Math.round(overBudgetPercentage) }}% over planned budget
+                  <div class="tooltip-arrow" data-popper-arrow></div>
+                </div>
               </div>
-            </div>
             </div>
           </div>
         </div>
@@ -164,17 +164,16 @@
 </template>
 
 <script setup lang="ts">
-import lodash from 'lodash';
-import {PropType} from "@vue/runtime-core";
-import {CircleBudgetPlannings, Record} from "~/utils/types";
-import {capitalizeFirstLetter} from "~/utils/functions";
-import {useCircleBudget, useCircleUsers} from "~/composables/circles";
-import {useCategories} from "~/composables/categories";
-import {ref, computed} from 'vue';
+import { groupBy } from 'lodash';
+import { PropType } from "@vue/runtime-core";
+import { CircleBudgetPlannings, Record } from "~/utils/types";
+import { capitalizeFirstLetter, currencyIDRFormatter } from "~/utils/functions";
+import { useCircleBudget, useCircleUsers } from "~/composables/circles";
+import { useCategories } from "~/composables/categories";
+import { ref, computed } from 'vue';
 
 const emit = defineEmits(['category-selected', 'reset-filter'])
 
-const {forEach, groupBy, map, mapValues, omit, reduce, split} = lodash;
 const $circleUsers = useCircleUsers()
 const $circleBudget = useCircleBudget()
 const $categories = useCategories()
@@ -193,7 +192,7 @@ const budgetItems = computed(() => {
 
   const plannings = $circleBudget.value.plannings.filter(p => p.amount > 0);
   const transactions = props.transactions.filter(t => 
-    plannings.some(p => p.categoryId === t.categoryId)
+    plannings.some(p => p.categoryId && t.categoryId && p.categoryId.toString() === t.categoryId.toString())
   );
 
   const groupedTransactions = groupBy(transactions, 'categoryId');
@@ -223,13 +222,13 @@ function getBudgetStatus(actual: number, planned: number): string {
   const ratio = actual / planned;
   if (ratio > 1) {
     const overAmount = actual - planned;
-    return `Over ${currencyIDRFormatter($circleUsers.selected?.currency, overAmount)}`;
+    return `Over ${currencyIDRFormatter($circleUsers.value.selected?.currency, overAmount)}`;
   }
   if (ratio === 1) return 'On Budget';
   if (ratio >= 0.9) return 'Near Budget';
   if (ratio >= 0.7) return 'On Track';
   const remainingAmount = planned - actual;
-  return currencyIDRFormatter($circleUsers.selected?.currency, remainingAmount);
+  return currencyIDRFormatter($circleUsers.value.selected?.currency, remainingAmount);
 }
 
 function getBudgetStatusColor(ratio: number): string {
@@ -311,24 +310,24 @@ const getRemainingBudgetColor = computed(() => {
   return 'text-green-500';
 });
 
-const showUnusedTotal = ref(false);
+const showOverTotal = ref(false);
 
-const totalUnusedBudget = computed(() => {
+const totalOverBudget = computed(() => {
   return budgetItems.value.reduce((sum, item) => {
-    const unused = item.planned - item.actual;
-    return sum + (unused > 0 ? unused : 0);
+    const over = item.actual - item.planned;
+    return sum + (over > 0 ? over : 0);
   }, 0);
 });
 
-const unusedBudgetPercentage = computed(() => {
+const overBudgetPercentage = computed(() => {
   if (!sumOfPlanned.value) return 0;
-  return (totalUnusedBudget.value / sumOfPlanned.value) * 100;
+  return (totalOverBudget.value / sumOfPlanned.value) * 100;
 });
 
-const getUnusedBudgetColor = computed(() => {
-  const percentage = unusedBudgetPercentage.value;
-  if (percentage <= 0) return 'text-red-500';
-  if (percentage < 10) return 'text-yellow-500';
+const getOverBudgetColor = computed(() => {
+  const percentage = overBudgetPercentage.value;
+  if (percentage >= 20) return 'text-red-500';
+  if (percentage >= 10) return 'text-yellow-500';
   return 'text-green-500';
 });
 

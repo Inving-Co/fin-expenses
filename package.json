@@ -22,7 +22,7 @@
     "nuxt": "^3.7.1",
     "prisma": "^5.0.0",
     "sass": "^1.64.2",
-    "supabase": "^2.1.1"
+    "supabase": "^2.9.6"
   },
   "dependencies": {
     "@nuxt/image": "^1.0.0-rc.1",
