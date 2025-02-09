@@ -66,39 +66,24 @@
         Plan
       </button>
     </div>
-    <div v-if="transactions" class="w-full mb-8 mt-2">
+    <div v-if="transactions" class="max-h-1/4 w-full gap-4 md:flex justify-center mb-8 mt-2">
       <client-only>
-      <div class="w-full">
-        <draggable 
-        v-model="chartOrder"
-        class="grid grid-cols-1 lg:grid-cols-2 gap-6"
-        :item-key="'id'"
-        @change="onChartOrderChanged"
-        handle=".chart-drag-handle">
-        <template #item="{ element }">
-          <div :class="[
-          'chart-wrapper relative rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200',
-          `chart-${element.component}`
-          ]">
-          <div class="chart-drag-handle absolute top-3 right-3 cursor-move p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 z-10">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-            </svg>
-          </div>
-          <client-only>
-            <component 
-            :is="components[element.component]"
-            class="chart-content"
-            :label-time="filterDate"
-            :transactions="chartTransactions"
-            @category-selected="onCategorySelected"
-            @reset-filter="onResetFilter"/>
-          </client-only>
-          </div>
-        </template>
-        </draggable>
-      </div>
 
+        <div class="md:w-1/2 h-full w-full flex-grow justify-between mt-4 md:mt-0">
+          <div class="flex flex-col mb-4 gap-4">
+            <div class="flex w-full flex-col lg:flex-row gap-4">
+              <expenses-structure-chart class="w-full lg:w-4/12" :label-time="filterDate"
+                                        :transactions="chartTransactions"/>
+              <budget-plan-chart class="w-full lg:w-8/12" :transactions="chartTransactions"
+                                @category-selected="onCategorySelected"
+                                @reset-filter="onResetFilter"/>
+            </div>
+            <div class="flex flex-col lg:flex-row gap-4">
+              <cash-flow-chart class="w-full" :label-time="filterDate" :transactions="chartTransactions"/>
+              <debt-percentage-by-income class="w-full" :label-time="filterDate" :transactions="chartTransactions"/>
+            </div>
+          </div>
+        </div>
       </client-only>
     </div>
     <div class="sm:flex p-4 justify-center sm:rounded-t-lg sm:justify-between bg-white dark:bg-gray-700"
@@ -265,10 +250,10 @@
 </template>
 
 <script setup lang="ts">
-import { Vue3Lottie } from "vue3-lottie";
+import {Vue3Lottie} from "vue3-lottie";
 import EmptyJSON from '~/assets/lottie/empty.json'
-import draggable from 'vuedraggable/src/vuedraggable'
-import { initDropdowns } from "flowbite";
+
+import {initDropdowns} from "flowbite";
 import {endOfToday, format, parseISO, startOfMonth,} from 'date-fns'
 import {capitalizeFirstLetter, checkAuth, currencyIDRFormatter, onSignOut} from "~/utils/functions";
 import {Category, EditableRecord, ElementEvent, Record} from "~/utils/types";
@@ -282,26 +267,8 @@ import {useCircleUsers} from "~/composables/circles";
 import {useTransactions} from "~/composables/transactions";
 import FormCategory from "~/components/FormCategory.vue";
 import BudgetPlanChart from "~/components/BudgetPlanChart.vue";
-import CashFlowChart from "~/components/CashFlowChart.vue";
-
-// Register all chart components
-const components = {
-  'expenses-structure-chart': ExpensesStructureChart,
-  'budget-plan-chart': BudgetPlanChart,
-  'cash-flow-chart': CashFlowChart,
-  'debt-percentage-by-income': DebtPercentageByIncome,
-}
-
-// Add min-height for charts
-const chartMinHeight = ref('300px')
 
 const searchKey = ref<string>('')
-const chartOrder = ref(JSON.parse(localStorage.getItem('chart-order') || JSON.stringify([
-  { id: 'expenses', component: 'expenses-structure-chart' },
-  { id: 'budget', component: 'budget-plan-chart' },
-  { id: 'cashflow', component: 'cash-flow-chart' },
-  { id: 'debt', component: 'debt-percentage-by-income' }
-])))
 const filterDate = ref<string>('this month')
 const startFilterDate = ref<string>(format(startOfMonth(new Date()), 'yyyy-MM-dd HH:mm'))
 const endFilterDate = ref<string>(format(endOfToday(), 'yyyy-MM-dd HH:mm'))
@@ -510,68 +477,15 @@ function onCategoryUpdated() {
 function onFilterCategoriesChanged(values: any[]) {
   refreshTrx()
 }
-
-function onChartOrderChanged() {
-  localStorage.setItem('chart-order', JSON.stringify(chartOrder.value))
-}
 </script>
 
 <style lang="scss">
 .dp-custom-calendar {
+
   overflow: visible;
 
   .dp__calendar_item {
     border: 1px solid var(--dp-border-color-hover);
   }
-}
-
-.chart-wrapper {
-  min-height: 400px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.chart-content {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  min-height: 100px;
-}
-
-.chart-drag-handle {
-  opacity: 1;
-  transition: opacity 0.2s ease-in-out;
-}
-
-.grid {
-  display: grid;
-  gap: 1.5rem;
-}
-
-@media (min-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(12, 1fr);
-  }
-  
-  .chart-expenses-structure-chart {
-    grid-column: span 4;
-  }
-  
-  .chart-budget-plan-chart {
-    grid-column: span 8;
-  }
-  
-  .chart-cash-flow-chart,
-  .chart-debt-percentage-by-income {
-    grid-column: span 6;
-  }
-}
-
-.chart-wrapper {
-  min-height: 100px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 </style>

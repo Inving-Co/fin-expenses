@@ -94,12 +94,31 @@
             <span class="font-semibold" :class="getRemainingBudgetColor">
               {{ currencyIDRFormatter($circleUsers.selected?.currency, remainingBudget) }}
             </span>
+            </div>
+          </div>
+            <div class="flex w-52 items-center gap-2">
+            <div class="w-2 h-2 rounded-full" :class="getUnusedBudgetColor"></div>
+            <div class="text-sm group relative">
+              <span class="text-gray-500 dark:text-gray-300">Total Unused: </span>
+              <span class="font-semibold cursor-help" 
+                :class="getUnusedBudgetColor"
+                @mouseenter="showUnusedTotal = true"
+                @mouseleave="showUnusedTotal = false">
+              {{ currencyIDRFormatter($circleUsers.selected?.currency, totalUnusedBudget) }}
+              </span>
+              <!-- Tooltip -->
+              <div v-if="showUnusedTotal" 
+                 class="absolute z-10 px-3 py-2 text-sm font-normal text-white bg-gray-900 rounded-lg shadow-sm tooltip dark:bg-gray-700"
+                 style="top: -40px; left: 50%; transform: translateX(-50%)">
+              {{ Math.round(unusedBudgetPercentage) }}% of total budget
+              <div class="tooltip-arrow" data-popper-arrow></div>
+              </div>
+            </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <hr class="flex-grow border-t my-3 border-gray-400"/>
+        <hr class="flex-grow border-t my-3 border-gray-400"/>
     
     <div class="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 max-h-[400px] md:max-h-none overflow-y-auto pr-2">
       <div v-for="(item, index) in budgetItems" :key="index" 
@@ -289,6 +308,27 @@ const getRemainingBudgetColor = computed(() => {
   if (!sumOfPlanned.value) return 'text-gray-500';
   if (remainingBudget.value <= 0) return 'text-red-500';
   if (remainingBudget.value < sumOfPlanned.value * 0.2) return 'text-yellow-500';
+  return 'text-green-500';
+});
+
+const showUnusedTotal = ref(false);
+
+const totalUnusedBudget = computed(() => {
+  return budgetItems.value.reduce((sum, item) => {
+    const unused = item.planned - item.actual;
+    return sum + (unused > 0 ? unused : 0);
+  }, 0);
+});
+
+const unusedBudgetPercentage = computed(() => {
+  if (!sumOfPlanned.value) return 0;
+  return (totalUnusedBudget.value / sumOfPlanned.value) * 100;
+});
+
+const getUnusedBudgetColor = computed(() => {
+  const percentage = unusedBudgetPercentage.value;
+  if (percentage <= 0) return 'text-red-500';
+  if (percentage < 10) return 'text-yellow-500';
   return 'text-green-500';
 });
 
